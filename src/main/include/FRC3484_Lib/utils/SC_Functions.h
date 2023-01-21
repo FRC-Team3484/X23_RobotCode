@@ -51,8 +51,16 @@ namespace SC
         }
     }
 
+    // template<class T>
+    // T F_Limit(SC::SC_Range<T> valRange, T fin)
+    // {
+    //     if(fin > valRange.Val_max) return valRange.Val_max;
+    //     else if(fin < valRange.Val_min) return valRange.Val_min;
+    //     else return fin; 
+    // }
+
     template<class T>
-    T F_Limit(SC::SC_Range<T> valRange, T fin)
+    T F_Limit(SC::SC_Range<T> &valRange, T fin)
     {
         if(fin > valRange.Val_max) return valRange.Val_max;
         else if(fin < valRange.Val_min) return valRange.Val_min;

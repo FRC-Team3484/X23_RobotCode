@@ -9,6 +9,7 @@
 #include <frc/kinematics/ChassisSpeeds.h>
 #include <frc/kinematics/MecanumDriveKinematics.h>
 #include <frc/kinematics/MecanumDriveOdometry.h>
+#include <frc/kinematics/MecanumDriveWheelPositions.h>
 #include <cmath>
 
 namespace SC
@@ -41,15 +42,16 @@ namespace SC
     private:
         frc::ChassisSpeeds chassis;
         frc::MecanumDriveWheelSpeeds wheelSpeed_SP, wheelSpeed_PV;
-        frc::MecanumDriveKinematics kinematics{ frc::Translation2d{-0.1_m,  0.1_m},
-                                                frc::Translation2d{ 0.1_m,  0.1_m},
-                                                frc::Translation2d{-0.1_m, -0.1_m},
-                                                frc::Translation2d{ 0.1_m, -0.1_m}};
         
-        frc::MecanumDriveOdometry odometry{ kinematics, 
-                                            frc::Rotation2d{0_rad}, 
-                                            frc::Pose2d{0_m, 0_m, 0_rad}};
-
+        // frc::MecanumDriveKinematics kinematics{ frc::Translation2d{-0.1_m,  0.1_m},
+        //                                         frc::Translation2d{ 0.1_m,  0.1_m},
+        //                                         frc::Translation2d{-0.1_m, -0.1_m},
+        //                                         frc::Translation2d{ 0.1_m, -0.1_m}};
+        
+        // frc::MecanumDriveWheelPositions odometry{ kinematics, 
+        //                                     frc::Rotation2d{0_rad}, 
+        //                                     frc::Pose2d{0_m, 0_m, 0_rad}};
+        
         units::meters_per_second_t maxWheelSpeed = 5.0_mps;
     };
 }

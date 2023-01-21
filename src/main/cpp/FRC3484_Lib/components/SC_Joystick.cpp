@@ -1,8 +1,6 @@
 #include "FRC3484_Lib/components/SC_Joystick.h"
 
 #include <hal/FRCUsageReporting.h>
-#include <cmath>
-#include <wpi/numbers>
 
 using namespace SC;
 using namespace frc;

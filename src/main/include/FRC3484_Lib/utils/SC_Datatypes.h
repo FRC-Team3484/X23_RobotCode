@@ -157,13 +157,13 @@ namespace SC
 	class SC_ABFilterU
 	{
 	public:
-		SC_ABFilterU<T>(units::time::second_t FilterTime, units::time::second_t ScanTime)
+		SC_ABFilterU(units::time::second_t FilterTime, units::time::second_t ScanTime)
 		{
 			this->_tau = FilterTime.value();
 			this->_scanT = ScanTime.value();
 		}
 
-		~SC_ABFilterU<T>()
+		~SC_ABFilterU()
 		{
 			;
 		}
@@ -201,13 +201,13 @@ namespace SC
 	class SC_ABFilter
 	{
 	public:
-		SC_ABFilter<T>(units::time::second_t FilterTime, units::time::second_t ScanTime)
+		SC_ABFilter(units::time::second_t FilterTime, units::time::second_t ScanTime)
 		{
 			this->_tau = FilterTime.value();
 			this->_scanT = ScanTime.value();
 		}
 
-		~SC_ABFilter<T>()
+		~SC_ABFilter()
 		{
 			;
 		}

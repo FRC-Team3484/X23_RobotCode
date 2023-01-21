@@ -52,6 +52,12 @@ namespace SC
         void SetPVLimits(SC::SC_Range<double> PVR);
 
         /**
+         * @brief   Sets the limits around where the PV should be operating.
+         */
+        void SetCVLimits(double minCV, double maxCV);
+        void SetCVLimits(SC::SC_Range<double> CVR);
+
+        /**
          * @brief   Sets the limit of how much of the integral term is used.
          *          Value should be in the range of 0 - 1.
          */
@@ -209,7 +215,7 @@ namespace SC
         double I, P, D;
 
         SC::SC_Range<double> SCR_Integral, SCR_Deriv;
-        SC::SC_Range<double> SCR_Setpoint, SCR_Process;
+        SC::SC_Range<double> SCR_Setpoint, SCR_Process, SCR_Control;
         double SP, PV, CV, CVfb;
         double manRate, trackerCV, manualCV;
 

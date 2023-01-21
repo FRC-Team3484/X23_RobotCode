@@ -14,18 +14,11 @@
 #include "networktables/NetworkTableInstance.h"
 
 using namespace frc;
-using namespace sc;
+using namespace SC;
 
 void Robot::RobotInit() 
 {
-  	// Clear out the network table
-	this->_nt_table = nt::NetworkTableInstance::GetDefault().GetTable("X22");
-	std::vector<std::string> entries = _nt_table->GetKeys();
-	for(unsigned int i = 0; i < entries.size(); i++)
-	{
-		_nt_table->Delete(entries.at(i));
-	}
-  GP1_driver = new XboxController(C_DRIVER_USB);
+  	GP1_driver = new XboxController(C_DRIVER_USB);
 
 }
 void Robot::RobotPeriodic() {}
