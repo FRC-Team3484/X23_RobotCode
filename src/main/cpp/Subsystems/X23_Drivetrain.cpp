@@ -9,7 +9,8 @@ using namespace ctre::phoenix::motorcontrol;
 using namespace ctre::phoenix::motorcontrol::can;
 
 
-X23_Drivetrain::X23_Drivetrain()
+X23_Drivetrain::X23_Drivetrain(inch_t trackwidth, feet_per_second_t MaxTangVel, degrees_per_second_t MaxRotVel,
+                        std::tuple<int, int> LeftIDs, std::tuple<int, int> RightIDs, SC_gripdrive)
 {
     md = nullptr;
     shifter = nullptr;

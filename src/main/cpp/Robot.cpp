@@ -20,6 +20,8 @@ void Robot::RobotInit()
 {
   	GP1_driver = new XboxController(C_DRIVER_USB);
 
+	_drivetrain = new
+
 }
 void Robot::RobotPeriodic() {}
 
@@ -28,7 +30,11 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
 }
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic() {
+
+#ifdef DRIVE_MODE_ARCADE
+
+}
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}
