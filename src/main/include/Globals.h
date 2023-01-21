@@ -10,7 +10,7 @@
 
 #include "FRC3484_Lib/utils/SC_Shuffleboard.h"
 
-static SC::SC_SBBuilder *DebugDash = new SC::SC_SBBuilder("X22 - Debug");
-static SC::SC_SBBuilder *DriverDash = new SC::SC_SBBuilder("X22 - Driver");
+static SC::SC_SBBuilder *DebugDash = new SC::SC_SBBuilder("X23 - Debug");
+static SC::SC_SBBuilder *DriverDash = new SC::SC_SBBuilder("X23 - Driver");
 
 #endif // GLOBALS_H

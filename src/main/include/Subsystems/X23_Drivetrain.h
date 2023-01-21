@@ -12,8 +12,7 @@ public:
     X23_Drivetrain( std::tuple<int, int> chFR, 
                 std::tuple<int, int> chFL, 
                 std::tuple<int, int> chBR, 
-                std::tuple<int, int> chBL,
-                int ch_shift);
+                std::tuple<int, int> chBL,);
 
     ~X23_Drivetrain();
 
@@ -49,11 +48,11 @@ private:
     SC::DriveMode defaultMode = SC::DriveMode::MECANUM;
     SC::DriveMode activeMode = SC::DriveMode::DEFAULT;
 
-    // Declare the master and slave motor controllers.
-    ctre::phoenix::motorcontrol::can::TalonSRX *FR, *FRs;
-    ctre::phoenix::motorcontrol::can::TalonSRX *FL, *FLs;
-    ctre::phoenix::motorcontrol::can::TalonSRX *BR, *BRs;
-    ctre::phoenix::motorcontrol::can::TalonSRX *BL, *BLs;
+    // Declare all four master controllers
+    ctre::phoenix::motorcontrol::can::TalonSRX *FR;
+    ctre::phoenix::motorcontrol::can::TalonSRX *FL;
+    ctre::phoenix::motorcontrol::can::TalonSRX *BR;
+    ctre::phoenix::motorcontrol::can::TalonSRX *BL;
 
 };
 
