@@ -12,8 +12,7 @@ public:
     X23_Drivetrain( std::tuple<int, int> chFR, 
                 std::tuple<int, int> chFL, 
                 std::tuple<int, int> chBR, 
-                std::tuple<int, int> chBL,
-                int ch_shift);
+                std::tuple<int, int> chBL,);
 
     ~X23_Drivetrain();
 

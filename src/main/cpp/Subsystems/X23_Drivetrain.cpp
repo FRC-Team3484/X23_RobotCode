@@ -11,7 +11,8 @@ using namespace ctre::phoenix::motorcontrol::can;
 class X23_Drivetrain
 {
 public:
-    X23_Drivetrain::X23_Drivetrain(inch_t trackwidth, feet_per_second_t MaxTangVel, degrees_per_second_t MaxRotVel,
+    X23_Drivetrain::X23_Drivetrain(inc
+    h_t trackwidth, feet_per_second_t MaxTangVel, degrees_per_second_t MaxRotVel,
                         std::tuple<int, int> LeftIDs, std::tuple<int, int> RightIDs, SC_gripdrive)
     ~X23_Drivetrain():
 private: 
