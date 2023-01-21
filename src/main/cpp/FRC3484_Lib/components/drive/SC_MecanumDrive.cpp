@@ -28,7 +28,7 @@ void SC_MecanumDrive::DriveCartesian(double X, double Y, double zRotation, degre
 
     // Initialize the input vector normalized against the configured
     // max wheel speed
-    Vector2d velVec(X * maxWheelSpeed.to<double>(), 
+    Translation2d velVec(X * maxWheelSpeed.to<double>(), 
                     Y * maxWheelSpeed.to<double>());
 
     // Apply the gyro angle to rotate the velocity input to the robot's
@@ -38,7 +38,7 @@ void SC_MecanumDrive::DriveCartesian(double X, double Y, double zRotation, degre
     // Y' = X * sin(gyro) + Y * cos(gyro)
     // Note: the Y is inverted in the above equations because the Y input
     // from the controller has +Y pointing downward
-    velVec.Rotate(gyro.value());
+    RotateBy(gyro.value());
 
     double vel[4] = {
     /* FL */  velVec.x + velVec.y + zRotation,
