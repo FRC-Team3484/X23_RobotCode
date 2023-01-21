@@ -1,6 +1,7 @@
-#include "FRC3484_Lib/subsystems/SC_MecanumDrive.h"
+#include "FRC3484_Lib/components/drive/SC_MecanumDrive.h"
 #include "FRC3484_Lib/utils/SC_Functions.h"
 #include "units/math.h"
+#include "frc/geometry/Translation2d.h"
 
 using namespace ctre::phoenix::motorcontrol::can;
 using namespace ctre::phoenix::motorcontrol;
@@ -10,17 +11,17 @@ using namespace frc;
 using namespace SC;
 
 
-SC_MecanumDrive::SC_MecanumDrive()
+SC::SC_MecanumDrive::SC_MecanumDrive()
 {
     wheelSpeed_SP = MecanumDriveWheelSpeeds{0_mps, 0_mps, 0_mps, 0_mps };
 }
 
-SC_MecanumDrive::~SC_MecanumDrive()
+SC::SC_MecanumDrive::~SC_MecanumDrive()
 {
 
 }
 
-void SC_MecanumDrive::DriveCartesian(double X, double Y, double zRotation, degree_t gyro)
+void SC::SC_MecanumDrive::DriveCartesian(double X, double Y, double zRotation, degree_t gyro)
 {
     // Correct gyro input to be between -pi and pi (-180 to 180 deg)
     radian_t phi = gyro >  180_deg ? gyro - 360_deg : gyro;
@@ -28,8 +29,10 @@ void SC_MecanumDrive::DriveCartesian(double X, double Y, double zRotation, degre
 
     // Initialize the input vector normalized against the configured
     // max wheel speed
-    Translation2d velVec(X * maxWheelSpeed.to<double>(), 
-                    Y * maxWheelSpeed.to<double>());
+    Translation2d velVec = Translation2d{units::meter_t{X}, units::meter_t{Y}}.RotateBy(Rotation2d{-gyro});
+
+    // Vector2d velVec(X * maxWheelSpeed.to<double>(), 
+    //                Y * maxWheelSpeed.to<double>());
 
     // Apply the gyro angle to rotate the velocity input to the robot's
     // coordinate plane
@@ -38,13 +41,13 @@ void SC_MecanumDrive::DriveCartesian(double X, double Y, double zRotation, degre
     // Y' = X * sin(gyro) + Y * cos(gyro)
     // Note: the Y is inverted in the above equations because the Y input
     // from the controller has +Y pointing downward
-    RotateBy(gyro.value());
+    //velVec.Rotate(gyro.value());
 
     double vel[4] = {
-    /* FL */  velVec.x + velVec.y + zRotation,
-    /* FR */ -velVec.x + velVec.y - zRotation,
-    /* BL */ -velVec.x + velVec.y + zRotation,
-    /* BR */  velVec.x + velVec.y - zRotation,
+    /* FL */  velVec.X().value() + velVec.Y().value() + zRotation,
+    /* FR */ -velVec.X().value() + velVec.Y().value() - zRotation,
+    /* BL */ -velVec.X().value() + velVec.Y().value() + zRotation,
+    /* BR */  velVec.X().value() + velVec.Y().value() - zRotation,
     };
 
     wheelSpeed_SP = MecanumDriveWheelSpeeds{

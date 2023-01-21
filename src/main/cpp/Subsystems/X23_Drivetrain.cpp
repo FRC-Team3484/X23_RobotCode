@@ -9,7 +9,7 @@ using namespace ctre::phoenix::motorcontrol;
 using namespace ctre::phoenix::motorcontrol::can;
 
 
-X20B_Drivetrain::X20B_Drivetrain()
+X23_Drivetrain::X23_Drivetrain()
 {
     md = nullptr;
     shifter = nullptr;
@@ -27,7 +27,7 @@ X20B_Drivetrain::X20B_Drivetrain()
     BLs = nullptr;
 }
 
-X20B_Drivetrain::X20B_Drivetrain( std::tuple<int, int> chFR, 
+X23_Drivetrain::X23_Drivetrain( std::tuple<int, int> chFR, 
                         std::tuple<int, int> chFL, 
                         std::tuple<int, int> chBR, 
                         std::tuple<int, int> chBL, 
@@ -134,7 +134,7 @@ X20B_Drivetrain::X20B_Drivetrain( std::tuple<int, int> chFR,
     if(BL != nullptr) { BL->SetNeutralMode(NeutralMode::Coast); }
 }
 
-X20B_Drivetrain::~X20B_Drivetrain()
+X23_Drivetrain::~X23_Drivetrain()
 {
     if(md != nullptr) { delete md; md = nullptr; }
     if(shifter != nullptr) { delete shifter; shifter = nullptr; }
@@ -151,7 +151,7 @@ X20B_Drivetrain::~X20B_Drivetrain()
 
 }
 
-void X20B_Drivetrain::Drive(double joystick_x, double joystick_y, double gyro, bool shift)
+void X23_Drivetrain::Drive(double joystick_x, double joystick_y, double gyro, bool shift)
 {
     if(shifter != nullptr)
         shifter->Set(shift);
@@ -171,7 +171,7 @@ void X20B_Drivetrain::Drive(double joystick_x, double joystick_y, double gyro, b
     }    
 }
 
-void X20B_Drivetrain::DriveAuto(double magnitude, double angle, double heading, bool shift)
+void X23_Drivetrain::DriveAuto(double magnitude, double angle, double heading, bool shift)
 {
     if(shifter != nullptr)
         shifter->Set(shift);
@@ -188,7 +188,7 @@ void X20B_Drivetrain::DriveAuto(double magnitude, double angle, double heading, 
     }
 }
 
-void X20B_Drivetrain::DriveDirect(double rawFR, double rawFL, double rawBR, double rawBL)
+void X23_Drivetrain::DriveDirect(double rawFR, double rawFL, double rawBR, double rawBL)
 {
     if(FR != nullptr) { FR->Set(ControlMode::PercentOutput, F_Limit(-1.0, 1.0, rawFR)); }
     if(FL != nullptr) { FL->Set(ControlMode::PercentOutput, F_Limit(-1.0, 1.0, rawFL)); }
@@ -196,7 +196,7 @@ void X20B_Drivetrain::DriveDirect(double rawFR, double rawFL, double rawBR, doub
     if(BL != nullptr) { BL->Set(ControlMode::PercentOutput, F_Limit(-1.0, 1.0, rawBL)); }
 }
 
-void X20B_Drivetrain::StopMotors()
+void X23_Drivetrain::StopMotors()
 {
     if(FR != nullptr) { FR->Set(ControlMode::PercentOutput, 0.0); }
     if(FL != nullptr) { FL->Set(ControlMode::PercentOutput, 0.0); }
@@ -204,7 +204,7 @@ void X20B_Drivetrain::StopMotors()
     if(BL != nullptr) { BL->Set(ControlMode::PercentOutput, 0.0); }
 }
 
-void X20B_Drivetrain::_setOutputs()
+void X23_Drivetrain::_setOutputs()
 {
     if(md != nullptr)
     {

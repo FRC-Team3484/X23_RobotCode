@@ -19,6 +19,7 @@ SC_PID::SC_PID()
     this->SCR_Deriv(0.0, 100.0);
     this->SCR_Setpoint(-100.0, 100.0);
     this->SCR_Process(-100.0, 100.0);
+    this->SCR_Control(0.0, 100.0);
 
     this->DervA = 0.0;
     this->DervB = 0.0;
@@ -41,6 +42,7 @@ SC_PID::SC_PID(SC_PIDConstants PIDc)
     this->SCR_Deriv(0.0, 100.0);
     this->SCR_Setpoint(-100.0, 100.0);
     this->SCR_Process(-100.0, 100.0);
+    this->SCR_Control(0.0, 100.0);
 
     this->DervA = 0.0;
     this->DervB = 0.0;
@@ -64,6 +66,7 @@ SC_PID::SC_PID(SC_PIDConstants PIDc, SC_PID_AW_MODE awMode)
     this->SCR_Deriv(0.0, 100.0);
     this->SCR_Setpoint(-100.0, 100.0);
     this->SCR_Process(-100.0, 100.0);
+    this->SCR_Control(0.0, 100.0);
 
     this->DervA = 0.0;
     this->DervB = 0.0;
@@ -139,6 +142,10 @@ void SC_PID::SetSPLimits(SC_Range<double> SPR) { SetSPLimits(SPR.Val_min, SPR.Va
 void SC_PID::SetPVLimits(double minPV, double maxPV) { this->SCR_Process(minPV, maxPV); }
 
 void SC_PID::SetPVLimits(SC_Range<double> PVR) { SetPVLimits(PVR.Val_min, PVR.Val_max); }
+
+void SC_PID::SetCVLimits(double minCV, double maxCV) { this->SCR_Process(minCV, maxCV); }
+
+void SC_PID::SetCVLimits(SC_Range<double> CVR) { SetPVLimits(CVR.Val_min, CVR.Val_max); }
 
 void SC_PID::SetILimits(double minI, double maxI) { this->SCR_Integral(minI, maxI); }
 
@@ -237,15 +244,15 @@ double SC_PID::Calculate()
             P = Kp * err;
 
             // Calculate the Integral term. 
-            I = F_Limit(0.0, 100.0, I + (Ki * err * dt));// + ((CVfb - CV) * Kw);
+            I = F_Limit(this->SCR_Integral, I + (Ki * err * dt));// + ((CVfb - CV) * Kw);
 
             // Calculate the Derivative term
-            D = F_Limit(0.0, 100.0, (DervA * D) + (DervB * ((Kd * (err - lastErr)) / dt)));
+            D = F_Limit(this->SCR_Deriv, (DervA * D) + (DervB * ((Kd * (err - lastErr)) / dt)));
 
             lastErr = err;
 
             // Calculate the output
-            CV = F_Limit(0.0, 100.0, P + I); //(SP * Kf) + P + I + D);
+            CV = F_Limit(this->SCR_Control, P + I); //(SP * Kf) + P + I + D);
             
             // Used to hold the CV in manual mode
             trackerCV = CV;
@@ -267,7 +274,7 @@ double SC_PID::Calculate()
                 trackerCV = F_Limit(trackerCV, manualCV, trackerCV - manRate);
             }
 
-            trackerCV = F_Limit(0.0, 100.0, trackerCV);
+            trackerCV = F_Limit(this->SCR_Control, trackerCV);
 
             // Set the integral value to the CV/
             I = trackerCV;
