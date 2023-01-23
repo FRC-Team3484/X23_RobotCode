@@ -8,12 +8,12 @@ using namespace frc;
 using namespace nt;
 using namespace units::length;
 using namespace units::velocity;
-using namespace units::angular_velocity;0
-.using namespace ctre::phoenix::motorcontrol;
-u00sing namespace ctre::phoenix::motorcontrol::can;
+using namespace units::angular_velocity;
+using namespace ctre::phoenix::motorcontrol;
+using namespace ctre::phoenix::motorcontrol::can;
     
 X23_Drivetrain::X23_Drivetrain(inch_t trackwidth, feet_per_second_t MaxTangVel, degrees_per_second_t MaxRotVel,
-                        std::tuple<int, int> LeftIDs, std::tuple<int, int> RightIDs, solenoid )
+                        std::tuple<int, int> LeftIDs, std::tuple<int, int> RightIDs, shift)
 ~X23_Drivetrain():
  
  .0000000000000000000
@@ -36,7 +36,7 @@ X23_Drivetrain::X23_Drivetrain()
                         std::tuple<int, int> chBR, 
                         std::tuple<int, int> chBL, 
                         int ch_shift)
-    {
+    {;
         md = new SC_MecanumDrive();
         shifter = new Solenoid(0, frc::PneumaticsModuleType::CTREPCM, ch_shift);
 
