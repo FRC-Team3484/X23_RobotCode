@@ -177,7 +177,7 @@ const double C_EJECT_VEL_OUT			= 0.40 * C_LAUNCH_MAX_WHEEL_VEL;
 /*======================*/
 #define C_DRIVER_USB                 0
 #define C_GAMEDEV_USB                1
-
+#define GP1_driver
 // Game Device control input scheme 
 // #define GD_SCHEME_JOYSTICK	/* Logitech Extreme-3D Pro Joystick Scheme */
 #define GD_SCHEME_XBOX			/* Xbox Controller Scheme */

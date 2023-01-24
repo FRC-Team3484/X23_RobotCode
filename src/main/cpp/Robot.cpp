@@ -14,7 +14,6 @@
 #include "networktables/NetworkTableInstance.h"
 
 using namespace frc;
-using namespace SC;
 
 void Robot::RobotInit() 
 {
