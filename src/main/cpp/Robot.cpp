@@ -19,7 +19,7 @@ void Robot::RobotInit()
 {
   	GP1_driver = new XboxController(C_DRIVER_USB);
 
-	_drivetrain = new
+	_drivetrain = new X23_Drivetrain();
 
 }
 void Robot::RobotPeriodic() {}
@@ -43,6 +43,7 @@ void Robot::TestPeriodic() {}
 
 void Robot::SimulationInit() {}
 void Robot::SimulationPeriodic() {}
+#endif
 
 #ifndef RUNNING_FRC_TESTS
 int main() {

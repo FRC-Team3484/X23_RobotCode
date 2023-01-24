@@ -342,6 +342,7 @@ const double C_EJECT_VEL_OUT			= 0.40 * C_LAUNCH_MAX_WHEEL_VEL;
 /*===================*/
 /* General Constants */
 /*===================*/
+#define _drivetrain
 #define C_SCAN_TIME					0.020_s
 #define C_SCAN_TIME_SEC				C_SCAN_TIME.value() // Seconds
 
