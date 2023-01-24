@@ -5,7 +5,6 @@
 
 using namespace SC;
 using namespace frc;
-using namespace nt;
 using namespace units::length;
 using namespace units::velocity;
 using namespace units::angular_velocity;
@@ -171,4 +170,4 @@ X23_Drivetrain::X23_Drivetrain()
             if(BL != nullptr) { BL->Set(ControlMode::PercentOutput, md->GetWheelOutput(REAR_LEFT)); }
         }
     }
-};
+}
