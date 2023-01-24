@@ -2,6 +2,7 @@
 #include "units/angle.h"
 #include "FRC3484_Lib/utils/SC_Functions.h"
 #include "Constants.h"
+#include "tuple"
 
 using namespace SC;
 using namespace frc;
@@ -12,10 +13,9 @@ using namespace ctre::phoenix::motorcontrol;
 using namespace ctre::phoenix::motorcontrol::can;
     
 X23_Drivetrain::X23_Drivetrain(inch_t trackwidth, feet_per_second_t MaxTangVel, degrees_per_second_t MaxRotVel,
-                        std::tuple<int, int> LeftIDs, std::tuple<int, int> RightIDs, shift)
-~X23_Drivetrain():
- 
- .0000000000000000000
+                        std::tuple<int, int> LeftIDs, std::tuple<int, int> RightIDs)
+{
+~X23_Drivetrain();
 
 X23_Drivetrain::X23_Drivetrain()
 {
