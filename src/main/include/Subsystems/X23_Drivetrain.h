@@ -8,11 +8,11 @@
 class X23_Drivetrain
 {
 public:
-    X23_Drivetrain();
-    X23_Drivetrain( std::tuple<int, int> chFR, 
+    X23_Drivetrain(std::tuple<int, int> chFR, 
                 std::tuple<int, int> chFL, 
                 std::tuple<int, int> chBR, 
-                std::tuple<int, int> chBL,);
+                std::tuple<int, int> chBL,
+                int ch_shift);
 
     ~X23_Drivetrain();
 

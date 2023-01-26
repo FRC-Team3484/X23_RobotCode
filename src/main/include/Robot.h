@@ -3,29 +3,45 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #pragma once
-
+#include "constants.h"
+#include "Subsystems/X23_Drivetrain.h"
 #include <frc/TimedRobot.h>
+#include <frc2/command/Command.h>
+
+#include "FRC3484_Lib/utils/SC_Datatypes.h"
+
+#include <frc/XboxController.h>
+
+#include <networktables/NetworkTableEntry.h>
+#include <networktables/NetworkTableValue.h>
+
+using namespace frc;
 
 class Robot : public frc::TimedRobot {
  public:
   void RobotInit() override;
   void RobotPeriodic() override;
-
-  void AutonomousInit() override;
-  void AutonomousPeriodic() override;
-
-  void TeleopInit() override;
-  void TeleopPeriodic() override;
-
   void DisabledInit() override;
   void DisabledPeriodic() override;
-
-  void TestInit() override;
+  void AutonomousInit() override;
+  void AutonomousPeriodic() override;
+  void TeleopInit() override;
+  void TeleopPeriodic() override;
   void TestPeriodic() override;
 
-  void SimulationInit() override;
-  void SimulationPeriodic() override;
+ private:
+  // Have it null by default so that if testing teleop it
+  // doesn't have undefined behavior and potentially crash.
+  frc2::Command* m_autonomousCommand = nullptr;
 
-private:
+  X23_Drivetrain *x23_drive;
 
+  SC::SC_Range<double> Throttle_Range_Normal = {-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND};
+  SC::SC_Range<double> Throttle_Range_Fine = {-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE};
+
+  double throttleDemand, turnDemand;
+  double forceLowGear;
+
+  frc::XboxController  *GP1_Driver;// GP = Gamepad
+  frc::GenericHID      *BB_GameDevice;  
 };
