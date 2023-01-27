@@ -12,7 +12,7 @@ public:
                 std::tuple<int, int> chFL, 
                 std::tuple<int, int> chBR, 
                 std::tuple<int, int> chBL,
-                int ch_shift);
+                SC::SC_Solenoid ch_shift);
 
     ~X23_Drivetrain();
 
@@ -41,6 +41,7 @@ public:
 
 private:
     void _setOutputs();
+    void _InitMotor(ctre::phoenix::motorcontrol::can::WPI_TalonSRX* Motor, bool Invert, ctre::phoenix::motorcontrol::can::WPI_TalonSRX* Master);
 
     SC::SC_MecanumDrive *md;
     frc::Solenoid *shifter;
@@ -49,10 +50,10 @@ private:
     SC::DriveMode activeMode = SC::DriveMode::DEFAULT;
 
     // Declare all four master controllers
-    ctre::phoenix::motorcontrol::can::TalonSRX *FR;
-    ctre::phoenix::motorcontrol::can::TalonSRX *FL;
-    ctre::phoenix::motorcontrol::can::TalonSRX *BR;
-    ctre::phoenix::motorcontrol::can::TalonSRX *BL;
+    ctre::phoenix::motorcontrol::can::WPI_TalonSRX *FR, *FR_Slave;
+    ctre::phoenix::motorcontrol::can::WPI_TalonSRX *FL, *FL_Slave;
+    ctre::phoenix::motorcontrol::can::WPI_TalonSRX *BR, *BR_Slave;
+    ctre::phoenix::motorcontrol::can::WPI_TalonSRX *BL, *BL_Slave;
 
 };
 

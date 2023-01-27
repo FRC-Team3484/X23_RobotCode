@@ -17,7 +17,7 @@ using namespace frc;
 
 void Robot::RobotInit() 
 {
-  	GP1_driver = new XboxController(C_DRIVER_USB);
+  	GP1_Driver = new XboxController(C_DRIVER_USB);
 
 	_drivetrain = new X23_Drivetrain();
 
@@ -27,23 +27,11 @@ void Robot::RobotPeriodic() {}
 void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
-void Robot::TeleopInit() {
-}
-void Robot::TeleopPeriodic() {
-
-#ifdef DRIVE_MODE_ARCADE
-
-}
+void Robot::TeleopInit() {}
+void Robot::TeleopPeriodic() {}
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}
-
-void Robot::TestInit() {}
-void Robot::TestPeriodic() {}
-
-void Robot::SimulationInit() {}
-void Robot::SimulationPeriodic() {}
-#endif
 
 #ifndef RUNNING_FRC_TESTS
 int main() {

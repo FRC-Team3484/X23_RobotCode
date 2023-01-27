@@ -17,30 +17,34 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
                     std::tuple<int, int> chFL, 
                     std::tuple<int, int> chBR, 
                     std::tuple<int, int> chBL, 
-                    int ch_shift)
+                    SC_Solenoid ch_shift)
 {
     md = new SC_MecanumDrive();
-    md->SetMaxWheelSpeed(C_LO_GEAR_MAX_SPEED);
-    shifter = new Solenoid(0, frc::PneumaticsModuleType::CTREPCM, ch_shift);
+    md->SetMaxWheelSpeed(C_GEAR_MAX_SPEED);
+    shifter = new Solenoid(ch_shift.CtrlID, ch_shift.CtrlType, ch_shift.Channel);
 
     int sCh = -1;
 
     // Initialize front right wheel
     if(chFR != C_BLANK_IDS) 
     { 
-        FR = new TalonSRX(std::get<0>(chFR));
+        FR = new WPI_TalonSRX(std::get<0>(chFR));
         sCh = std::get<1>(chFR);
+
+        if(sCh != C_DISABLED_CHANNEL) { FR_Slave = new WPI_TalonSRX(sCh); _InitMotor(FL_Slave, true, FR); }
+		else { FR_Slave = nullptr; }
     } 
     else
     {
         FR = nullptr;
+        FR_Slave = nullptr; 
     }
 
 
     // Initialize front left wheel
     if(chFL != C_BLANK_IDS) 
     { 
-        FR = new TalonSRX(std::get<0>(chFL));
+        FR = new WPI_TalonSRX(std::get<0>(chFL));
     
         sCh = std::get<1>(chFL);
     }
@@ -52,7 +56,7 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
     // Initialize back right wheel
     if(chBR != C_BLANK_IDS) 
     { 
-        BR = new TalonSRX(std::get<0>(chBR));
+        BR = new WPI_TalonSRX(std::get<0>(chBR));
 
         sCh = std::get<1>(chBR);
     } 
@@ -64,7 +68,7 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
     // Initialize back left wheel
     if(chBL != C_BLANK_IDS) 
     { 
-        BL = new TalonSRX(std::get<0>(chBL));
+        BL = new WPI_TalonSRX(std::get<0>(chBL));
 
         sCh = std::get<1>(chBL);
     } 
@@ -73,10 +77,10 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
         BL = nullptr;
     }
 
-    if(FR != nullptr) { FR->SetNeutralMode(NeutralMode::Coast); }
-    if(FL != nullptr) { FL->SetNeutralMode(NeutralMode::Coast); }
-    if(BR != nullptr) { BR->SetNeutralMode(NeutralMode::Coast); }
-    if(BL != nullptr) { BL->SetNeutralMode(NeutralMode::Coast); }
+    if(FR != nullptr) { FR->SetNeutralMode(NeutralMode::Coast); FR_Slave->SetNeutralMode(NeutralMode::Coast);}
+    if(FL != nullptr) { FL->SetNeutralMode(NeutralMode::Coast); FL_Slave->SetNeutralMode(NeutralMode::Coast);}
+    if(BR != nullptr) { BR->SetNeutralMode(NeutralMode::Coast); BR_Slave->SetNeutralMode(NeutralMode::Coast);}
+    if(BL != nullptr) { BL->SetNeutralMode(NeutralMode::Coast); BL_Slave->SetNeutralMode(NeutralMode::Coast);}
 }
 
 X23_Drivetrain::~X23_Drivetrain()
@@ -88,6 +92,10 @@ X23_Drivetrain::~X23_Drivetrain()
     if(FL != nullptr) { delete FL; FL = nullptr; }
     if(BR != nullptr) { delete BR; BR = nullptr; }
     if(BL != nullptr) { delete BL; BL = nullptr; }
+    if(FR_Slave != nullptr) { delete FR_Slave; FR_Slave = nullptr; }
+    if(FL_Slave != nullptr) { delete FL_Slave; FL_Slave = nullptr; }
+    if(BR_Slave != nullptr) { delete BR_Slave; BR_Slave = nullptr; }
+    if(BL_Slave != nullptr) { delete BL_Slave; BL_Slave = nullptr; }
 
 }
 
@@ -127,7 +135,10 @@ void X23_Drivetrain::DriveAuto(double magnitude, double angle, double heading, b
     }
 }
 
-void Drivetrain::_InitMotor(WPI_TalonSRX* Motor, bool Invert, WPI_TalonSRX* Master);
+void X23_Drivetrain::_InitMotor(WPI_TalonSRX* Motor, bool Invert, WPI_TalonSRX* Master){
+
+
+}
 
 void X23_Drivetrain::DriveDirect(double rawFR, double rawFL, double rawBR, double rawBL)
 {
