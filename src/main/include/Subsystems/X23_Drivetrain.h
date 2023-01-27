@@ -3,7 +3,7 @@
 
 #include "FRC3484_Lib/components/drive/SC_MecanumDrive.h"
 #include "frc/Solenoid.h"
-#include "ctre/phoenix/motorcontrol/can/TalonSRX.h"
+#include "ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h"
 
 class X23_Drivetrain
 {

@@ -127,6 +127,8 @@ void X23_Drivetrain::DriveAuto(double magnitude, double angle, double heading, b
     }
 }
 
+void Drivetrain::_InitMotor(WPI_TalonSRX* Motor, bool Invert, WPI_TalonSRX* Master);
+
 void X23_Drivetrain::DriveDirect(double rawFR, double rawFL, double rawBR, double rawBL)
 {
     if(FR != nullptr) { FR->Set(ControlMode::PercentOutput, F_Limit(-1.0, 1.0, rawFR)); }
