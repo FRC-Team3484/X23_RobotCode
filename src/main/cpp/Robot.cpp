@@ -85,7 +85,7 @@ void Robot::TeleopPeriodic()
 		// X_Demand = GP1_Driver->GetLeftX();
 	}
 
-	drivetrain_mode = GP1_Driver->GetAButton() || GP1_Driver->GetRightBumper();
+	drivetrain_mode = GP1_Driver->GetAButton();
 
 	if(Gyroscope != nullptr)
 	{

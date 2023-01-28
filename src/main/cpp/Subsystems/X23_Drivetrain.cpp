@@ -116,6 +116,10 @@ void X23_Drivetrain::Drive(double direction_x, double direction_y, double rotati
 
     if(md != nullptr)
     {
+        if (shift)
+        {
+            direction_x = 0;
+        }
         md->DriveCartesian(direction_x, direction_y, 0.0, 
                             units::make_unit<units::degree_t>(gyro));
         
