@@ -24,10 +24,14 @@
 /*==========*/
 /* CAN ID's */
 /*==========*/
-#define C_FX_LEFT_MASTER			1
-#define C_FX_LEFT_SLAVE				2
-#define C_FX_RIGHT_MASTER			3
-#define C_FX_RIGHT_SLAVE			4
+#define C_FX_FL_MASTER				1
+#define C_FX_FL_SLAVE				-1
+#define C_FX_FR_MASTER				2
+#define C_FX_FR_SLAVE				-1
+#define C_FX_BL_MASTER				3
+#define C_FX_BL_SLAVE				-1
+#define C_FX_BR_MASTER				4
+#define C_FX_BR_SLAVE				-1
 #define C_PCM						30
 #define C_PDP						40
 

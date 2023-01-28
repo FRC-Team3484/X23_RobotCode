@@ -31,7 +31,7 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
         FR = new WPI_TalonSRX(std::get<0>(chFR));
         sCh = std::get<1>(chFR);
 
-        if(sCh != C_DISABLED_CHANNEL) { FR_Slave = new WPI_TalonSRX(sCh); _InitMotor(FL_Slave, true, FR); }
+        if(sCh != C_DISABLED_CHANNEL) { FR_Slave = new WPI_TalonSRX(sCh); _InitMotor(FR_Slave, true, FR); }
 		else { FR_Slave = nullptr; }
     } 
     else
@@ -44,13 +44,16 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
     // Initialize front left wheel
     if(chFL != C_BLANK_IDS) 
     { 
-        FR = new WPI_TalonSRX(std::get<0>(chFL));
+        FL = new WPI_TalonSRX(std::get<0>(chFL));
     
         sCh = std::get<1>(chFL);
+        if(sCh != C_DISABLED_CHANNEL) { FL_Slave = new WPI_TalonSRX(sCh); _InitMotor(FL_Slave, true, FL); }
+		else { FL_Slave = nullptr; }
     }
     else
     {
         FL = nullptr;
+        FL_Slave = nullptr;
     }
 
     // Initialize back right wheel
@@ -59,10 +62,13 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
         BR = new WPI_TalonSRX(std::get<0>(chBR));
 
         sCh = std::get<1>(chBR);
+        if(sCh != C_DISABLED_CHANNEL) { BR_Slave = new WPI_TalonSRX(sCh); _InitMotor(BR_Slave, true, BR); }
+		else { BR_Slave = nullptr; }
     } 
     else
     {
         BR = nullptr;
+        BR_Slave = nullptr;
     }
 
     // Initialize back left wheel
@@ -71,10 +77,13 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
         BL = new WPI_TalonSRX(std::get<0>(chBL));
 
         sCh = std::get<1>(chBL);
+        if(sCh != C_DISABLED_CHANNEL) { BL_Slave = new WPI_TalonSRX(sCh); _InitMotor(BL_Slave, true, BL); }
+		else { BL_Slave = nullptr; }
     } 
     else
     {
         BL = nullptr;
+        BL_Slave = nullptr;
     }
 
     if(FR != nullptr) { FR->SetNeutralMode(NeutralMode::Coast); FR_Slave->SetNeutralMode(NeutralMode::Coast);}
@@ -99,7 +108,7 @@ X23_Drivetrain::~X23_Drivetrain()
 
 }
 
-void X23_Drivetrain::Drive(double joystick_x, double joystick_y, double gyro, bool shift)
+void X23_Drivetrain::Drive(double direction_x, double direction_y, double rotation_z, double gyro, bool shift)
 {
     // octocanum shifter
     if(shifter != nullptr)
@@ -107,7 +116,7 @@ void X23_Drivetrain::Drive(double joystick_x, double joystick_y, double gyro, bo
 
     if(md != nullptr)
     {
-        md->DriveCartesian(joystick_x, joystick_y, 0.0, 
+        md->DriveCartesian(direction_x, direction_y, 0.0, 
                             units::make_unit<units::degree_t>(gyro));
         
         _setOutputs();
@@ -125,7 +134,7 @@ void X23_Drivetrain::DriveAuto(double magnitude, double angle, double heading, b
 
     if(md != nullptr)
     {
-        md->SetMaxWheelSpeed(shift ? C_LO_GEAR_MAX_SPEED : C_HI_GEAR_MAX_SPEED);
+        
 
         md->DrivePolar(magnitude,
                     units::make_unit<units::degree_t>(angle), 
@@ -136,6 +145,17 @@ void X23_Drivetrain::DriveAuto(double magnitude, double angle, double heading, b
 }
 
 void X23_Drivetrain::_InitMotor(WPI_TalonSRX* Motor, bool Invert, WPI_TalonSRX* Master){
+    if(Motor != NULL)
+	{
+		Motor->SetInverted(Invert);
+		Motor->SetNeutralMode(NeutralMode::Brake);
+		Motor->ConfigOpenloopRamp(2);
+		Motor->ConfigClosedloopRamp(0);
+		Motor->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
+		Motor->SetSelectedSensorPosition(0);
+
+		if(Master != NULL) { Motor->Follow(*Master); }
+	}
 
 
 }
