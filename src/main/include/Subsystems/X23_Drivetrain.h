@@ -16,7 +16,7 @@ public:
 
     ~X23_Drivetrain();
 
-    void Drive(double joystick_x, double joystick_y, double gyro, bool shift);
+    void Drive(double direction_x, double direction_y, double rotation_z, double gyro, bool shift);
 
     void DriveAuto(double magnitude, double angle, double heading, bool shift);
     

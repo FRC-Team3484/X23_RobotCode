@@ -16,16 +16,17 @@
 
 using namespace frc;
 using namespace SC;
-
+using namespace ctre;
 void Robot::RobotInit() 
 {
 	GP1_Driver = new XboxController(/*USB Port*/ 0);
 	BB_GameDevice = new GenericHID(/*USB Port*/ 1);
-
-  	x23_drive = new X23_Drivetrain(C_X22_TRACK_WIDTH, C_HI_GEAR_MAX_SPEED, 90_deg_per_s,
-                                   std::make_tuple<int, int>(C_FX_LEFT_MASTER, C_FX_LEFT_SLAVE),
-                                   std::make_tuple<int, int>(C_FX_RIGHT_MASTER, C_FX_RIGHT_SLAVE),
-                                   SC::SC_DoubleSolenoid{C_PCM, frc::PneumaticsModuleType::REVPH, C_DRIVE_SOL, 1});
+	Gyroscope = new phoenix::sensors::Pigeon2(30);
+  	_drivetrain = new X23_Drivetrain(std::make_tuple<int, int>(C_FX_FL_MASTER, C_FX_FL_SLAVE),
+                                   std::make_tuple<int, int>(C_FX_FR_MASTER, C_FX_FR_SLAVE),
+								   std::make_tuple<int, int>(C_FX_BL_MASTER, C_FX_BL_SLAVE),
+                                   std::make_tuple<int, int>(C_FX_BR_MASTER, C_FX_BR_SLAVE),
+                                   SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::REVPH, C_DRIVE_SOL});
 }
 /**
  * This function is called every robot packet, no matter the mode. Use
@@ -56,17 +57,7 @@ void Robot::AutonomousInit() {}
 
 void Robot::AutonomousPeriodic() {}
 
-void Robot::TeleopInit() {
-  // This makes sure that the autonomous stops running when
-  // teleop starts running. If you want the autonomous to
-  // continue until interrupted by another command, remove
-  // this line or comment it out.
-	if (m_autonomousCommand != nullptr) {
-		m_autonomousCommand->Cancel();
-		m_autonomousCommand = nullptr;
-	}
-
-}
+void Robot::TeleopInit() {}
 
 /**
  * This function is called periodically during operator control.
@@ -80,23 +71,38 @@ void Robot::TeleopPeriodic()
 	if(GP1_Driver->GetRightBumper())
 	{
 		// Fine control mode; Scales driver input to smaller range for finer control
-		throttleDemand = F_Scale(-100.0, 100.0, Throttle_Range_Fine, -GP1_Driver->GetLeftY());
-		turnDemand = F_Scale(-100.0, 100.0, Throttle_Range_Fine, GP1_Driver->GetLeftX());
+		Y_Demand = F_Scale(-100.0, 100.0, Throttle_Range_Fine, -GP1_Driver->GetLeftY());
+		X_Demand = F_Scale(-100.0, 100.0, Throttle_Range_Fine, GP1_Driver->GetLeftX());
+		Z_Demand = F_Scale(-100.0, 100.0, Throttle_Range_Fine, GP1_Driver->GetRightX());
 	}
 	else
 	{
 		// Normal control mode
-		throttleDemand = F_Scale(-100.0, 100.0, Throttle_Range_Normal, -GP1_Driver->GetLeftY());
-		turnDemand = F_Scale(-100.0, 100.0, Throttle_Range_Normal, GP1_Driver->GetLeftX());
-		// throttleDemand = -GP1_Driver->GetLeftY();
-		// turnDemand = GP1_Driver->GetLeftX();
+		Y_Demand = F_Scale(-100.0, 100.0, Throttle_Range_Normal, -GP1_Driver->GetLeftY());
+		X_Demand = F_Scale(-100.0, 100.0, Throttle_Range_Normal, GP1_Driver->GetLeftX());
+		Z_Demand = F_Scale(-100.0, 100.0, Throttle_Range_Normal, GP1_Driver->GetRightX());
+		// Y_Demand = -GP1_Driver->GetLeftY();
+		// X_Demand = GP1_Driver->GetLeftX();
 	}
 
-	forceLowGear = GP1_Driver->GetAButton() || GP1_Driver->GetRightBumper();
+	drivetrain_mode = GP1_Driver->GetAButton();
 
-	x23_drive->Drive(SC::F_Deadband(throttleDemand, C_DRIVE_DEADBAND),
-					 SC::F_Deadband(turnDemand, C_DRIVE_DEADBAND),
-                   	 forceLowGear);
+	if(Gyroscope != nullptr)
+	{
+		_drivetrain->Drive(SC::F_Deadband(X_Demand, C_DRIVE_DEADBAND),
+					 SC::F_Deadband(Y_Demand, C_DRIVE_DEADBAND), 
+					 SC::F_Deadband(Z_Demand, C_DRIVE_DEADBAND), 
+					 Gyroscope->GetYaw(),
+					 drivetrain_mode);
+	}
+	else
+	{
+		_drivetrain->Drive(SC::F_Deadband(X_Demand, C_DRIVE_DEADBAND),
+					 SC::F_Deadband(Y_Demand, C_DRIVE_DEADBAND), 
+					 SC::F_Deadband(Z_Demand, C_DRIVE_DEADBAND), 
+					 0.0,
+					 drivetrain_mode);
+	}
   
 }
 

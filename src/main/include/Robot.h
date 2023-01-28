@@ -12,8 +12,10 @@
 
 #include <frc/XboxController.h>
 
+#include "ctre/phoenix/sensors/Pigeon2.h"
 #include <networktables/NetworkTableEntry.h>
 #include <networktables/NetworkTableValue.h>
+
 
 class Robot : public frc::TimedRobot {
  public:
@@ -36,9 +38,11 @@ class Robot : public frc::TimedRobot {
   SC::SC_Range<double> Throttle_Range_Normal = {-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND};
   SC::SC_Range<double> Throttle_Range_Fine = {-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE};
 
-  double throttleDemand, turnDemand;
-  double forceLowGear;
+  double X_Demand, Y_Demand, Z_Demand;
+  double drivetrain_mode;
 
   frc::XboxController  *GP1_Driver;// GP = Gamepad
   frc::GenericHID      *BB_GameDevice;  
+
+  ctre::phoenix::sensors::Pigeon2 *Gyroscope;
 };
