@@ -150,7 +150,7 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 
 // Game device inputs
 #define C_INTAKE_BTN_DBNC_TIME		0.100_s	// Intake deploy controller input debounce time
-
+#define C_Pincher_BTN_DBNC_TIME     0.100_s // Pincher Debounce Time
 // Auto-functions
 #define C_AUTOSHIFT_DBNC_TIME		0.250_s	// Auto-shift debounce time
 
