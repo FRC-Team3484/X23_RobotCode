@@ -32,6 +32,7 @@
 #define C_FX_BL_SLAVE				-1
 #define C_FX_BR_MASTER				4
 #define C_FX_BR_SLAVE				-1
+#define C_PIGEON_IMU				20
 #define C_PCM						30
 #define C_PDP						40
 
@@ -79,7 +80,7 @@ const double C_MAX_GEAR_ENC      = (C_DT_MOTOR_MAX_RPM / 600.0) * (C_DT_ENC_CPR 
 
 const double C_DT_SCALE_FACTOR   = ((600.0 * C_GEAR_RATIO) / C_DT_ENC_CPR) * C_DT_RPM_TO_FPS;
 
-const units::feet_per_second_t C_GEAR_MAX_SPEED 	= 7.9_fps;
+const units::feet_per_second_t C_GEAR_MAX_SPEED 	= 17.0_fps;
 const units::feet_per_second_t C_SHIFT_UP_SPEED     = 5.0_fps;
 const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 

@@ -7,26 +7,25 @@
 #include "FRC3484_Lib/utils/SC_Functions.h"
 
 #include "frc/PneumaticsModuleType.h"
-#include <frc/smartdashboard/SmartDashboard.h>
 
-#include <frc2/command/CommandScheduler.h>
-#include "ctre/phoenix/motorcontrol/Faults.h"
-
-#include "networktables/NetworkTableInstance.h"
 
 using namespace frc;
 using namespace SC;
 using namespace ctre;
 void Robot::RobotInit() 
 {
-	GP1_Driver = new XboxController(/*USB Port*/ 0);
-	BB_GameDevice = new GenericHID(/*USB Port*/ 1);
-	Gyroscope = new phoenix::sensors::Pigeon2(30);
+	GP1_Driver = new XboxController(/*USB Port*/ C_DRIVER_USB);
+	//BB_GameDevice = new GenericHID(/*USB Port*/ 1);
+	Gyroscope = nullptr; //new phoenix::sensors::Pigeon2(C_PIGEON_IMU);
   	_drivetrain = new X23_Drivetrain(std::make_tuple<int, int>(C_FX_FL_MASTER, C_FX_FL_SLAVE),
                                    std::make_tuple<int, int>(C_FX_FR_MASTER, C_FX_FR_SLAVE),
 								   std::make_tuple<int, int>(C_FX_BL_MASTER, C_FX_BL_SLAVE),
                                    std::make_tuple<int, int>(C_FX_BR_MASTER, C_FX_BR_SLAVE),
-                                   SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::REVPH, C_DRIVE_SOL});
+                                   SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_DRIVE_SOL});
+
+	
+	Throttle_Range_Normal(-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND);
+	Throttle_Range_Fine(-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE);
 }
 /**
  * This function is called every robot packet, no matter the mode. Use
@@ -37,7 +36,6 @@ void Robot::RobotInit()
  * LiveWindow and SmartDashboard integrated updating.
  */
 void Robot::RobotPeriodic() {
-	frc2::CommandScheduler::GetInstance().Run();
 }
 
 /**

@@ -24,7 +24,7 @@ public:
     void Elevate(double TiltAngle, double ElevatorHeight);
 
     void ToggleClaw(bool ClawToggleClose, bool ClawTiltDown);
--
+
     void StopMotors();
 
 

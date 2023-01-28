@@ -1,7 +1,6 @@
 #include "FRC3484_Lib/components/drive/SC_MecanumDrive.h"
 #include "FRC3484_Lib/utils/SC_Functions.h"
 #include "units/math.h"
-#include "frc/geometry/Translation2d.h"
 
 using namespace ctre::phoenix::motorcontrol::can;
 using namespace ctre::phoenix::motorcontrol;
@@ -13,7 +12,7 @@ using namespace SC;
 
 SC::SC_MecanumDrive::SC_MecanumDrive()
 {
-    wheelSpeed_SP = MecanumDriveWheelSpeeds{0_mps, 0_mps, 0_mps, 0_mps };
+    wheelSpeed_PV = wheelSpeed_SP = MecanumDriveWheelSpeeds{0_mps, 0_mps, 0_mps, 0_mps };
 }
 
 SC::SC_MecanumDrive::~SC_MecanumDrive()
@@ -58,29 +57,29 @@ void SC::SC_MecanumDrive::DriveCartesian(double X, double Y, double zRotation, d
                     };
 }
 
-void SC_MecanumDrive::DrivePolar(double radius, degree_t theta, double zRotation)
+void SC::SC_MecanumDrive::DrivePolar(double radius, degree_t theta, double zRotation)
 {
     DriveCartesian(radius * units::math::cos(theta), 
                     radius * units::math::sin(theta), 
                     zRotation, 0_deg);
 }
 
-void SC_MecanumDrive::SetMaxWheelSpeed(units::meters_per_second_t mSpeed)
+void SC::SC_MecanumDrive::SetMaxWheelSpeed(units::meters_per_second_t mSpeed)
 {
     this->maxWheelSpeed = mSpeed;
 }
 
-MecanumDriveWheelSpeeds SC_MecanumDrive::GetWheelSpeedsSetpoint()
+frc::MecanumDriveWheelSpeeds SC::SC_MecanumDrive::GetWheelSpeedsSetpoint()
 {
     return wheelSpeed_SP;
 }
 
-ChassisSpeeds SC_MecanumDrive::GetChassisSpeed()
+frc::ChassisSpeeds SC::SC_MecanumDrive::GetChassisSpeed()
 {
     return chassis;
 }
 
-double SC_MecanumDrive::GetWheelOutput(SC::SC_Wheel wheelIdx)
+double SC::SC_MecanumDrive::GetWheelOutput(SC::SC_Wheel wheelIdx)
 {
     units::scalar_t out = 0;
 
@@ -103,5 +102,5 @@ double SC_MecanumDrive::GetWheelOutput(SC::SC_Wheel wheelIdx)
         break;
     }
 
-    return F_Limit(-1.0, 1.0, out.to<double>());
+    return SC::F_Limit(-1.0, 1.0, out.to<double>());
 }

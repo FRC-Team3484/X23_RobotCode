@@ -19,7 +19,7 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
                     std::tuple<int, int> chBL, 
                     SC_Solenoid ch_shift)
 {
-    md = new SC_MecanumDrive();
+    md = new SC::SC_MecanumDrive();
     md->SetMaxWheelSpeed(C_GEAR_MAX_SPEED);
     shifter = new Solenoid(ch_shift.CtrlID, ch_shift.CtrlType, ch_shift.Channel);
 
@@ -86,10 +86,14 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
         BL_Slave = nullptr;
     }
 
-    if(FR != nullptr) { FR->SetNeutralMode(NeutralMode::Coast); FR_Slave->SetNeutralMode(NeutralMode::Coast);}
-    if(FL != nullptr) { FL->SetNeutralMode(NeutralMode::Coast); FL_Slave->SetNeutralMode(NeutralMode::Coast);}
-    if(BR != nullptr) { BR->SetNeutralMode(NeutralMode::Coast); BR_Slave->SetNeutralMode(NeutralMode::Coast);}
-    if(BL != nullptr) { BL->SetNeutralMode(NeutralMode::Coast); BL_Slave->SetNeutralMode(NeutralMode::Coast);}
+    if(FR != nullptr) { FR->SetNeutralMode(NeutralMode::Coast); }
+    if(FL != nullptr) { FL->SetNeutralMode(NeutralMode::Coast); }
+    if(BR != nullptr) { BR->SetNeutralMode(NeutralMode::Coast); }
+    if(BL != nullptr) { BL->SetNeutralMode(NeutralMode::Coast); }
+    if(FR_Slave != nullptr) { FR_Slave->SetNeutralMode(NeutralMode::Coast); }
+    if(FL_Slave != nullptr) { FL_Slave->SetNeutralMode(NeutralMode::Coast); }
+    if(BR_Slave != nullptr) { BR_Slave->SetNeutralMode(NeutralMode::Coast); }
+    if(BL_Slave != nullptr) { BL_Slave->SetNeutralMode(NeutralMode::Coast); }
 }
 
 X23_Drivetrain::~X23_Drivetrain()
@@ -120,7 +124,8 @@ void X23_Drivetrain::Drive(double direction_x, double direction_y, double rotati
         {
             direction_x = 0;
         }
-        md->DriveCartesian(direction_x, direction_y, 0.0, 
+
+        md->DriveCartesian(direction_x, direction_y, rotation_z, 
                             units::make_unit<units::degree_t>(gyro));
         
         _setOutputs();
@@ -138,8 +143,6 @@ void X23_Drivetrain::DriveAuto(double magnitude, double angle, double heading, b
 
     if(md != nullptr)
     {
-        
-
         md->DrivePolar(magnitude,
                     units::make_unit<units::degree_t>(angle), 
                     heading);
