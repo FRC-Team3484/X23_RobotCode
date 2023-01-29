@@ -14,6 +14,9 @@ namespace SC
 {
 	typedef struct {double Kp; double Ki; double Kd; double Kf;} SC_PIDConstants;
 
+	// Defines the CAN ID's and motor direction for a motor pairing. Note: In a two motor gearbox, both motors spin the same direction.
+	typedef struct {int MasterID; int SlaveID; bool IsReverse; } SC_MotorPairDef;
+
 	typedef struct {int CtrlID; frc::PneumaticsModuleType CtrlType; int Channel;} SC_Solenoid;
 	typedef struct {int CtrlID; frc::PneumaticsModuleType CtrlType; int Fwd_Channel; int Rev_Channel;} SC_DoubleSolenoid;
 
@@ -147,7 +150,7 @@ namespace SC
 
 	};
 
-	enum DriveMode { DEFAULT, TANK, DIFFERENTIAL, MECANUM };
+	enum DriveMode { DEFAULT, TANK, DIFFERENTIAL, MECANUM, SWERVE };
 	enum SC_Wheel { FRONT_LEFT, FRONT_RIGHT, REAR_LEFT, REAR_RIGHT, LEFT_WHEEL, RIGHT_WHEEL };
 
 	/**
@@ -235,6 +238,60 @@ namespace SC
 		double _tau, _scanT;
 		double _alpha, _beta;
 		T PV_out;
+
+	};
+	
+	/*
+		Discrete Edge Detection Triggers
+	*/
+
+	/**
+	 * @brief   Rising edge trigger. Takes boolean input signal, CLK,
+	 *          in function call. The output, Q, will be TRUE for a single
+	 *          evaluation when CLK goes from FALSE to TRUE. 
+	 *          
+	 *          Q will return to false on the next subsequent call.
+	 */
+	class R_TRIG
+	{
+	public:
+		R_TRIG() { lastState = false; };
+
+		void Check(bool CLK) 
+		{ 
+			this->Q = CLK && !this->lastState;
+			this->lastState = CLK;
+		}
+
+		bool Q;
+
+	private:
+		bool state, lastState;
+
+	};
+
+	/**
+	 * @brief   Falling edge trigger. Takes boolean input signal, CLK,
+	 *          in function call. The output, Q, will be TRUE for a single
+	 *          evaluation when CLK goes from TRUE to FALSE. 
+	 * 
+	 *          Q will return to false on the next subsequent call.
+	 */
+	class F_TRIG
+	{
+	public:
+		F_TRIG() { lastState = false; };
+
+		void Check(bool CLK) 
+		{ 
+			this->Q = !CLK && this->lastState;
+			this->lastState = CLK;
+		}
+
+		bool Q;
+
+	private:
+		bool lastState;
 
 	};
 }

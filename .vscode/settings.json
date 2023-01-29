@@ -16,8 +16,9 @@
   },
   "C_Cpp.default.configurationProvider": "vscode-wpilib",
   "files.associations": {
-    "sstream": "cpp",
-    "utility": "cpp"
-  },
+	"sstream": "cpp",
+	"utility": "cpp",
+	"span": "cpp"
+},
   "C_Cpp.errorSquiggles": "enabled",
 }

@@ -3,13 +3,13 @@
 #include "FRC3484_Lib/utils/SC_Functions.h"
 #include "Constants.h"
 #include "tuple"
-#include "Subsystems/X23_Elevator.h"
 
 using namespace SC;
 using namespace frc;
 using namespace ctre::phoenix::motorcontrol;
 using namespace ctre::phoenix::motorcontrol::can;
 using namespace rev;
+
 // Emc-Elevator Motor Control
 X23_Elevator::X23_Elevator(std::tuple<int,int> Emc,int TiltMotor,SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt, int TiltHome,
     int ElevatorHome, int TiltMax)

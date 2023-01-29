@@ -1,7 +1,7 @@
 #ifndef X23_Drivetrain_h
 #define X23_Drivetrain_h
 
-#include "FRC3484_Lib/components/drive/SC_MecanumDrive.h"
+#include "FRC3484_Lib/components/drive/SC_MecanumKinematics.h"
 #include "frc/Solenoid.h"
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h"
 
@@ -35,19 +35,24 @@ public:
      */
     void Ramp();
 
-    void SetDriveMode(SC::DriveMode dm);
-
     void StopMotors();
+
+	/**
+	 * @brief	Switches all motor controllers to brake mode
+	*/
+	void SetBrakeMode();
+
+	/**
+	 * @brief	Switches all motor controllers to coast mode
+	*/
+	void SetCoastMode();
 
 private:
     void _setOutputs();
     void _InitMotor(ctre::phoenix::motorcontrol::can::WPI_TalonSRX* Motor, bool Invert, ctre::phoenix::motorcontrol::can::WPI_TalonSRX* Master);
 
-    SC::SC_MecanumDrive *md;
+    SC::SC_MecanumKinematics *md;
     frc::Solenoid *shifter;
-
-    SC::DriveMode defaultMode = SC::DriveMode::MECANUM;
-    SC::DriveMode activeMode = SC::DriveMode::DEFAULT;
 
     // Declare all four master controllers
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX *FR, *FR_Slave;

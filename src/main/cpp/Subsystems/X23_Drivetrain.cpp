@@ -8,19 +8,17 @@ using namespace SC;
 using namespace frc;
 using namespace units::length;
 using namespace units::velocity;
-using namespace units::angular_velocity;
 using namespace ctre::phoenix::motorcontrol;
 using namespace ctre::phoenix::motorcontrol::can;
 
 
 X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR, 
-                    std::tuple<int, int> chFL, 
-                    std::tuple<int, int> chBR, 
-                    std::tuple<int, int> chBL, 
-                    SC_Solenoid ch_shift)
+                    			std::tuple<int, int> chFL, 
+                    			std::tuple<int, int> chBR, 
+                    			std::tuple<int, int> chBL, 
+                    			SC_Solenoid ch_shift)
 {
-    md = new SC::SC_MecanumDrive();
-    md->SetMaxWheelSpeed(C_GEAR_MAX_SPEED);
+    md = new SC::SC_MecanumKinematics();
     shifter = new Solenoid(ch_shift.CtrlID, ch_shift.CtrlType, ch_shift.Channel);
 
     int sCh = -1;
@@ -29,8 +27,9 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
     if(chFR != C_BLANK_IDS) 
     { 
         FR = new WPI_TalonSRX(std::get<0>(chFR));
-        sCh = std::get<1>(chFR);
+		_InitMotor(FR, true, NULL);
 
+        sCh = std::get<1>(chFR);
         if(sCh != C_DISABLED_CHANNEL) { FR_Slave = new WPI_TalonSRX(sCh); _InitMotor(FR_Slave, true, FR); }
 		else { FR_Slave = nullptr; }
     } 
@@ -45,9 +44,10 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
     if(chFL != C_BLANK_IDS) 
     { 
         FL = new WPI_TalonSRX(std::get<0>(chFL));
-    
+		_InitMotor(FL, false, NULL);
+
         sCh = std::get<1>(chFL);
-        if(sCh != C_DISABLED_CHANNEL) { FL_Slave = new WPI_TalonSRX(sCh); _InitMotor(FL_Slave, true, FL); }
+        if(sCh != C_DISABLED_CHANNEL) { FL_Slave = new WPI_TalonSRX(sCh); _InitMotor(FL_Slave, false, FL); }
 		else { FL_Slave = nullptr; }
     }
     else
@@ -60,6 +60,7 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
     if(chBR != C_BLANK_IDS) 
     { 
         BR = new WPI_TalonSRX(std::get<0>(chBR));
+		_InitMotor(BR, true, NULL);
 
         sCh = std::get<1>(chBR);
         if(sCh != C_DISABLED_CHANNEL) { BR_Slave = new WPI_TalonSRX(sCh); _InitMotor(BR_Slave, true, BR); }
@@ -75,9 +76,10 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
     if(chBL != C_BLANK_IDS) 
     { 
         BL = new WPI_TalonSRX(std::get<0>(chBL));
+		_InitMotor(BL, false, NULL);
 
         sCh = std::get<1>(chBL);
-        if(sCh != C_DISABLED_CHANNEL) { BL_Slave = new WPI_TalonSRX(sCh); _InitMotor(BL_Slave, true, BL); }
+        if(sCh != C_DISABLED_CHANNEL) { BL_Slave = new WPI_TalonSRX(sCh); _InitMotor(BL_Slave, false, BL); }
 		else { BL_Slave = nullptr; }
     } 
     else
@@ -90,6 +92,7 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
     if(FL != nullptr) { FL->SetNeutralMode(NeutralMode::Coast); }
     if(BR != nullptr) { BR->SetNeutralMode(NeutralMode::Coast); }
     if(BL != nullptr) { BL->SetNeutralMode(NeutralMode::Coast); }
+
     if(FR_Slave != nullptr) { FR_Slave->SetNeutralMode(NeutralMode::Coast); }
     if(FL_Slave != nullptr) { FL_Slave->SetNeutralMode(NeutralMode::Coast); }
     if(BR_Slave != nullptr) { BR_Slave->SetNeutralMode(NeutralMode::Coast); }
@@ -144,8 +147,8 @@ void X23_Drivetrain::DriveAuto(double magnitude, double angle, double heading, b
     if(md != nullptr)
     {
         md->DrivePolar(magnitude,
-                    units::make_unit<units::degree_t>(angle), 
-                    heading);
+                    	units::make_unit<units::degree_t>(angle), 
+                    	heading);
 
         _setOutputs();
     }
@@ -163,8 +166,6 @@ void X23_Drivetrain::_InitMotor(WPI_TalonSRX* Motor, bool Invert, WPI_TalonSRX* 
 
 		if(Master != NULL) { Motor->Follow(*Master); }
 	}
-
-
 }
 
 void X23_Drivetrain::DriveDirect(double rawFR, double rawFL, double rawBR, double rawBL)
@@ -181,6 +182,16 @@ void X23_Drivetrain::StopMotors()
     if(FL != nullptr) { FL->Set(ControlMode::PercentOutput, 0.0); }
     if(BR != nullptr) { BR->Set(ControlMode::PercentOutput, 0.0); }
     if(BL != nullptr) { BL->Set(ControlMode::PercentOutput, 0.0); }
+}
+
+void X23_Drivetrain::SetBrakeMode()
+{
+	
+}
+
+void X23_Drivetrain::SetCoastMode()
+{
+
 }
 
 void X23_Drivetrain::_setOutputs()

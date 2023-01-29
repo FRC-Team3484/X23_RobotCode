@@ -9,7 +9,6 @@
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
 #include "rev/CANSparkMax.h"
 #include "frc/filter/Debouncer.h"
-#include "FRC3484_Lib/utils/TC3_Syntax.h"
 
 class X23_Elevator
 {
@@ -43,9 +42,9 @@ private:
     frc::DigitalInput *TiltLimit, *TiltHome, *ElevatorHome;
 
 //Debouncers
-bool PincherSolenoidState;
+	bool PincherSolenoidState;
 
-    R_TRIG *rTrigPinch;
+    SC::R_TRIG *rTrigPinch;
     frc::Debouncer *DebouncePincher;
 };
 
