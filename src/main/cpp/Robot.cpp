@@ -65,7 +65,7 @@ void Robot::TeleopPeriodic()
 	/*======================*/
 	/*====Driver Controls===*/
 	/*======================*/
-
+/*
 	if(GP1_Driver->GetRightBumper())
 	{
 		// Fine control mode; Scales driver input to smaller range for finer control
@@ -73,17 +73,20 @@ void Robot::TeleopPeriodic()
 		X_Demand = F_Scale(-100.0, 100.0, Throttle_Range_Fine, GP1_Driver->GetLeftX());
 		Z_Demand = F_Scale(-100.0, 100.0, Throttle_Range_Fine, GP1_Driver->GetRightX());
 	}
-	else
+	else*/
 	{
 		// Normal control mode
-		Y_Demand = F_Scale(-100.0, 100.0, Throttle_Range_Normal, -GP1_Driver->GetLeftY());
-		X_Demand = F_Scale(-100.0, 100.0, Throttle_Range_Normal, GP1_Driver->GetLeftX());
-		Z_Demand = F_Scale(-100.0, 100.0, Throttle_Range_Normal, GP1_Driver->GetRightX());
+		Y_Demand = F_Limit(Throttle_Range_Normal, GP1_Driver->GetLeftY());
+		X_Demand = F_Limit(Throttle_Range_Normal, GP1_Driver->GetLeftX());
+		Z_Demand = F_Limit(Throttle_Range_Normal, GP1_Driver->GetRightX());
 		// Y_Demand = -GP1_Driver->GetLeftY();
 		// X_Demand = GP1_Driver->GetLeftX();
+		// X_Demand = (GP1_Driver->GetLeftX());
+		// Y_Demand = (GP1_Driver->GetLeftY());
+		// Z_Demand = (GP1_Driver->GetRightX());
 	}
 
-	drivetrain_mode = GP1_Driver->GetAButton();
+	drivetrain_mode = GP1_Driver->GetRawButton(XBOX_RB);
 
 	if(Gyroscope != nullptr)
 	{
