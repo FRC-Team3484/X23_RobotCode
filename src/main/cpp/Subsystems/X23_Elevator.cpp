@@ -60,9 +60,25 @@ this->rTrigPinch = new R_TRIG();
 this->PincherSolenoidState = 0;
 }
 
+
 X23_Elevator::~X23_Elevator()
 {
+    if (Emc != nullptr) { delete Emc; Emc = nullptr; }
+    if (rTrigPinch != nullptr) { delete rTrigPinch; rTrigPinch = nullptr; }
 
+    if (ElevateOne != nullptr) { delete ElevateOne; ElevateOne = nullptr; }
+    if (ElevateTwo != nullptr) { delete ElevateTwo; ElevateTwo = nullptr; }
+    if (DebouncePincher != nullptr) { delete DebouncePincher; DebouncePincher = nullptr; }
+    if (TiltLimit != nullptr) { delete TiltLimit; TiltLimit = nullptr; }
+
+    if (TiltHome != nullptr) { delete TiltHome; TiltHome = nullptr; }
+    if (ElevatorHome != nullptr) { delete ElevatorHome; ElevatorHome = nullptr; }
+    if (TiltSolenoid != nullptr) { delete TiltSolenoid; TiltSolenoid = nullptr; }
+    if (PincherSolenoid != nullptr) { delete PincherSolenoid; PincherSolenoid = nullptr; }
+    if (TiltFalcon != nullptr) { delete TiltFalcon; TiltFalcon = nullptr; }
+    if (ElevatorHome != nullptr) { delete ElevatorHome; ElevatorHome = nullptr; }
+    if (TiltSolenoid != nullptr) { delete TiltSolenoid; TiltSolenoid = nullptr; }
+    if (PincherSolenoid != nullptr) { delete PincherSolenoid; PincherSolenoid = nullptr; }
 }
 
 void X23_Elevator::Elevate(double TiltAngle, double ElevatorHeight)
@@ -72,8 +88,13 @@ void X23_Elevator::Elevate(double TiltAngle, double ElevatorHeight)
 
 void X23_Elevator::ToggleClaw(bool ClawToggleClose, bool ClawTiltDown)
 {
+<<<<<<< HEAD
 
     if((this->rTrigPinch != NULL)) 
+=======
+    /*
+if((this-> != NULL))
+>>>>>>> 38c31ee3095e035bcc9c3ca79aa2ed41d2f3061d
     {
         if((this->DebouncePincher != NULL) )
         {
@@ -95,9 +116,15 @@ void X23_Elevator::ToggleClaw(bool ClawToggleClose, bool ClawTiltDown)
         {
             bool Claw;
 
+<<<<<<< HEAD
             Claw = this->DebouncePincher->Calculate(ClawToggleClose);
          
             
+=======
+            s1e = this->_dbnc_s1e->Calculate(Stage1_Ext);
+            s1c = this->_dbnc_s1c->Calculate(Stage1_Claw);
+
+>>>>>>> 38c31ee3095e035bcc9c3ca79aa2ed41d2f3061d
 
             this->PincherSolenoidState = (this->PincherSolenoidState && !Claw) || (!this->PincherSolenoidState && Claw);
                         }
