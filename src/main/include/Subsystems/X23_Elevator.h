@@ -14,7 +14,7 @@ class X23_Elevator
 {
 public:
     X23_Elevator(std::tuple<int,int> Emc,int TiltMotor, 
-    SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt, 
+    SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt, SC::SC_Solenoid ChElevateBrake,
     int TiltHome, int ElevatorHome, int TiltMax);
      //Emc is Elevator motor Controller,Master and Slave//
 
@@ -38,7 +38,7 @@ private:
 // Declare Pincher Solenoids
     frc::Solenoid *PincherSolenoid;
 // Declare Pincher Tilt Solenoids
-    frc::Solenoid *TiltSolenoid;
+    frc::Solenoid *TiltSolenoid, *ElevateBrake;
 // Declare Limit Switches
     frc::DigitalInput *TiltLimit, *TiltHome, *ElevatorHome;
 
