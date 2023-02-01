@@ -26,6 +26,7 @@ public:
 
     void StopMotors();
 
+    void ControlDirect(double RawElevate, double RawTiltFalcon);
 
 private:
     void _setOutputs();
@@ -45,7 +46,7 @@ private:
 	bool PincherSolenoidState;
 
     SC::R_TRIG *rTrigPinch;
-    frc::Debouncer *DebouncePincher;
+    frc::Debouncer *DebouncePincher, *DebounceTilt;
 };
 
 #endif // Elevator_H
