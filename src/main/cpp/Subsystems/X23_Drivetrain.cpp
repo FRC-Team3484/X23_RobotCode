@@ -186,12 +186,18 @@ void X23_Drivetrain::StopMotors()
 
 void X23_Drivetrain::SetBrakeMode()
 {
-	
+	if(this->FR != NULL) { this->FR->SetNeutralMode(NeutralMode::Brake); }
+	if(this->FL != NULL) { this->FL->SetNeutralMode(NeutralMode::Brake); }
+	if(this->BR != NULL) { this->BR->SetNeutralMode(NeutralMode::Brake); }
+	if(this->BL != NULL) { this->BL->SetNeutralMode(NeutralMode::Brake); }
 }
 
 void X23_Drivetrain::SetCoastMode()
 {
-
+    if(this->FR != NULL) { this->FR->SetNeutralMode(NeutralMode::Coast); }
+	if(this->FL != NULL) { this->FL->SetNeutralMode(NeutralMode::Coast); }
+	if(this->BR != NULL) { this->BR->SetNeutralMode(NeutralMode::Coast); }
+	if(this->BL != NULL) { this->BL->SetNeutralMode(NeutralMode::Coast); }
 }
 
 void X23_Drivetrain::_setOutputs()
