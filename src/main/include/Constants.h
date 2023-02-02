@@ -175,4 +175,9 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 
 const std::tuple<int, int> C_BLANK_IDS = std::make_tuple<int, int>(C_DISABLED_CHANNEL, C_DISABLED_CHANNEL);
 
-
+/*==================*/
+/*PID Loop Variables*/
+/*==================*/
+#define E_Kp
+#define E_Ki
+#define E_dt

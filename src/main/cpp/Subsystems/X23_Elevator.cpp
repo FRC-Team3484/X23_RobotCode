@@ -82,6 +82,11 @@ X23_Elevator::~X23_Elevator()
 
 void X23_Elevator::Elevate(double TiltAngle, double ElevatorHeight)
 {
+double CalcHeight = SC::F_XYCurve<double>(xArrayElevate,yArrayElevate,ElevatorHeight, 9 );
+
+
+
+
 
 }
 

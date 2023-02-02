@@ -41,12 +41,20 @@ private:
     frc::Solenoid *TiltSolenoid, *ElevateBrake;
 // Declare Limit Switches
     frc::DigitalInput *TiltLimit, *TiltHome, *ElevatorHome;
-
 //Debouncers
 	bool PincherSolenoidState;
 
     SC::R_TRIG *rTrigPinch;
     frc::Debouncer *DebouncePincher, *DebounceTilt;
+//PID Elevator Loop
+double E_CV;
+double E_P;
+double E_I_Lim;
+double E_I_Min;
+double E_I_Max;
+double E_I;
+double xArrayElevate [9];
+double yArrayElevate [9];
 };
 
 #endif // Elevator_H
