@@ -5,6 +5,7 @@
 #pragma once
 #include "Constants.h"
 #include "Subsystems/X23_Drivetrain.h"
+#include "Subsystems/X23_Intake.h"
 #include <frc/TimedRobot.h>
 #include <frc2/command/Command.h>
 
@@ -34,6 +35,7 @@ class Robot : public frc::TimedRobot {
   // doesn't have undefined behavior and potentially crash.
 
   X23_Drivetrain *_drivetrain = nullptr;
+  X23_Intake *_intake = nullptr;
 
   SC::SC_Range<double> Throttle_Range_Normal = {-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND};
   SC::SC_Range<double> Throttle_Range_Fine = {-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE};

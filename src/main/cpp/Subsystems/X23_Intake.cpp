@@ -1,4 +1,4 @@
-#include "subsystems/X23_Intake.h"
+#include "Subsystems/X23_Intake.h"
 
 #include "Constants.h"
 #include "Globals.h"
@@ -12,7 +12,7 @@ using namespace ctre::phoenix::motorcontrol::can;
 
 
 X23_Intake::X23_Intake(int IntakeID, int FeedID_Master, int FeedID_Slave, int LoaderRS_Ch, 
-	SC_Solenoid Sol, int FeederSw_Ch,)
+	SC_Solenoid Sol, int FeederSw_Ch,frc::I2C::Port ColorSenPort)
 {
 
 	Motor_Intake_Master = new VictorSPX(IntakeID);
@@ -80,14 +80,10 @@ X23_Intake::~X23_Intake()
 
 void X23_Intake::Collect(bool Run, bool ForceFeed, bool ForceEject)
 {
-	bool intakeOut, intakeForward, intakeReverse, feederForward, feederReverse;
+	bool intakeOut, intakeForward, intakeReverse, feederOn, feederOff;
 	double intakeSpeed, feederSpeed;
 
 	bool cargoStored = IsCargoStored(); // Save the state of the cargo switch
-
-	// Deploy the intake
-	if(this->_dbnc_rf_intake != NULL) { intakeOut = this->_dbnc_rf_intake->Calculate(Run); }
-	else { intakeOut = Run; }
 
 	// Turn on the intake motor
 	if(this->_dly_re_intake_on != NULL) { intakeForward = this->_dly_re_intake_on->Calculate(intakeOut || ForceFeed); }
@@ -96,22 +92,22 @@ void X23_Intake::Collect(bool Run, bool ForceFeed, bool ForceEject)
 	// Run the feed motor forward (towards loader)
 	if(this->_dbnc_re_forceFeed != NULL) 
 	{ 
-		feederForward = (intakeForward && (!cargoStored || (!IsCargoLoaded() && cargoStored))) // Auto-feed
+		feederOn = (intakeForward && (!cargoStored || (!IsCargoLoaded() && cargoStored))) // Auto-feed
 						|| this->_dbnc_re_forceFeed->Calculate(ForceFeed); // Manual feed
 	}
-	else { feederForward = intakeForward || ForceFeed; }
+	else { feederOn = intakeForward || ForceFeed; }
 
 	// Run the feed motor reverse (away from loader)
-	if(this->_dbnc_re_feedEject != NULL) { intakeReverse = feederReverse = this->_dbnc_re_feedEject->Calculate(ForceEject); }
-	else { intakeReverse = feederReverse = ForceEject; }
+	if(this->_dbnc_re_feedEject != NULL) { intakeReverse = feederOff = this->_dbnc_re_feedEject->Calculate(ForceEject); }
+	else { intakeReverse = feederOff = ForceEject; }
 
 	// Set the motor speeds
 	if(intakeForward) { intakeSpeed = C_INTAKE_DRIVE_SPEED; }
 	else if(intakeReverse) { intakeSpeed = -C_INTAKE_DRIVE_SPEED; }
 	else { intakeSpeed = 0.0; }
 
-	if(feederForward) { feederSpeed = C_FEED_DRIVE_SPEED; }
-	else if(feederReverse) { feederSpeed = -C_FEED_DRIVE_SPEED; }
+	if(feederOn) { feederSpeed = C_FEED_DRIVE_SPEED; }
+	else if(feederOff) { feederSpeed = -C_FEED_DRIVE_SPEED; }
 	else { feederSpeed = 0.0; }
 
 	// Apply outputs

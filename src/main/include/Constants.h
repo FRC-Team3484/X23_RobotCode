@@ -25,23 +25,26 @@
 /* CAN ID's */
 /*==========*/
 #define C_FX_FL_MASTER				1
-#define C_FX_FL_SLAVE				-1
+#define C_FX_FL_SLAVE			   -1
 #define C_FX_FR_MASTER				2
-#define C_FX_FR_SLAVE				-1
+#define C_FX_FR_SLAVE		   	   -1
 #define C_FX_BL_MASTER				3
-#define C_FX_BL_SLAVE				-1
+#define C_FX_BL_SLAVE			   -1
 #define C_FX_BR_MASTER				4
-#define C_FX_BR_SLAVE				-1
-#define C_PIGEON_IMU				20
-#define C_PCM						30
-#define C_PDP						40
+#define C_FX_BR_SLAVE			   -1
+#define C_SPX_INTAKE                5
+#define C_SPX_FEED_MASTER           6
+#define C_SPX_FEED_SLAVE            7
+#define C_PIGEON_IMU			   20
+#define C_PCM					   30
+#define C_PDP					   40
 
 
 /*===================*/
 /* Solenoid Channels */
 /*===================*/
 #define C_DRIVE_SOL					0 // Shifter
-
+#define C_SOL_INTAKE				1
 
 /*==============*/
 /* DIO Channels */
