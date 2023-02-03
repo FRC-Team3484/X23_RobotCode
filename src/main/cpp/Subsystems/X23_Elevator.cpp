@@ -3,6 +3,7 @@
 #include "FRC3484_Lib/utils/SC_Functions.h"
 #include "Constants.h"
 #include "tuple"
+#include "cmath"
 
 using namespace SC;
 using namespace frc;
@@ -19,6 +20,8 @@ SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax)
     if(Emc != C_BLANK_IDS) 
     { 
         ElevateOne = new CANSparkMax(std::get<0>(Emc),rev::CANSparkMaxLowLevel::MotorType::kBrushless);
+        ElevateEncoder = ElevateOne->GetEncoder();
+        ElevateEncoder.SetMeasurementPeriod(0.01);
         ElevateOne->SetIdleMode (rev::CANSparkMax::IdleMode::kBrake);
          sCh = std::get<1>(Emc);
 
@@ -82,10 +85,17 @@ X23_Elevator::~X23_Elevator()
 
 void X23_Elevator::Elevate(double TiltAngle, double ElevatorHeight)
 {
-double CalcHeight = SC::F_XYCurve<double>(xArrayElevate,yArrayElevate,ElevatorHeight, 9 );
+    if(ElevateOne != nullptr)
+    {    SparkMaxRelativeEncoder NeoEncoderValue = ElevateOne->GetEncoder();
 
-
-
+    
+        double CalcHeight = fmin(F_XYCurve<double>(xArrayElevate,yArrayElevate, TiltAngle , 9 ));
+        double Elevator_Error = ElevatorHeight - CalcHeight;
+        this->E_P = Elevator_Error * E_Kp;
+        this->E_I = E_I_Max, E_I_Min, E_I+(E_Ki * Elevator_Error *E_dt);
+        this->E_D = E_Kd * (Elevator_Error - E_Error_ZminusOne)/E_dt;
+        this->E_CV = E_P + E_I + E_D;
+    }
 
 
 }

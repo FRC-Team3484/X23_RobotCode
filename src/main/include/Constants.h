@@ -178,6 +178,7 @@ const std::tuple<int, int> C_BLANK_IDS = std::make_tuple<int, int>(C_DISABLED_CH
 /*==================*/
 /*PID Loop Variables*/
 /*==================*/
-#define E_Kp
-#define E_Ki
-#define E_dt
+#define E_Kp 0.1
+#define E_Ki 0.1
+#define E_dt 0.01
+#define E_Kd 0.1
