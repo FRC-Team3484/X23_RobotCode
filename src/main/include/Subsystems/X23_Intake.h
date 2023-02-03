@@ -25,12 +25,8 @@ class X23_Intake
 {
 
 public:
-	X23_Intake(int IntakeID, int FeedID_Master, int FeedID_Slave, int LoaderRS_Ch, 
-	SC::SC_Solenoid Sol, int FeederSw_Ch,
-	frc::I2C::Port ColorSenPort);
-	~X23_Intake();
-
-	void Collect(bool Intake, bool ForceFeed, bool ForceEject);
+	X23_Intake(int IntakeID, int IntakeMaster, int IntakeSlave);
+	void Collect(bool Intake, bool Direction);
 
 	/**
 	 * @brief Returns true if cargo is in the loader. 
@@ -55,32 +51,17 @@ private:
 	void _getColorDist();
 
 	ctre::phoenix::motorcontrol::can::VictorSPX *Motor_Intake_Master;
-	ctre::phoenix::motorcontrol::can::VictorSPX *Motor_Feed_Master;
-	ctre::phoenix::motorcontrol::can::VictorSPX *Motor_Feed_Slave;
-	frc::Solenoid *Sol_1;
-
-	frc::DigitalInput *_di_feeder_sw, *_di_loader_rsw;
-	SC::SC_ColorSensor *_sen_loader;
+	ctre::phoenix::motorcontrol::can::VictorSPX *Motor_Intake_Slave;
 
 	nt::NetworkTableInstance _nt_inst;
 	std::shared_ptr<nt::NetworkTable> _nt_table;
 
-	SC::SC_ABFilter<double> *_filter_color_sen;
-	double _color_dist_pvf;
-
 	// Debouncers
-	frc::Debouncer *_dbnc_re_feed_sw;       // Debounce the activation of the `cargo stored` switch
 	frc::Debouncer *_dbnc_rf_intake;        // Debounce driver's `Intake` command on both the rising edge (R) and falling edge (F)
-	frc::Debouncer *_dbnc_re_forceFeed;     // Debounce driver's `Force Feed` command on the rising edge (RE)
-	frc::Debouncer *_dbnc_re_feedEject;     // Debounce driver's `Feed Eject` command on the rising edge (RE)
-	frc::Debouncer *_dbnc_re_loaderDown;    // Debounce the loader down switch.
-	frc::Debouncer *_dbnc_re_loaded;        // Dounce cargo loaded signal
 
 	// Delay timers
 	/* Debouncers can double as a delay timer for triggering an action after a specified time after a signal changes */
 	frc::Debouncer *_dly_re_intake_on;  // Delay intake motors on after the rising edge (RE) of the driver's `Intake` command
-	frc::Debouncer *_dly_fe_feed_off;   // Delay feed motors off after the falling edge (FE) of the switch un-depressing
-	frc::Debouncer *_dly_fe_loaded;		// Delay `cargo loaded` signal off after the falling edge (FE) of the sensor signal
 };
 
 
