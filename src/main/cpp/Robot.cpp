@@ -5,9 +5,8 @@
 #include "Robot.h"
 #include "constants.h"
 #include "FRC3484_Lib/utils/SC_Functions.h"
-
+#include "Subsystems/X23_Intake.h"
 #include "frc/PneumaticsModuleType.h"
-
 
 using namespace frc;
 using namespace SC;
@@ -112,7 +111,14 @@ void Robot::TeleopPeriodic()
 
 	_intake->Collect(BB_GameDevice->GetRawButton(C_GD_INTAKE), 
 					 BB_GameDevice->GetRawButton(C_GD_DIRECT_INTAKE));
-  
+    if(C_GD_INTAKE != false) {
+		if(C_GD_DIRECT_INTAKE == false) {
+			
+		}
+		else {
+
+		}
+	}
 }
 
 /**
