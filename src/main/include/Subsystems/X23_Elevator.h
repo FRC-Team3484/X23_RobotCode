@@ -14,7 +14,7 @@ class X23_Elevator
 {
 public:
     X23_Elevator(std::tuple<int,int> Emc,int TiltMotor, 
-    SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt, 
+    SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt, SC::SC_Solenoid ChElevateBrake,
     int TiltHome, int ElevatorHome, int TiltMax);
      //Emc is Elevator motor Controller,Master and Slave//
 
@@ -26,6 +26,7 @@ public:
 
     void StopMotors();
 
+    void ControlDirect(double RawElevate, double RawTiltFalcon);
 
 private:
     void _setOutputs();
@@ -34,18 +35,28 @@ private:
     ctre::phoenix::motorcontrol::can::WPI_TalonFX *TiltFalcon;  
 // Declare Neo
     rev::CANSparkMax *ElevateOne, *ElevateTwo;
+    rev::SparkMaxRelativeEncoder ElevateEncoder{};
 // Declare Pincher Solenoids
     frc::Solenoid *PincherSolenoid;
 // Declare Pincher Tilt Solenoids
-    frc::Solenoid *TiltSolenoid;
+    frc::Solenoid *TiltSolenoid, *ElevateBrake;
 // Declare Limit Switches
     frc::DigitalInput *TiltLimit, *TiltHome, *ElevatorHome;
-
 //Debouncers
 	bool PincherSolenoidState;
 
     SC::R_TRIG *rTrigPinch;
-    frc::Debouncer *DebouncePincher;
+    frc::Debouncer *DebouncePincher, *DebounceTilt;
+//PID Elevator Loop
+double E_CV;
+double E_P;
+double E_I_Min;
+double E_I_Max;
+double E_I;
+double xArrayElevate [9] = [ 5, 10, 15, 20, 25, 30, 35, 40, 45];
+double yArrayElevate [9];
+double E_Error_ZminusOne;
+double E_D;
 };
 
 #endif // Elevator_H
