@@ -26,23 +26,7 @@ class X23_Intake
 
 public:
 	X23_Intake(int IntakeID, int IntakeMaster, int IntakeSlave);
-	void Collect(bool Intake, bool Direction);
-
-	/**
-	 * @brief Returns true if cargo is in the loader. 
-	 */
-	bool IsCargoLoaded();
-	
-	/**
-	 * @brief Returns true if cargo is present in the feeder. This status will stay on for
-	 *        a short period after the switch is released.
-	 */
-	bool IsCargoStored();
-
-	/**
-	 * @brief Returns true if the loader is down. Use to avoid running the feeder while launching cargo.
-	 */
-	bool IsLoaderDown();
+	void Collect(bool Intake, bool DirectionL, bool DirecttionR);
 
 private:
 
