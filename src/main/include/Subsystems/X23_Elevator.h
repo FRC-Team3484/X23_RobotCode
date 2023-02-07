@@ -49,10 +49,12 @@ private:
     frc::Debouncer *DebouncePincher, *DebounceTilt;
 //PID Elevator Loop
 double E_CV;
+double E_FooFighters;
 double E_P;
 double E_I_Min;
 double E_I_Max;
 double E_I 0;
+double yArrayFooFighters [10] {10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
 double xArrayElevate [10] = {0, 5, 10, 15, 20, 25, 30, 35, 40, 42};
 double yArrayElevate [10] = {56.5, 56.5, 57.5, 59.5, 61.5, 64.5, 67.5, 68.5, 68.5, 68.5};
 double E_Error_ZminusOne;
