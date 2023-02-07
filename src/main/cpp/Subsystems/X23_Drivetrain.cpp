@@ -87,7 +87,7 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
         BL = nullptr;
         BL_Slave = nullptr;
     }
-
+    /*
     if(FR != nullptr) { FR->SetNeutralMode(NeutralMode::Coast); }
     if(FL != nullptr) { FL->SetNeutralMode(NeutralMode::Coast); }
     if(BR != nullptr) { BR->SetNeutralMode(NeutralMode::Coast); }
@@ -97,6 +97,7 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
     if(FL_Slave != nullptr) { FL_Slave->SetNeutralMode(NeutralMode::Coast); }
     if(BR_Slave != nullptr) { BR_Slave->SetNeutralMode(NeutralMode::Coast); }
     if(BL_Slave != nullptr) { BL_Slave->SetNeutralMode(NeutralMode::Coast); }
+    */
 }
 
 X23_Drivetrain::~X23_Drivetrain()
