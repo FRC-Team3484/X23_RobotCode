@@ -4,7 +4,6 @@
 #include "Constants.h"
 #include "tuple"
 #include "cmath"
-
 using namespace SC;
 using namespace frc;
 using namespace ctre::phoenix::motorcontrol;
@@ -85,19 +84,19 @@ X23_Elevator::~X23_Elevator()
 
 void X23_Elevator::Elevate(double TiltAngle, double ElevatorHeight)
 {
-    if(ElevateOne != nullptr)
-    {    SparkMaxRelativeEncoder NeoEncoderValue = ElevateOne->GetEncoder();
 
-    
-        double CalcHeight = fmin(F_XYCurve<double>(xArrayElevate,yArrayElevate, TiltAngle , 9 ));
-        double Elevator_Error = ElevatorHeight - CalcHeight;
+    if(ElevateOne != nullptr)
+    { 
+SparkMaxRelativeEncoder NeoEncoderValue = ElevateOne->GetEncoder();
+double CalcHeight = fmin(F_XYCurve<double>(xArrayElevate,yArrayElevate, TiltAngle , 9 ), ElevatorHeight);
+double Elevator_Error = CalcHeight - NeoEncoderValue.GetPosition();
+        {  
         this->E_P = Elevator_Error * E_Kp;
         this->E_I = E_I_Max, E_I_Min, E_I+(E_Ki * Elevator_Error *E_dt);
         this->E_D = E_Kd * (Elevator_Error - E_Error_ZminusOne)/E_dt;
         this->E_CV = E_P + E_I + E_D;
+        }
     }
-
-
 }
 
 void X23_Elevator::ToggleClaw(bool ClawToggleClose, bool ClawTiltDown)
@@ -113,10 +112,11 @@ void X23_Elevator::ToggleClaw(bool ClawToggleClose, bool ClawTiltDown)
 // Debouncer's are not instantiated, read button change directly.
             this->rTrigPinch->Check(ClawToggleClose);
         }
+    
 
-        this->PincherSolenoidState  = (this->PincherSolenoidState && (!this->rTrigPinch->Q))     || (!this->PincherSolenoidState && this->rTrigPinch->Q);
+            this->PincherSolenoidState  = (this->PincherSolenoidState && (!this->rTrigPinch->Q)) || (!this->PincherSolenoidState && this->rTrigPinch->Q);
     }
-    else
+        else
     {
         if(this->DebouncePincher != NULL)
         {

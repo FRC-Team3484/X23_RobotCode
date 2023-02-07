@@ -52,11 +52,18 @@ double E_CV;
 double E_P;
 double E_I_Min;
 double E_I_Max;
-double E_I;
+double E_I 0;
 double xArrayElevate [9] = [ 5, 10, 15, 20, 25, 30, 35, 40, 45];
 double yArrayElevate [9];
 double E_Error_ZminusOne;
 double E_D;
+double T_CV;
+double T_P;
+double T_I_Min;
+double T_I_Max;
+double T_I;
+double T_Error_ZminusOne;
+double T_D;
 };
 
 #endif // Elevator_H

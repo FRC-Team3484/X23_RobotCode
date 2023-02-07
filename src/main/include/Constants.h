@@ -172,13 +172,16 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 /*===================*/
 #define C_SCAN_TIME					0.020_s
 #define C_SCAN_TIME_SEC				C_SCAN_TIME.value() // Seconds
-
 const std::tuple<int, int> C_BLANK_IDS = std::make_tuple<int, int>(C_DISABLED_CHANNEL, C_DISABLED_CHANNEL);
 
 /*==================*/
 /*PID Loop Variables*/
 /*==================*/
 #define E_Kp 0.1
-#define E_Ki 0.1
+#define E_Ki 0.0
 #define E_dt 0.01
 #define E_Kd 0.1
+#define T_Kp 0.1
+#define T_Ki 0.1
+#define T_dt 0.01
+#define T_Kd 0.1
