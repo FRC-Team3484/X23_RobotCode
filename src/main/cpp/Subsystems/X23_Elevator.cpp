@@ -88,7 +88,7 @@ void X23_Elevator::Elevate(double TiltAngle, double ElevatorHeight)
     if(ElevateOne != nullptr)
     { 
 SparkMaxRelativeEncoder NeoEncoderValue = ElevateOne->GetEncoder();
-double CalcHeight = fmin(F_XYCurve<double>(xArrayElevate,yArrayElevate, TiltAngle , 9 ), ElevatorHeight);
+double CalcHeight = fmin(F_XYCurve<double>(xArrayElevate,yArrayElevate, TiltAngle , 10 ), ElevatorHeight);
 double Elevator_Error = CalcHeight - NeoEncoderValue.GetPosition();
         {  
         this->E_P = Elevator_Error * E_Kp;
