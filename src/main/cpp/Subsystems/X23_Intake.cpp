@@ -24,7 +24,6 @@ X23_Intake::X23_Intake(int IntakeID, int IntakeFeedMaster, int IntakeFeedSlave)
 	this->_dbnc_rf_intake = new Debouncer(C_INTAKE_BTN_DBNC_TIME, Debouncer::kBoth); // Prevent accidental deployment or release of intake
 
 	this->_dly_re_intake_on = new Debouncer(C_INTAKEMOTOR_DELAY_TIME, Debouncer::kRising); // Delay intake motors on until the intake is extended partially
-	this->_initDashboard();
 	
 }
 
@@ -61,7 +60,4 @@ void X23_Intake::Collect(bool Run, bool DirectionL, bool DirectionR)
 
 	// Apply outputs
 	Motor_Intake_Master->Set(ControlMode::PercentOutput, intakeSpeed);
-
-	// Update dashboard statuses
-	this->_updateDashboard();
 }

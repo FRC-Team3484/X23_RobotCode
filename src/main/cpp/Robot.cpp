@@ -110,15 +110,8 @@ void Robot::TeleopPeriodic()
 	/*==========================*/
 
 	_intake->Collect(BB_GameDevice->GetRawButton(C_GD_INTAKE), 
-					 BB_GameDevice->GetRawButton(C_GD_DIRECT_INTAKE));
-    if(C_GD_INTAKE != false) {
-		if(C_GD_DIRECT_INTAKE == false) {
-			
-		}
-		else {
-
-		}
-	}
+					 BB_GameDevice->GetRawButton(C_GD_DIRCET_L_INTAKE),
+					 BB_GameDevice->GetRawButton(C_GD_DIRECT_R_INTAKE));
 }
 
 /**

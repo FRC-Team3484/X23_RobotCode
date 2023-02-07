@@ -14,8 +14,6 @@
 #include <frc/XboxController.h>
 
 #include "ctre/phoenix/sensors/Pigeon2.h"
-#include <networktables/NetworkTableEntry.h>
-#include <networktables/NetworkTableValue.h>
 
 
 class Robot : public frc::TimedRobot {
