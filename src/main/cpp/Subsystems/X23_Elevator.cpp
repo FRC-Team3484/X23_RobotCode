@@ -84,20 +84,33 @@ X23_Elevator::~X23_Elevator()
 
 void X23_Elevator::Elevate(double TiltAngle, double ElevatorHeight)
 {
+//scary code
+    if (TiltFalcon != nullptr && ElevateOne != nullptr)
+    {
+//Define Locals
+    double CalcAngle, CalcHeight, Elevator_Error, Tilt_Error;
+    CalcAngle = (F_XYCurve<double>(xArrayMotorPOS, yArrayAnglePOS,TiltFalcon->GetSelectedSensorVelocity(0), 10));
 
-    if(ElevateOne != nullptr)
-    { 
-SparkMaxRelativeEncoder NeoEncoderValue = ElevateOne->GetEncoder();
-double CalcHeight = fmin(F_XYCurve<double>(xArrayElevate, yArrayElevate, TiltAngle , 10 ), ElevatorHeight);
-double Elevator_Error = CalcHeight - NeoEncoderValue.GetPosition();
-        {  
-        this->E_FooFighters = (F_XYCurve<double>(xArrayElevate, yArrayFooFighters, TiltAngle, 10));
+    SparkMaxRelativeEncoder NeoEncoderValue = ElevateOne->GetEncoder();
+//second FXY curve stuff for max height
+    CalcHeight = fmin(F_XYCurve<double>(xArrayElevate, yArrayElevate, CalcAngle , 10 ), ElevatorHeight);
+    Elevator_Error = CalcHeight - NeoEncoderValue.GetPosition(); 
+
+        this->E_FooFighters = (F_XYCurve<double>(xArrayElevate, yArrayFooFighters, CalcAngle, 10));
         this->E_P = Elevator_Error * E_Kp;
         this->E_I = E_I_Max, E_I_Min, E_I+(E_Ki * Elevator_Error *E_dt);
         this->E_D = E_Kd * (Elevator_Error - E_Error_ZminusOne)/E_dt;
-        this->E_CV = E_P + E_I + E_D;
-        }
+        this->E_CV = E_P + E_I + E_D + E_FooFighters;
+
+    Tilt_Error = TiltAngle - CalcAngle;
+        
+        this->T_P = Tilt_Error * T_Kp;
+        this->T_I = T_I_Max, T_I_Min, T_I+(T_Ki * Tilt_Error *T_dt);
+        this->T_D = T_Kd * (Tilt_Error - T_Error_ZminusOne)/T_dt;
+        this->T_CV = T_P + T_I + T_D; 
+
     }
+
 }
 
 void X23_Elevator::ToggleClaw(bool ClawToggleClose, bool ClawTiltDown)
