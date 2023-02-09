@@ -40,7 +40,7 @@ namespace SC
 			this->_entry = this->_widget->GetEntry();
 		}
 
-		SC_SBItem(std::string Tab, std::string Name, frc::BuiltInWidgets Widget, wpi::StringMap<std::shared_ptr<nt::Value>> Props, double DefaultVal = 0.0)
+		SC_SBItem(std::string Tab, std::string Name, frc::BuiltInWidgets Widget, wpi::StringMap<<nt::Value>> Props, double DefaultVal = 0.0)
 		{
 			this->_tabName = Tab;
 			this->_name = Name;
@@ -70,7 +70,7 @@ namespace SC
 		void SetText(std::string value) { this->_entry.SetString(value); }
 
 	private:
-		wpi::StringMap<std::shared_ptr<nt::Value>> _props = { };
+		wpi::StringMap<<nt::Value>> _props = { };
 		std::string _tabName = "SmartDashboard";
 		std::string _name = "";
 		frc::BuiltInWidgets _type;

@@ -19,14 +19,14 @@ SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax)
     if(Emc != C_BLANK_IDS) 
     { 
         ElevateOne = new CANSparkMax(std::get<0>(Emc),rev::CANSparkMaxLowLevel::MotorType::kBrushless);
-        ElevateEncoder = ElevateOne->GetEncoder();
+    rev::SparkMaxRelativeEncoder ElevateEncoder = ElevateOne->GetEncoder();
         ElevateEncoder.SetMeasurementPeriod(0.01);
         ElevateOne->SetIdleMode (rev::CANSparkMax::IdleMode::kBrake);
-         sCh = std::get<1>(Emc);
+        sCh = std::get<1>(Emc);
 
         if(sCh != C_DISABLED_CHANNEL) 
         { 
-             ElevateTwo = new CANSparkMax (sCh, rev::CANSparkMaxLowLevel::MotorType::kBrushless);
+            ElevateTwo = new CANSparkMax (sCh, rev::CANSparkMaxLowLevel::MotorType::kBrushless);
             ElevateTwo->SetIdleMode (rev::CANSparkMax::IdleMode::kBrake);
         }
 		
@@ -39,29 +39,30 @@ SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax)
     }
 // Set tilt motor
     if(TiltMotor != C_DISABLED_CHANNEL) { TiltFalcon = new WPI_TalonFX (sCh); 
-    TiltFalcon->SetNeutralMode(NeutralMode::Brake);
-    TiltFalcon->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
-	TiltFalcon->SetSelectedSensorPosition(0);
+        TiltFalcon->SetNeutralMode(NeutralMode::Brake);
+        TiltFalcon->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
+	    TiltFalcon->SetSelectedSensorPosition(0);
     }
 	else { TiltFalcon = nullptr; }
-//Set Digital Inputs
-this->TiltHome = new DigitalInput(TiltHome);
-this->TiltLimit = new DigitalInput(TiltMax);
-this->ElevatorHome = new DigitalInput(ElevatorHome);
 
-this->PincherSolenoid = new Solenoid(ChClawGripper.CtrlID, ChClawGripper.CtrlType, ChClawGripper.Channel);
-	PincherSolenoid->Set(false);
-this->TiltSolenoid = new Solenoid(ChClawTilt.CtrlID, ChClawTilt.CtrlType, ChClawTilt.Channel);
-	TiltSolenoid->Set(false);
-this->ElevateBrake = new Solenoid(ChElevateBrake.CtrlID, ChElevateBrake.CtrlType, ChElevateBrake.Channel);
-	ElevateBrake->Set(false);
-//set Debouncer
-this->DebouncePincher = new Debouncer(C_Pincher_BTN_DBNC_TIME, frc::Debouncer::DebounceType::kRising);
-this->DebounceTilt = new Debouncer(C_Pincher_BTN_DBNC_TIME, frc::Debouncer::DebounceType::kRising);
-//set Trigger
-this->rTrigPinch = new R_TRIG();
-//set Bool
-this->PincherSolenoidState = 0;
+    //Set Digital Inputs
+    this->TiltHome = new DigitalInput(TiltHome);
+    this->TiltLimit = new DigitalInput(TiltMax);
+    this->ElevatorHome = new DigitalInput(ElevatorHome);
+
+    this->PincherSolenoid = new Solenoid(ChClawGripper.CtrlID, ChClawGripper.CtrlType, ChClawGripper.Channel);
+    	PincherSolenoid->Set(false);
+    this->TiltSolenoid = new Solenoid(ChClawTilt.CtrlID, ChClawTilt.CtrlType, ChClawTilt.Channel);
+    	TiltSolenoid->Set(false);
+    this->ElevateBrake = new Solenoid(ChElevateBrake.CtrlID, ChElevateBrake.CtrlType, ChElevateBrake.Channel);
+    	ElevateBrake->Set(false);
+    //set Debouncer
+    this->DebouncePincher = new Debouncer(C_Pincher_BTN_DBNC_TIME, frc::Debouncer::DebounceType::kRising);
+    this->DebounceTilt = new Debouncer(C_Pincher_BTN_DBNC_TIME, frc::Debouncer::DebounceType::kRising);
+    //set Trigger
+    this->rTrigPinch = new R_TRIG();
+    //set Bool
+    this->PincherSolenoidState = 0;
 }
 
 
@@ -88,24 +89,24 @@ void X23_Elevator::Elevate(double TiltAngle, double ElevatorHeight)
     if (TiltFalcon != nullptr && ElevateOne != nullptr)
     {
 //Define Locals
-    double CalcAngle, CalcHeight, Elevator_Error, Tilt_Error;
-    CalcAngle = (F_XYCurve<double>(xArrayMotorPOS, yArrayAnglePOS,TiltFalcon->GetSelectedSensorVelocity(0), 10));
+        double CalcAngle, CalcHeight, Elevator_Error, Tilt_Error;
+        CalcAngle = (F_XYCurve<double>(xArrayMotorPOS, yArrayAnglePOS,TiltFalcon->GetSelectedSensorVelocity(0), 10));
 
-    SparkMaxRelativeEncoder NeoEncoderValue = ElevateOne->GetEncoder();
+        SparkMaxRelativeEncoder NeoEncoderValue = ElevateOne->GetEncoder();
 //second FXY curve stuff for max height
-    CalcHeight = fmin(F_XYCurve<double>(xArrayElevate, yArrayElevate, CalcAngle , 10 ), ElevatorHeight);
-    Elevator_Error = CalcHeight - NeoEncoderValue.GetPosition(); 
+        CalcHeight = fmin(F_XYCurve<double>(xArrayElevate, yArrayElevate, CalcAngle , 10 ), ElevatorHeight);
+        Elevator_Error = CalcHeight - NeoEncoderValue.GetPosition(); 
 
         this->E_FooFighters = (F_XYCurve<double>(xArrayElevate, yArrayFooFighters, CalcAngle, 10));
         this->E_P = Elevator_Error * E_Kp;
-        this->E_I = E_I_Max, E_I_Min, E_I+(E_Ki * Elevator_Error *E_dt);
+        this->E_I = F_Limit(E_I_Max, E_I_Min, E_I+(E_Ki * Elevator_Error *E_dt));
         this->E_D = E_Kd * (Elevator_Error - E_Error_ZminusOne)/E_dt;
         this->E_CV = E_P + E_I + E_D + E_FooFighters;
 
     Tilt_Error = TiltAngle - CalcAngle;
         
         this->T_P = Tilt_Error * T_Kp;
-        this->T_I = T_I_Max, T_I_Min, T_I+(T_Ki * Tilt_Error *T_dt);
+        this->T_I = F_Limit(T_I_Max, T_I_Min, T_I+(T_Ki * Tilt_Error *T_dt));
         this->T_D = T_Kd * (Tilt_Error - T_Error_ZminusOne)/T_dt;
         this->T_CV = T_P + T_I + T_D; 
 

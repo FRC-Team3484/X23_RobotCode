@@ -5,9 +5,8 @@
 #include "Robot.h"
 #include "constants.h"
 #include "FRC3484_Lib/utils/SC_Functions.h"
-
+#include "Subsystems/X23_Intake.h"
 #include "frc/PneumaticsModuleType.h"
-
 
 using namespace frc;
 using namespace SC;
@@ -21,7 +20,9 @@ void Robot::RobotInit()
                                    std::make_tuple<int, int>(C_FX_FR_MASTER, C_FX_FR_SLAVE),
 								   std::make_tuple<int, int>(C_FX_BL_MASTER, C_FX_BL_SLAVE),
                                    std::make_tuple<int, int>(C_FX_BR_MASTER, C_FX_BR_SLAVE),
-                                   SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_DRIVE_SOL});
+                                   SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_DRIVE_SOL}); 
+
+	_intake = new X23_Intake (int IntakeLeft, int IntakeRight);
 
 	
 	Throttle_Range_Normal(-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND);
@@ -104,7 +105,13 @@ void Robot::TeleopPeriodic()
 					 0.0,
 					 drivetrain_mode);
 	}
-  
+	/*==========================*/
+	/*===Game Device Controls===*/
+	/*==========================*/
+
+	_intake->Collect(BB_GameDevice->GetRawButton(C_GD_INTAKE), 
+					 BB_GameDevice->GetRawButton(C_GD_DIRCET_L_INTAKE),
+					 BB_GameDevice->GetRawButton(C_GD_DIRECT_R_INTAKE));
 }
 
 /**
