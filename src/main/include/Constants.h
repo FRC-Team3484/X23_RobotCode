@@ -101,7 +101,7 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 /*======================*/
 #define C_DRIVER_USB                 0
 #define C_GAMEDEV_USB                1
-
+#define C_BUTTONBOX
 // Game Device control input scheme 
 // #define GD_SCHEME_JOYSTICK	/* Logitech Extreme-3D Pro Joystick Scheme */
 #define GD_SCHEME_XBOX			/* Xbox Controller Scheme */
@@ -138,12 +138,23 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 /*===================*/
 /* Game Device Input */
 /*===================*/
-#ifdef GD_SCHEME_XBOX
-	#define C_GD_INTAKE						XBOX_LB
-	#define C_GD_SUCK_CUBE					XBOX_A
-	#define C_GD_KNOCK_CONE_L				XBOX_B
-	#define C_GD_KNOCK_CONE_R				XBOX_X
-	#define C_GB_SPIT_CUBES					XBOX_Y
+#ifdef C_BUTTONBOX
+/* intake modes */					
+	#define C_SUCK_CUBE					R_BTN_1
+	#define C_KNOCK_CONE_L				R_BTN_2
+	#define C_KNOCK_CONE_R				R_BTN_3
+	#define C_SPIT_CUBES				R_BTN_4
+/* elevator modes */					
+	#define C_HIGH_CONE					L_BTN_1
+	#define C_HIGH_CUBE					L_BTN_2
+	#define C_MID_CONE					L_BTN_3
+	#define C_MID_CUBE					L_BTN_4
+	#define C_LOW						L_BTN_5
+	#define C_NEUTRAL					L_BTN_6
+	#define C_D_PICKUP					L_BTN_7
+/* claw modes */					
+	#define C_CLAW_GRAB					R_BTN_5
+	#define C_CLAW_PIV					R_BTN_6
 
 #elif defined(GD_SCHEME_JOYSTICK)
 	#define C_GD_INTAKE					LE3D_BTN_5

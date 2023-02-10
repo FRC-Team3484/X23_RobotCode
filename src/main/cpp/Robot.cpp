@@ -109,11 +109,10 @@ void Robot::TeleopPeriodic()
 	/*===Game Device Controls===*/
 	/*==========================*/
 
-	_intake->Collect(BB_GameDevice->GetRawButton(C_GD_INTAKE), 
-					 BB_GameDevice->GetRawButton(C_GD_SUCK_CUBE),
-					 BB_GameDevice->GetRawButton(C_GD_KNOCK_CONE_L),
-					 BB_GameDevice->GetRawButton(C_GD_KNOCK_CONE_R),
-					 BB_GameDevice->GetRawButton(C_GB_SPIT_CUBES));
+	_intake->Collect(BB_GameDevice->GetRawButton(C_SUCK_CUBE),
+					 BB_GameDevice->GetRawButton(C_KNOCK_CONE_L),
+					 BB_GameDevice->GetRawButton(C_KNOCK_CONE_R),
+					 BB_GameDevice->GetRawButton(C_SPIT_CUBES));
 }
 
 /**

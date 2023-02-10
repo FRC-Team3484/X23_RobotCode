@@ -22,7 +22,7 @@ class X23_Intake
 
 public:
 	X23_Intake(int IntakeLeft, int IntakeRight);
-	void Collect(bool Run, bool ButtonA, bool ButtonB, bool ButtonC, bool ButtonD);
+	void Collect(bool ButtonA, bool ButtonB, bool ButtonC, bool ButtonD);
 ~X23_Intake();
 
 private:
