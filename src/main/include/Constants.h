@@ -139,9 +139,11 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 /* Game Device Input */
 /*===================*/
 #ifdef GD_SCHEME_XBOX
-	#define C_GD_INTAKE					XBOX_LB
-	#define C_GD_DIRCET_L_INTAKE			XBOX_A
-	#define C_GD_DIRECT_R_INTAKE			XBOX_B
+	#define C_GD_INTAKE						XBOX_LB
+	#define C_GD_SUCK_CUBE					XBOX_A
+	#define C_GD_KNOCK_CONE_L				XBOX_B
+	#define C_GD_KNOCK_CONE_R				XBOX_X
+	#define C_GB_SPIT_CUBES					XBOX_Y
 
 #elif defined(GD_SCHEME_JOYSTICK)
 	#define C_GD_INTAKE					LE3D_BTN_5

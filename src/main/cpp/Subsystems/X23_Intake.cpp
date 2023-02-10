@@ -65,7 +65,7 @@ if(Motor_Intake_Left != nullptr && Motor_Intake_Right != nullptr)
 
 		else if(ButtonD != false)
 		{
-		//Sphit Out Cubes
+		//Spit Out Cubes
 		Motor_Intake_Right->Set(ControlMode::PercentOutput, -1.0);
 		Motor_Intake_Left->Set(ControlMode::PercentOutput, 1.0);
 		}
