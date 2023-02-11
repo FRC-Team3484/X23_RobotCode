@@ -38,8 +38,8 @@
 #define C_PIGEON_IMU			   20
 #define C_PCM					   30
 #define C_PDP					   40
-
-
+#define C_FX_ELEVATEMOTOR           8
+#define C_FX_TILTMOTOR              9
 /*===================*/
 /* Solenoid Channels */
 /*===================*/
