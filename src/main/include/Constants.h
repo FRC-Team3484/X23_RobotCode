@@ -45,6 +45,10 @@
 /*===================*/
 #define C_DRIVE_SOL					0 // Shifter
 #define C_SOL_INTAKE				1
+#define C_SOL_CLAW_L				2
+#define C_SOL_CLAW_R				3
+#define C_SOL_CLAW_TILT				4
+
 
 /*==============*/
 /* DIO Channels */

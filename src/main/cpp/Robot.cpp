@@ -14,7 +14,7 @@ using namespace ctre;
 void Robot::RobotInit() 
 {
 	GP1_Driver = new XboxController(/*USB Port*/ C_DRIVER_USB);
-	//BB_GameDevice = new GenericHID(/*USB Port*/ 1);
+	BB_Jgerald = new GenericHID(/*USB Port*/ 1);
 	Gyroscope = nullptr; //new phoenix::sensors::Pigeon2(C_PIGEON_IMU);
   	_drivetrain = new X23_Drivetrain(std::make_tuple<int, int>(C_FX_FL_MASTER, C_FX_FL_SLAVE),
                                    std::make_tuple<int, int>(C_FX_FR_MASTER, C_FX_FR_SLAVE),
@@ -23,7 +23,8 @@ void Robot::RobotInit()
                                    SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_DRIVE_SOL}); 
 
 	_intake = new X23_Intake ( C_SPX_FEED_SLAVE, C_SPX_FEED_MASTER);
-
+	_elevator = new X23_Elevator (std::tuple<int,int>(C_SOL_CLAW_L,C_SOL_CLAW_R),int C_SOL_CLAW_TILT, SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt,
+SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
 	
 	Throttle_Range_Normal(-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND);
 	Throttle_Range_Fine(-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE);
@@ -109,10 +110,13 @@ void Robot::TeleopPeriodic()
 	/*===Game Device Controls===*/
 	/*==========================*/
 
-	_intake->Collect(BB_GameDevice->GetRawButton(C_SUCK_CUBE),
-					 BB_GameDevice->GetRawButton(C_KNOCK_CONE_L),
-					 BB_GameDevice->GetRawButton(C_KNOCK_CONE_R),
-					 BB_GameDevice->GetRawButton(C_SPIT_CUBES));
+	_intake->Collect(BB_Jgerald->GetRawButton(C_SUCK_CUBE),
+					 BB_Jgerald->GetRawButton(C_KNOCK_CONE_L),
+					 BB_Jgerald->GetRawButton(C_KNOCK_CONE_R),
+					 BB_Jgerald->GetRawButton(C_SPIT_CUBES));
+	
+	_elevator->ToggleClaw(BB_Jgerald->GetRawButton(C_CLAW_GRAB),
+						  BB_Jgerald->GetRawButton(C_CLAW_PIV));
 }
 
 /**
