@@ -1,4 +1,4 @@
-// Copyright (c) FIRST and other WPILib contributors.
+   // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -207,3 +207,5 @@ const std::tuple<int, int> C_BLANK_IDS = std::make_tuple<int, int>(C_DISABLED_CH
 #define T_Ki 0.1
 #define T_dt 0.01
 #define T_Kd 0.1
+#define E_SPgt 0.1
+#define T_SPgt 0.1

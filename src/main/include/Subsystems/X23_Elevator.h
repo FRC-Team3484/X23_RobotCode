@@ -44,7 +44,7 @@ private:
 //Debouncers
 	bool PincherSolenoidState;
 
-    SC::R_TRIG *rTrigPinch;
+    SC::R_TRIG *rTrigPinch, *rTrigEHome, *rTrigTHome, *rTrigTLimit;
     frc::Debouncer *DebouncePincher, *DebounceTilt;
 //PID Elevator Loop
 double E_CV;
@@ -52,7 +52,7 @@ double E_FooFighters;
 double E_P;
 double E_I_Min;
 double E_I_Max;
-double E_I = 0;
+double E_I = 0; 
 double xArrayMotorPOS [10] ;//Actuator stroke position
 double yArrayAnglePOS [10] ;//Tilt
 double yArrayFooFighters [10] {10, 9, 8, 7, 6, 5, 4, 3, 2, 1};

@@ -19,7 +19,7 @@ SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax)
     if(Emc != C_BLANK_IDS) 
     { 
         ElevateOne = new CANSparkMax(std::get<0>(Emc),rev::CANSparkMaxLowLevel::MotorType::kBrushless);
-    rev::SparkMaxRelativeEncoder ElevateEncoder = ElevateOne->GetEncoder();
+        rev::SparkMaxRelativeEncoder ElevateEncoder = ElevateOne->GetEncoder();
         ElevateEncoder.SetMeasurementPeriod(0.01);
         ElevateOne->SetIdleMode (rev::CANSparkMax::IdleMode::kBrake);
         sCh = std::get<1>(Emc);
@@ -85,14 +85,35 @@ X23_Elevator::~X23_Elevator()
 
 void X23_Elevator::Elevate(double TiltAngle, double ElevatorHeight)
 {
-//scary code
-    if (TiltFalcon != nullptr && ElevateOne != nullptr)
+
+if(ElevatorHome != nullptr && TiltFalcon != nullptr && ElevateOne != nullptr && TiltLimit != nullptr && TiltHome != nullptr)
+{
+SparkMaxRelativeEncoder NeoEncoderValue = ElevateOne->GetEncoder();
+this->rTrigEHome->Check(ElevatorHome->Get());
+this->rTrigTHome->Check(TiltHome->Get());
+this->rTrigTLimit->Check(TiltLimit->Get());
+    if (rTrigEHome->Q)
     {
+    E_FooFighters = E_D = E_I = E_P = 0;
+    NeoEncoderValue.SetPosition(0);
+    }
+    if (rTrigTHome->Q)
+    {
+    T_D = T_I = T_P = 0;
+    NeoEncoderValue.SetPosition(0);
+    }
+    else if (rTrigTLimit->Q)
+    {
+    T_D = T_I = T_P = 0;
+    NeoEncoderValue.SetPosition(0);
+    }
+//scary code
+
+
 //Define Locals
         double CalcAngle, CalcHeight, Elevator_Error, Tilt_Error;
         CalcAngle = (F_XYCurve<double>(xArrayMotorPOS, yArrayAnglePOS,TiltFalcon->GetSelectedSensorVelocity(0), 10));
 
-        SparkMaxRelativeEncoder NeoEncoderValue = ElevateOne->GetEncoder();
 //second FXY curve stuff for max height
         CalcHeight = fmin(F_XYCurve<double>(xArrayElevate, yArrayElevate, CalcAngle , 10 ), ElevatorHeight);
         Elevator_Error = CalcHeight - NeoEncoderValue.GetPosition(); 
@@ -110,10 +131,10 @@ void X23_Elevator::Elevate(double TiltAngle, double ElevatorHeight)
         this->T_D = T_Kd * (Tilt_Error - T_Error_ZminusOne)/T_dt;
         this->T_CV = T_P + T_I + T_D; 
 
-    }
+    
 
 }
-
+}
 void X23_Elevator::ToggleClaw(bool ClawToggleClose, bool ClawTiltDown)
 {
     if((this->rTrigPinch != NULL)) 
