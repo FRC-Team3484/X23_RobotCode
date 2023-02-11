@@ -13,7 +13,7 @@
 class X23_Elevator
 {
 public:
-    X23_Elevator(std::tuple<int,int> ElevateMotor,int TiltMotor,SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt,
+    X23_Elevator(int ElevateMotor,int TiltMotor,SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt,
 SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
      //Emc is Elevator motor Controller,Master and Slave//
 
@@ -31,7 +31,7 @@ private:
     void _setOutputs();
 
 // Declare Tilt 
-    ctre::phoenix::motorcontrol::can::WPI_TalonFX *TiltFalcon;  
+    ctre::phoenix::motorcontrol::can::WPI_TalonFX *TiltFalcon, *ElevateFalcon;  
 // Declare Neo
     rev::CANSparkMax *ElevateOne, *ElevateTwo;
     //rev::SparkMaxRelativeEncoder ElevateEncoder;

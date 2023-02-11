@@ -60,19 +60,14 @@
 #define L_JOY_Y         0
 #define R_JOY_Y         1
 // Buttons
-#define L_BTN_1         1
-#define L_BTN_2         2
-#define L_BTN_3         3
-#define L_BTN_4         4
-#define L_BTN_5         5
-#define L_BTN_6         6
-#define L_BTN_7         7
-#define R_BTN_1         8
-#define R_BTN_2         9
-#define R_BTN_3         10
-#define R_BTN_4         11
-#define R_BTN_5         12
-#define R_BTN_6         13
+#define BTN_1         1
+#define BTN_2         2
+#define BTN_3         3
+#define BTN_4         4
+#define BTN_5         5
+#define BTN_6         6
+#define BTN_7         7
+#define BTN_8         8
 /*==================================*/
 /* Logitech Extreme-3D Joystick Map */
 /*==================================*/

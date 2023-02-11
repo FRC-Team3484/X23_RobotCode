@@ -23,7 +23,7 @@ void Robot::RobotInit()
                                    SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_DRIVE_SOL}); 
 
 	_intake = new X23_Intake ( C_SPX_FEED_SLAVE, C_SPX_FEED_MASTER);
-	_elevator = new X23_Elevator (std::tuple<int,int> C_FX_ELEVATE_MOTOR,
+	_elevator = new X23_Elevator (C_FX_ELEVATE_MOTOR,
 								C_FX_TILT_MOTOR,
 							    SC::SC_Solenoid{},
 							    SC::SC_Solenoid{},
