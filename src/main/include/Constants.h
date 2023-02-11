@@ -45,9 +45,9 @@
 /*===================*/
 #define C_DRIVE_SOL					0 // Shifter
 #define C_SOL_INTAKE				1
-#define C_SOL_CLAW_L				2
-#define C_SOL_CLAW_R				3
-#define C_SOL_CLAW_TILT				4
+#define C_SOL_CLAW_GRAB				2
+#define C_SOL_CLAW_TILT				3
+#define C_SOL_EL
 
 
 /*==============*/
@@ -144,21 +144,21 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 /*===================*/
 #ifdef C_BUTTONBOX
 /* intake modes */					
-	#define C_SUCK_CUBE					R_BTN_1
-	#define C_KNOCK_CONE_L				R_BTN_2
-	#define C_KNOCK_CONE_R				R_BTN_3
-	#define C_SPIT_CUBES				R_BTN_4
-/* elevator modes */					
-	#define C_HIGH_CONE					L_BTN_1
-	#define C_HIGH_CUBE					L_BTN_2
-	#define C_MID_CONE					L_BTN_3
-	#define C_MID_CUBE					L_BTN_4
-	#define C_LOW						L_BTN_5
-	#define C_NEUTRAL					L_BTN_6
-	#define C_D_PICKUP					L_BTN_7
+	#define C_SUCK_CUBE					BTN_1
+	#define C_KNOCK_CONE_L				BTN_2
+	#define C_KNOCK_CONE_R				BTN_3
+	#define C_SPIT_CUBES				BTN_4
 /* claw modes */					
-	#define C_CLAW_GRAB					R_BTN_5
-	#define C_CLAW_PIV					R_BTN_6
+	#define C_CLAW_GRAB					BTN_5
+	#define C_CLAW_PIV					BTN_6
+/* elevator modes 					
+*	#define C_HIGH_CONE					L_BTN_1
+*	#define C_HIGH_CUBE					L_BTN_2
+*	#define C_MID_CONE					L_BTN_3
+*	#define C_MID_CUBE					L_BTN_4
+*	#define C_LOW						L_BTN_5
+*	#define C_NEUTRAL					L_BTN_6
+*	#define C_D_PICKUP					L_BTN_7 */
 
 #elif defined(GD_SCHEME_JOYSTICK)
 	#define C_GD_INTAKE					LE3D_BTN_5
