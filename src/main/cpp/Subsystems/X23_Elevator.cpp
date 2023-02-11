@@ -9,35 +9,19 @@ using namespace frc;
 using namespace ctre::phoenix::motorcontrol;
 using namespace ctre::phoenix::motorcontrol::can;
 
-// Emc-Elevator Motor Control
-X23_Elevator::X23_Elevator(std::tuple<int,int> Emc,int TiltMotor,SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt,
+// ElevateFalcon-Elevator Motor Control
+X23_Elevator::X23_Elevator(int ElevateMotor,int TiltMotor,SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt,
 SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax)
 {
 // set elevate motors
-    int sCh = C_DISABLED_CHANNEL;
-    if(Emc != C_BLANK_IDS) 
-    { 
-        ElevateOne = new CANSparkMax(std::get<0>(Emc),rev::CANSparkMaxLowLevel::MotorType::kBrushless);
-        rev::SparkMaxRelativeEncoder ElevateEncoder = ElevateOne->GetEncoder();
-        ElevateEncoder.SetMeasurementPeriod(0.01);
-        ElevateOne->SetIdleMode (rev::CANSparkMax::IdleMode::kBrake);
-        sCh = std::get<1>(Emc);
-
-        if(sCh != C_DISABLED_CHANNEL) 
-        { 
-            ElevateTwo = new CANSparkMax (sCh, rev::CANSparkMaxLowLevel::MotorType::kBrushless);
-            ElevateTwo->SetIdleMode (rev::CANSparkMax::IdleMode::kBrake);
-        }
-		
-        else { ElevateTwo = nullptr; }
-    } 
-    else
-    {
-        ElevateOne = nullptr;
-        ElevateTwo = nullptr; 
+if(ElevateMotor != C_DISABLED_CHANNEL) { ElevateFalcon = new WPI_TalonFX (ElevateMotor); 
+        TiltFalcon->SetNeutralMode(NeutralMode::Brake);
+        TiltFalcon->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
+	    TiltFalcon->SetSelectedSensorPosition(0);
     }
+	else { TiltFalcon = nullptr; }
 // Set tilt motor
-    if(TiltMotor != C_DISABLED_CHANNEL) { TiltFalcon = new WPI_TalonFX (sCh); 
+    if(TiltMotor != C_DISABLED_CHANNEL) { TiltFalcon = new WPI_TalonFX (TiltMotor); 
         TiltFalcon->SetNeutralMode(NeutralMode::Brake);
         TiltFalcon->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
 	    TiltFalcon->SetSelectedSensorPosition(0);
@@ -69,8 +53,7 @@ X23_Elevator::~X23_Elevator()
 {
     if (rTrigPinch != nullptr) { delete rTrigPinch; rTrigPinch = nullptr; }
 
-    if (ElevateOne != nullptr) { delete ElevateOne; ElevateOne = nullptr; }
-    if (ElevateTwo != nullptr) { delete ElevateTwo; ElevateTwo = nullptr; }
+    if (ElevateFalcon != nullptr) { delete ElevateFalcon; ElevateFalcon = nullptr; }
     if (DebouncePincher != nullptr) { delete DebouncePincher; DebouncePincher = nullptr; }
     if (TiltLimit != nullptr) { delete TiltLimit; TiltLimit = nullptr; }
 
@@ -85,26 +68,25 @@ X23_Elevator::~X23_Elevator()
 void X23_Elevator::Elevate(double TiltAngle, double ElevatorHeight)
 {
 
-if(ElevatorHome != nullptr && TiltFalcon != nullptr && ElevateOne != nullptr && TiltLimit != nullptr && TiltHome != nullptr)
+if(ElevatorHome != nullptr && TiltFalcon != nullptr && ElevateFalcon != nullptr && TiltLimit != nullptr && TiltHome != nullptr)
 {
-SparkMaxRelativeEncoder NeoEncoderValue = ElevateOne->GetEncoder();
 this->rTrigEHome->Check(ElevatorHome->Get());
 this->rTrigTHome->Check(TiltHome->Get());
 this->rTrigTLimit->Check(TiltLimit->Get());
     if (rTrigEHome->Q)
     {
     E_FooFighters = E_D = E_I = E_P = 0;
-    NeoEncoderValue.SetPosition(0);
+    ElevateFalcon->SetSelectedSensorPosition(0);
     }
     if (rTrigTHome->Q)
     {
     T_D = T_I = T_P = 0;
-    NeoEncoderValue.SetPosition(0);
+    
     }
     else if (rTrigTLimit->Q)
     {
     T_D = T_I = T_P = 0;
-    NeoEncoderValue.SetPosition(0);
+    ;
     }
 //scary code
 
@@ -115,7 +97,7 @@ this->rTrigTLimit->Check(TiltLimit->Get());
 
 //second FXY curve stuff for max height
         CalcHeight = fmin(F_XYCurve<double>(xArrayElevate, yArrayElevate, CalcAngle , 10 ), ElevatorHeight);
-        Elevator_Error = CalcHeight - NeoEncoderValue.GetPosition(); 
+        Elevator_Error = CalcHeight - ElevateFalcon->GetSelectedSensorPosition(); 
 
         this->E_FooFighters = (F_XYCurve<double>(xArrayElevate, yArrayFooFighters, CalcAngle, 10));
         this->E_P = Elevator_Error * E_Kp;
@@ -181,11 +163,11 @@ void X23_Elevator::ToggleClaw(bool ClawToggleClose, bool ClawTiltDown)
 
 void X23_Elevator::StopMotors()
 {
-    if(ElevateOne != nullptr) { ElevateOne->Set( 0.0); }
+    if(ElevateFalcon != nullptr) { ElevateFalcon->Set( 0.0); }
     if(TiltFalcon != nullptr) { TiltFalcon->Set(ControlMode::PercentOutput, 0.0); }
 }
 void X23_Elevator::ControlDirect(double RawElevate, double RawTiltFalcon)
 {
-    if(ElevateOne != nullptr) { ElevateOne->Set( F_Limit(-1.0, 1.0, RawElevate)); }
+    if(ElevateFalcon != nullptr) { ElevateFalcon->Set( F_Limit(-1.0, 1.0, RawElevate)); }
     if(TiltFalcon != nullptr) { TiltFalcon->Set(ControlMode::PercentOutput, F_Limit(-1.0, 1.0, RawTiltFalcon)); }
 }

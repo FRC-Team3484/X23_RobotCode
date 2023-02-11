@@ -7,7 +7,6 @@
 #include "frc/DigitalInput.h"
 #include "frc/filter/Debouncer.h"
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
-#include "rev/CANSparkMax.h"
 #include "frc/filter/Debouncer.h"
 
 class X23_Elevator
@@ -32,9 +31,6 @@ private:
 
 // Declare Tilt 
     ctre::phoenix::motorcontrol::can::WPI_TalonFX *TiltFalcon, *ElevateFalcon;  
-// Declare Neo
-    rev::CANSparkMax *ElevateOne, *ElevateTwo;
-    //rev::SparkMaxRelativeEncoder ElevateEncoder;
 // Declare Pincher Solenoids
     frc::Solenoid *PincherSolenoid;
 // Declare Pincher Tilt Solenoids
