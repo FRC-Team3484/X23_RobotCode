@@ -47,7 +47,7 @@
 #define C_SOL_INTAKE				1
 #define C_SOL_CLAW_GRAB				2
 #define C_SOL_CLAW_TILT				3
-#define C_SOL_EL
+#define C_SOL_ELE_BRAKE				4
 
 
 /*==============*/

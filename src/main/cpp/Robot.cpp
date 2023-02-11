@@ -27,9 +27,9 @@ void Robot::RobotInit()
 								C_FX_TILTMOTOR,
 							    SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_CLAW_GRAB},
 							    SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_CLAW_TILT},
-							    SC::SC_Solenoid{},
+							    SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_ELE_BRAKE},
 								int(),
-								int(), 
+								int(),
 								int());
 	
 	Throttle_Range_Normal(-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND);
@@ -123,6 +123,7 @@ void Robot::TeleopPeriodic()
 	
 	_elevator->ToggleClaw(BB_Jgerald->GetRawButton(C_CLAW_GRAB),
 						  BB_Jgerald->GetRawButton(C_CLAW_PIV));
+	_elevator->Elevate();
 }
 
 /**
