@@ -23,8 +23,14 @@ void Robot::RobotInit()
                                    SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_DRIVE_SOL}); 
 
 	_intake = new X23_Intake ( C_SPX_FEED_SLAVE, C_SPX_FEED_MASTER);
-	_elevator = new X23_Elevator (std::tuple<int,int>(C_SOL_CLAW_L,C_SOL_CLAW_R),int C_SOL_CLAW_TILT, SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt,
-SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
+	_elevator = new X23_Elevator (std::tuple<int,int> C_FX_ELEVATE_MOTOR,
+								C_FX_TILT_MOTOR,
+							    SC::SC_Solenoid{},
+							    SC::SC_Solenoid{},
+							    SC::SC_Solenoid{},
+								int(),
+								int(), 
+								int());
 	
 	Throttle_Range_Normal(-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND);
 	Throttle_Range_Fine(-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE);
