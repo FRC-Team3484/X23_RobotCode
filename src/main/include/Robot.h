@@ -39,7 +39,7 @@ class Robot : public frc::TimedRobot {
   SC::SC_Range<double> Throttle_Range_Fine = {-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE};
 
   double X_Demand, Y_Demand, Z_Demand;
-  double drivetrain_mode;
+  bool drivetrain_mode;
 
   frc::XboxController  *GP1_Driver;// GP = Gamepad
   frc::GenericHID      *BB_GameDevice;  

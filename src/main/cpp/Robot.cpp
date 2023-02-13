@@ -26,6 +26,7 @@ void Robot::RobotInit()
 	
 	Throttle_Range_Normal(-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND);
 	Throttle_Range_Fine(-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE);
+	drivetrain_mode = false;
 }
 /**
  * This function is called every robot packet, no matter the mode. Use
