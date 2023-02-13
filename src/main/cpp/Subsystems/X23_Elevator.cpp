@@ -13,14 +13,15 @@ using namespace ctre::phoenix::motorcontrol::can;
 X23_Elevator::X23_Elevator(int ElevateMotor,int TiltMotor,SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt,
 SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax)
 {
-// set elevate motors
-if(ElevateMotor != C_DISABLED_CHANNEL) { ElevateFalcon = new WPI_TalonFX (ElevateMotor); 
+	// set elevate motors
+	if(ElevateMotor != C_DISABLED_CHANNEL) { ElevateFalcon = new WPI_TalonFX (ElevateMotor); 
         TiltFalcon->SetNeutralMode(NeutralMode::Brake);
         TiltFalcon->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
 	    TiltFalcon->SetSelectedSensorPosition(0);
     }
 	else { TiltFalcon = nullptr; }
-// Set tilt motor
+	
+	// Set tilt motor
     if(TiltMotor != C_DISABLED_CHANNEL) { TiltFalcon = new WPI_TalonFX (TiltMotor); 
         TiltFalcon->SetNeutralMode(NeutralMode::Brake);
         TiltFalcon->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
@@ -35,17 +36,22 @@ if(ElevateMotor != C_DISABLED_CHANNEL) { ElevateFalcon = new WPI_TalonFX (Elevat
 
     this->PincherSolenoid = new Solenoid(ChClawGripper.CtrlID, ChClawGripper.CtrlType, ChClawGripper.Channel);
     	PincherSolenoid->Set(false);
-    this->TiltSolenoid = new Solenoid(ChClawTilt.CtrlID, ChClawTilt.CtrlType, ChClawTilt.Channel);
+    
+	this->TiltSolenoid = new Solenoid(ChClawTilt.CtrlID, ChClawTilt.CtrlType, ChClawTilt.Channel);
     	TiltSolenoid->Set(false);
-    this->ElevateBrake = new Solenoid(ChElevateBrake.CtrlID, ChElevateBrake.CtrlType, ChElevateBrake.Channel);
+    
+	this->ElevateBrake = new Solenoid(ChElevateBrake.CtrlID, ChElevateBrake.CtrlType, ChElevateBrake.Channel);
     	ElevateBrake->Set(false);
-    //set Debouncer
+    
+	//set Debouncer
     this->DebouncePincher = new Debouncer(C_Pincher_BTN_DBNC_TIME, frc::Debouncer::DebounceType::kRising);
     this->DebounceTilt = new Debouncer(C_Pincher_BTN_DBNC_TIME, frc::Debouncer::DebounceType::kRising);
-    //set Trigger
+    
+	//set Trigger
     this->rTrigPinch = new R_TRIG();
-    //set Bool
-    this->PincherSolenoidState = 0;
+    
+	//set Bool
+    this->PincherSolenoidState = false;
 }
 
 
@@ -67,35 +73,28 @@ X23_Elevator::~X23_Elevator()
 
 void X23_Elevator::Elevate(double TiltAngle, double ElevatorHeight)
 {
+	if(ElevatorHome != nullptr && TiltFalcon != nullptr && ElevateFalcon != nullptr && TiltLimit != nullptr && TiltHome != nullptr)
+	{
+		this->rTrigEHome->Check(ElevatorHome->Get());
+		this->rTrigTHome->Check(TiltHome->Get());
+		this->rTrigTLimit->Check(TiltLimit->Get());
 
-if(ElevatorHome != nullptr && TiltFalcon != nullptr && ElevateFalcon != nullptr && TiltLimit != nullptr && TiltHome != nullptr)
-{
-this->rTrigEHome->Check(ElevatorHome->Get());
-this->rTrigTHome->Check(TiltHome->Get());
-this->rTrigTLimit->Check(TiltLimit->Get());
-    if (rTrigEHome->Q)
-    {
-    E_FooFighters = E_D = E_I = E_P = 0;
-    ElevateFalcon->SetSelectedSensorPosition(0);
-    }
-    if (rTrigTHome->Q)
-    {
-    T_D = T_I = T_P = 0;
-    
-    }
-    else if (rTrigTLimit->Q)
-    {
-    T_D = T_I = T_P = 0;
-    ;
-    }
-//scary code
+		if (rTrigEHome->Q)
+		{
+			E_FooFighters = E_D = E_I = E_P = 0;
+			ElevateFalcon->SetSelectedSensorPosition(0);
+		}
 
+		if (rTrigTHome->Q)
+			T_D = T_I = T_P = 0;
+		else if (rTrigTLimit->Q)
+			T_D = T_I = T_P = 0;
 
 //Define Locals
         double CalcAngle, CalcHeight, Elevator_Error, Tilt_Error;
         CalcAngle = (F_XYCurve<double>(xArrayMotorPOS, yArrayAnglePOS,TiltFalcon->GetSelectedSensorVelocity(0), 10));
 
-//second FXY curve stuff for max height
+//second XY curve stuff for max height
         CalcHeight = fmin(F_XYCurve<double>(xArrayElevate, yArrayElevate, CalcAngle , 10 ), ElevatorHeight);
         Elevator_Error = CalcHeight - ElevateFalcon->GetSelectedSensorPosition(); 
 
@@ -105,35 +104,28 @@ this->rTrigTLimit->Check(TiltLimit->Get());
         this->E_D = E_Kd * (Elevator_Error - E_Error_ZminusOne)/E_dt;
         this->E_CV = E_P + E_I + E_D + E_FooFighters;
 
-    Tilt_Error = TiltAngle - CalcAngle;
+		// Tilt Motor PID
+   		Tilt_Error = TiltAngle - CalcAngle;
         
         this->T_P = Tilt_Error * T_Kp;
         this->T_I = F_Limit(T_I_Max, T_I_Min, T_I+(T_Ki * Tilt_Error *T_dt));
         this->T_D = T_Kd * (Tilt_Error - T_Error_ZminusOne)/T_dt;
         this->T_CV = T_P + T_I + T_D; 
-
-    
-
+	}
 }
-}
+
 void X23_Elevator::ToggleClaw(bool ClawToggleClose, bool ClawTiltDown)
 {
     if((this->rTrigPinch != NULL)) 
     {
         if((this->DebouncePincher != NULL) )
-        {
             this->rTrigPinch->Check(this->DebouncePincher->Calculate(ClawToggleClose));
-        }
-        else
-        {
-// Debouncer's are not instantiated, read button change directly.
+        else // Debouncer's are not instantiated, read button change directly.
             this->rTrigPinch->Check(ClawToggleClose);
-        }
-    
-
-            this->PincherSolenoidState  = (this->PincherSolenoidState && (!this->rTrigPinch->Q)) || (!this->PincherSolenoidState && this->rTrigPinch->Q);
+    	
+		this->PincherSolenoidState  = (this->PincherSolenoidState && (!this->rTrigPinch->Q)) || (!this->PincherSolenoidState && this->rTrigPinch->Q);
     }
-        else
+    else
     {
         if(this->DebouncePincher != NULL)
         {
@@ -143,29 +135,24 @@ void X23_Elevator::ToggleClaw(bool ClawToggleClose, bool ClawTiltDown)
             this->PincherSolenoidState = (this->PincherSolenoidState && !Claw) || (!this->PincherSolenoidState && Claw);
         }
         else
-        {
             this->PincherSolenoidState = (this->PincherSolenoidState && !ClawToggleClose) || (!this->PincherSolenoidState && ClawToggleClose);
-        }
     }
 
     if(this->PincherSolenoid != NULL) { this->PincherSolenoid->Set(this->PincherSolenoidState); }
 
 // set debounce on tilt
     if(this->DebounceTilt != NULL)
-    {
        if(this->TiltSolenoid != NULL) { this->TiltSolenoid->Set(this->DebounceTilt->Calculate(ClawTiltDown)); } 
-    }
     else
-    {
-        if(this->TiltSolenoid != NULL) { this->TiltSolenoid->Set(ClawTiltDown); }  
-    }
+        if(this->TiltSolenoid != NULL) { this->TiltSolenoid->Set(ClawTiltDown); } 
 }
 
 void X23_Elevator::StopMotors()
 {
-    if(ElevateFalcon != nullptr) { ElevateFalcon->Set( 0.0); }
+    if(ElevateFalcon != nullptr) { ElevateFalcon->Set(0.0); }
     if(TiltFalcon != nullptr) { TiltFalcon->Set(ControlMode::PercentOutput, 0.0); }
 }
+
 void X23_Elevator::ControlDirect(double RawElevate, double RawTiltFalcon)
 {
     if(ElevateFalcon != nullptr) { ElevateFalcon->Set( F_Limit(-1.0, 1.0, RawElevate)); }

@@ -15,18 +15,54 @@
 #include "frc/DigitalInput.h"
 #include "frc/filter/Debouncer.h"
 
+#include "frc2/command/SubsystemBase.h"
 
 
-class X23_Intake
+class X23_Intake : public frc2::SubsystemBase
 {
-
 public:
 	X23_Intake(int IntakeLeft, int IntakeRight);
-	void Collect(bool ButtonA, bool ButtonB, bool ButtonC, bool ButtonD);
-~X23_Intake();
+	~X23_Intake();
+
+	void Collect(bool Run, bool ButtonA, bool ButtonB, bool ButtonC, bool ButtonD);
+
+	/*-------------------*/
+	/* Command functions */
+	/*-------------------*/
+	/*
+		Intake Orientations
+			All cone orientations reference the the direction the cone
+			is pointing while laying on its side starting from the base 
+			and moving towards the top of the cone.
+
+		Left orientation:
+			Left mandible:	CW
+			Right mandible:	CW
+
+		Right orientation:
+			Left mandible:	CCW
+			Right mandible:	CCW
+
+		Center orientation:
+			Left mandible: CW
+			Right mandible: CCW
+
+		Cube:
+			Left mandible:	CW
+			Right mandible:	CCW
+
+		Eject
+			Left mandible:	CCW
+			Right mandible:	CW
+	*/
+
+	/* Run the intake for left-oriented cones */
+	void Collect_ConeLeft();
+
+	/* Stop the intake motors */
+	void StopIntake();
 
 private:
-	void _getColorDist();
 
 	ctre::phoenix::motorcontrol::can::VictorSPX *Motor_Intake_Right;
 	ctre::phoenix::motorcontrol::can::VictorSPX *Motor_Intake_Left;

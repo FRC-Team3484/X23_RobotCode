@@ -25,30 +25,27 @@
 /* CAN ID's */
 /*==========*/
 #define C_FX_FL_MASTER				1
-#define C_FX_FL_SLAVE			   -1
+#define C_FX_FL_SLAVE			   	C_DISABLED_CHANNEL
 #define C_FX_FR_MASTER				2
-#define C_FX_FR_SLAVE		   	   -1
+#define C_FX_FR_SLAVE			   	C_DISABLED_CHANNEL
 #define C_FX_BL_MASTER				3
-#define C_FX_BL_SLAVE			   -1
+#define C_FX_BL_SLAVE			   	C_DISABLED_CHANNEL
 #define C_FX_BR_MASTER				4
-#define C_FX_BR_SLAVE			   -1
-#define C_SPX_INTAKE                5
-#define C_SPX_FEED_MASTER           6
-#define C_SPX_FEED_SLAVE            7
-#define C_PIGEON_IMU			   20
-#define C_PCM					   30
-#define C_PDP					   40
-#define C_FX_ELEVATEMOTOR           8
-#define C_FX_TILTMOTOR              9
+#define C_FX_BR_SLAVE			   	C_DISABLED_CHANNEL
+#define C_SPX_INTAKE_LEFT          	10
+#define C_SPX_INTAKE_RIGHT          11
+#define C_FX_ELEVATEMOTOR          	12
+#define C_FX_TILTMOTOR              13
+#define C_PIGEON_IMU			   	20
+#define C_PCM					   	30
+#define C_PDP					   	40
+
 /*===================*/
 /* Solenoid Channels */
 /*===================*/
-#define C_DRIVE_SOL					0 // Shifter
-#define C_SOL_INTAKE				1
-#define C_SOL_CLAW_GRAB				2
-#define C_SOL_CLAW_TILT				3
-#define C_SOL_ELE_BRAKE				4
-
+#define C_DRIVE_SOL					0 // Octocanum Shifter
+#define C_SOL_CLAW_GRIP				1
+#define C_SOL_CLAW_TILT				2
 
 /*==============*/
 /* DIO Channels */
@@ -56,7 +53,6 @@
 #define C_DI_CH_STORED_SW			0
 #define C_DI_CH_TURRET_LS_MIN		1
 #define C_DI_CH_TURRET_LS_MAX		2
-#define C_DI_CH_LOADER_DOWN_SW		3
 
 
 /*==========*/
@@ -77,15 +73,15 @@
 
 #define C_DT_RPM_TO_FPS				(units::constants::pi * C_X23_DT_WHEEL_DIAM) / (60.0 * 12.0)
 
-const double C_GEAR_RATIO		= 1.0 / 18.0;
+const double C_GEAR_RATIO			= 1.0 / 18.0;
 
 const double C_DT_MOTOR_MAX_RPM		= 6380.0;
 const double C_DT_MOTOR_MAX_RPM_ACT = 6000.0; // TODO: Get max achievable RPM of drivetrain motors.
 const double C_DT_ENC_CPR			= 2048.0;
 
-const double C_MAX_GEAR_ENC      = (C_DT_MOTOR_MAX_RPM / 600.0) * (C_DT_ENC_CPR / C_GEAR_RATIO);
+const double C_MAX_GEAR_ENC      	= (C_DT_MOTOR_MAX_RPM / 600.0) * (C_DT_ENC_CPR / C_GEAR_RATIO);
 
-const double C_DT_SCALE_FACTOR   = ((600.0 * C_GEAR_RATIO) / C_DT_ENC_CPR) * C_DT_RPM_TO_FPS;
+const double C_DT_SCALE_FACTOR   	= ((600.0 * C_GEAR_RATIO) / C_DT_ENC_CPR) * C_DT_RPM_TO_FPS;
 
 const units::feet_per_second_t C_GEAR_MAX_SPEED 	= 17.0_fps;
 const units::feet_per_second_t C_SHIFT_UP_SPEED     = 5.0_fps;
@@ -96,20 +92,21 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 /* Intake Parameters */
 /*===================*/
 #define C_INTAKE_DRIVE_SPEED		1.0 // *100%
-#define C_INTAKE_RAMP_TIME			0.50 // Seconds
-#define C_FEED_DRIVE_SPEED			1.00 // *100%
+#define C_INTAKE_CW_SPEED			C_INTAKE_DRIVE_SPEED
+#define C_INTAKE_CCW_SPEED			-1 * C_INTAKE_DRIVE_SPEED
 
 
 /*======================*/
 /* CONTROLLER CONSTANTS */
 /*======================*/
 #define C_DRIVER_USB                 0
-#define C_GAMEDEV_USB                1
-#define C_BUTTONBOX
+#define C_OPERATOR_USB               1
+
 // Game Device control input scheme 
-// #define GD_SCHEME_JOYSTICK	/* Logitech Extreme-3D Pro Joystick Scheme */
-#define GD_SCHEME_XBOX			/* Xbox Controller Scheme */
+//#define GD_SCHEME_JOYSTICK	/* Logitech Extreme-3D Pro Joystick Scheme */
+//#define GD_SCHEME_XBOX			/* Xbox Controller Scheme */
 //#define GD_SCHEME_DS4 		/* DualShock 4 Controller Scheme */
+#define GD_SCHEME_BB			/* Custom Button Box Scheme*/
 
 
 
@@ -142,30 +139,19 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 /*===================*/
 /* Game Device Input */
 /*===================*/
-#ifdef C_BUTTONBOX
-/* intake modes */					
-	#define C_SUCK_CUBE					BTN_1
-	#define C_KNOCK_CONE_L				BTN_2
-	#define C_KNOCK_CONE_R				BTN_3
-	#define C_SPIT_CUBES				BTN_4
-/* claw modes */					
-	#define C_CLAW_GRAB					BTN_5
-	#define C_CLAW_PIV					BTN_6
-/* elevator modes 					
-*	#define C_HIGH_CONE					L_BTN_1
-*	#define C_HIGH_CUBE					L_BTN_2
-*	#define C_MID_CONE					L_BTN_3
-*	#define C_MID_CUBE					L_BTN_4
-*	#define C_LOW						L_BTN_5
-*	#define C_NEUTRAL					L_BTN_6
-*	#define C_D_PICKUP					L_BTN_7 */
+#ifdef GD_SCHEME_XBOX
+	#define C_GD_INTAKE					XBOX_LB
+	#define C_GD_DIRCET_L_INTAKE		XBOX_A
+	#define C_GD_DIRECT_R_INTAKE		XBOX_B
 
 #elif defined(GD_SCHEME_JOYSTICK)
 	#define C_GD_INTAKE					LE3D_BTN_5
 	
 #elif defined(GD_SCHEME_DS4)
 	#define C_GD_INTAKE					DS4_CROSS
-	
+#elif defined(GD_SCHEME_BB)
+	// TODO Define button box input mapping
+	#define C_GD_COLLECT_CONE_LEFT		1
 #endif
 
 /*==================*/
@@ -178,6 +164,7 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 // Game device inputs
 #define C_INTAKE_BTN_DBNC_TIME		0.100_s	// Intake deploy controller input debounce time
 #define C_Pincher_BTN_DBNC_TIME     0.100_s // Pincher Debounce Time
+
 // Auto-functions
 #define C_AUTOSHIFT_DBNC_TIME		0.250_s	// Auto-shift debounce time
 
@@ -193,19 +180,25 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 /* General Constants */
 /*===================*/
 #define C_SCAN_TIME					0.020_s
-#define C_SCAN_TIME_SEC				C_SCAN_TIME.value() // Seconds
+#define C_SCAN_TIME_SEC				C_SCAN_TIME.value() // Seconds'
+
 const std::tuple<int, int> C_BLANK_IDS = std::make_tuple<int, int>(C_DISABLED_CHANNEL, C_DISABLED_CHANNEL);
 
-/*==================*/
-/*PID Loop Variables*/
-/*==================*/
+/*===========================*/
+/*Elevator PID Loop Variables*/
+/*===========================*/
 #define E_Kp 0.1
 #define E_Ki 0.0
 #define E_dt 0.01
 #define E_Kd 0.1
+
+/*================================*/
+/*Elevator Tilt PID Loop Variables*/
+/*================================*/
 #define T_Kp 0.1
 #define T_Ki 0.1
 #define T_dt 0.01
 #define T_Kd 0.1
+
 #define E_SPgt 0.1
 #define T_SPgt 0.1

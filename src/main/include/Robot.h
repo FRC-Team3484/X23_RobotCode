@@ -6,11 +6,11 @@
 #include "Constants.h"
 #include "Subsystems/X23_Drivetrain.h"
 #include "Subsystems/X23_Intake.h"
-#include "Subsystems/X23_Elevator.h"
 #include <frc/TimedRobot.h>
 #include <frc2/command/Command.h>
 
 #include "FRC3484_Lib/utils/SC_Datatypes.h"
+#include "FRC3484_Lib/components/SC_OperatorInput.h"
 
 #include <frc/XboxController.h>
 
@@ -35,7 +35,6 @@ class Robot : public frc::TimedRobot {
 
   X23_Drivetrain *_drivetrain = nullptr;
   X23_Intake *_intake = nullptr;
-  X23_Elevator *_elevator = nullptr;
 
   SC::SC_Range<double> Throttle_Range_Normal = {-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND};
   SC::SC_Range<double> Throttle_Range_Fine = {-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE};
@@ -44,7 +43,8 @@ class Robot : public frc::TimedRobot {
   double drivetrain_mode;
 
   frc::XboxController  *GP1_Driver;// GP = Gamepad
-  frc::GenericHID      *BB_Jgerald; // Jgerald is the name of the button box, thank you jystin <3
+  SC::SC_OperatorInput	*BB_GameDevice;
+//  frc::GenericHID      *BB_GameDevice;  
 
   ctre::phoenix::sensors::Pigeon2 *Gyroscope;
 };

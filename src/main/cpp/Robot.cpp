@@ -7,14 +7,18 @@
 #include "FRC3484_Lib/utils/SC_Functions.h"
 #include "Subsystems/X23_Intake.h"
 #include "frc/PneumaticsModuleType.h"
+#include "frc2/command/Commands.h"
+#include "frc2/command/CommandScheduler.h"
 
 using namespace frc;
+using namespace frc2;
 using namespace SC;
 using namespace ctre;
+
 void Robot::RobotInit() 
 {
 	GP1_Driver = new XboxController(/*USB Port*/ C_DRIVER_USB);
-	BB_Jgerald = new GenericHID(/*USB Port*/ 1);
+	BB_GameDevice = new SC_OperatorInput(/*USB Port*/ 1);
 	Gyroscope = nullptr; //new phoenix::sensors::Pigeon2(C_PIGEON_IMU);
   	_drivetrain = new X23_Drivetrain(std::make_tuple<int, int>(C_FX_FL_MASTER, C_FX_FL_SLAVE),
                                    std::make_tuple<int, int>(C_FX_FR_MASTER, C_FX_FR_SLAVE),
@@ -22,15 +26,8 @@ void Robot::RobotInit()
                                    std::make_tuple<int, int>(C_FX_BR_MASTER, C_FX_BR_SLAVE),
                                    SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_DRIVE_SOL}); 
 
-	_intake = new X23_Intake ( C_SPX_FEED_SLAVE, C_SPX_FEED_MASTER);
-	_elevator = new X23_Elevator (C_FX_ELEVATEMOTOR,
-								C_FX_TILTMOTOR,
-							    SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_CLAW_GRAB},
-							    SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_CLAW_TILT},
-							    SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_ELE_BRAKE},
-								int(),
-								int(),
-								int());
+	_intake = new X23_Intake(C_SPX_INTAKE_LEFT, C_SPX_INTAKE_RIGHT);
+
 	
 	Throttle_Range_Normal(-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND);
 	Throttle_Range_Fine(-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE);
@@ -63,25 +60,33 @@ void Robot::AutonomousInit() {}
 
 void Robot::AutonomousPeriodic() {}
 
-void Robot::TeleopInit() {}
+void Robot::TeleopInit() 
+{
+	if(BB_GameDevice != nullptr)
+	{
+		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_LEFT).OnTrue(frc2::cmd::RunOnce([this] { this->_intake->Collect_ConeLeft(); }));
+		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_LEFT).OnFalse(frc2::cmd::RunOnce([this] { this->_intake->StopIntake(); }));
+	}
+}
 
 /**
  * This function is called periodically during operator control.
  */
 void Robot::TeleopPeriodic() 
 {
+
 	/*======================*/
 	/*====Driver Controls===*/
 	/*======================*/
-/*
+
 	if(GP1_Driver->GetRightBumper())
 	{
 		// Fine control mode; Scales driver input to smaller range for finer control
-		Y_Demand = F_Scale(-100.0, 100.0, Throttle_Range_Fine, -GP1_Driver->GetLeftY());
-		X_Demand = F_Scale(-100.0, 100.0, Throttle_Range_Fine, GP1_Driver->GetLeftX());
-		Z_Demand = F_Scale(-100.0, 100.0, Throttle_Range_Fine, GP1_Driver->GetRightX());
+		Y_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, -GP1_Driver->GetLeftY());
+		X_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, GP1_Driver->GetLeftX());
+		Z_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, GP1_Driver->GetRightX());
 	}
-	else*/
+	else
 	{
 		// Normal control mode
 		Y_Demand = F_Limit(Throttle_Range_Normal, GP1_Driver->GetLeftY());
@@ -99,10 +104,10 @@ void Robot::TeleopPeriodic()
 	if(Gyroscope != nullptr)
 	{
 		_drivetrain->Drive(SC::F_Deadband(X_Demand, C_DRIVE_DEADBAND),
-					 SC::F_Deadband(Y_Demand, C_DRIVE_DEADBAND), 
-					 SC::F_Deadband(Z_Demand, C_DRIVE_DEADBAND), 
-					 Gyroscope->GetYaw(),
-					 drivetrain_mode);
+							SC::F_Deadband(Y_Demand, C_DRIVE_DEADBAND), 
+							SC::F_Deadband(Z_Demand, C_DRIVE_DEADBAND), 
+							Gyroscope->GetYaw(),
+							drivetrain_mode);
 	}
 	else
 	{
@@ -116,14 +121,11 @@ void Robot::TeleopPeriodic()
 	/*===Game Device Controls===*/
 	/*==========================*/
 
-	_intake->Collect(BB_Jgerald->GetRawButton(C_SUCK_CUBE),
-					 BB_Jgerald->GetRawButton(C_KNOCK_CONE_L),
-					 BB_Jgerald->GetRawButton(C_KNOCK_CONE_R),
-					 BB_Jgerald->GetRawButton(C_SPIT_CUBES));
-	
-	_elevator->ToggleClaw(BB_Jgerald->GetRawButton(C_CLAW_GRAB),
-						  BB_Jgerald->GetRawButton(C_CLAW_PIV));
-	_elevator->Elevate();
+	_intake->Collect(BB_GameDevice->IsButtonPressed(C_GD_INTAKE), 
+					 BB_GameDevice->IsButtonPressed(C_GD_DIRCET_L_INTAKE),
+					 BB_GameDevice->IsButtonPressed(C_GD_DIRECT_R_INTAKE),
+					 false,
+					 false);
 }
 
 /**

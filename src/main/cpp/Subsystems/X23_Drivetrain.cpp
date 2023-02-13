@@ -87,16 +87,6 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
         BL = nullptr;
         BL_Slave = nullptr;
     }
-
-    if(FR != nullptr) { FR->SetNeutralMode(NeutralMode::Coast); }
-    if(FL != nullptr) { FL->SetNeutralMode(NeutralMode::Coast); }
-    if(BR != nullptr) { BR->SetNeutralMode(NeutralMode::Coast); }
-    if(BL != nullptr) { BL->SetNeutralMode(NeutralMode::Coast); }
-
-    if(FR_Slave != nullptr) { FR_Slave->SetNeutralMode(NeutralMode::Coast); }
-    if(FL_Slave != nullptr) { FL_Slave->SetNeutralMode(NeutralMode::Coast); }
-    if(BR_Slave != nullptr) { BR_Slave->SetNeutralMode(NeutralMode::Coast); }
-    if(BL_Slave != nullptr) { BL_Slave->SetNeutralMode(NeutralMode::Coast); }
 }
 
 X23_Drivetrain::~X23_Drivetrain()
@@ -108,6 +98,7 @@ X23_Drivetrain::~X23_Drivetrain()
     if(FL != nullptr) { delete FL; FL = nullptr; }
     if(BR != nullptr) { delete BR; BR = nullptr; }
     if(BL != nullptr) { delete BL; BL = nullptr; }
+
     if(FR_Slave != nullptr) { delete FR_Slave; FR_Slave = nullptr; }
     if(FL_Slave != nullptr) { delete FL_Slave; FL_Slave = nullptr; }
     if(BR_Slave != nullptr) { delete BR_Slave; BR_Slave = nullptr; }
@@ -190,6 +181,11 @@ void X23_Drivetrain::SetBrakeMode()
 	if(this->FL != NULL) { this->FL->SetNeutralMode(NeutralMode::Brake); }
 	if(this->BR != NULL) { this->BR->SetNeutralMode(NeutralMode::Brake); }
 	if(this->BL != NULL) { this->BL->SetNeutralMode(NeutralMode::Brake); }
+
+    if(this->FR_Slave != nullptr) { FR_Slave->SetNeutralMode(NeutralMode::Brake); }
+    if(this->FL_Slave != nullptr) { FL_Slave->SetNeutralMode(NeutralMode::Brake); }
+    if(this->BR_Slave != nullptr) { BR_Slave->SetNeutralMode(NeutralMode::Brake); }
+    if(this->BL_Slave != nullptr) { BL_Slave->SetNeutralMode(NeutralMode::Brake); }
 }
 
 void X23_Drivetrain::SetCoastMode()
@@ -198,6 +194,11 @@ void X23_Drivetrain::SetCoastMode()
 	if(this->FL != NULL) { this->FL->SetNeutralMode(NeutralMode::Coast); }
 	if(this->BR != NULL) { this->BR->SetNeutralMode(NeutralMode::Coast); }
 	if(this->BL != NULL) { this->BL->SetNeutralMode(NeutralMode::Coast); }
+
+    if(this->FR_Slave != nullptr) { FR_Slave->SetNeutralMode(NeutralMode::Coast); }
+    if(this->FL_Slave != nullptr) { FL_Slave->SetNeutralMode(NeutralMode::Coast); }
+    if(this->BR_Slave != nullptr) { BR_Slave->SetNeutralMode(NeutralMode::Coast); }
+    if(this->BL_Slave != nullptr) { BL_Slave->SetNeutralMode(NeutralMode::Coast); }
 }
 
 void X23_Drivetrain::_setOutputs()

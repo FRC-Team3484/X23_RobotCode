@@ -2,6 +2,7 @@
 
 #include "Constants.h" 
 #include "Globals.h"
+#include "frc2/command/RunCommand.h"
 
 using namespace frc;
 using namespace SC;
@@ -13,7 +14,6 @@ using namespace ctre::phoenix::motorcontrol::can;
 
 X23_Intake::X23_Intake(int IntakeLeft, int IntakeRight)
 {
-
 	Motor_Intake_Right = new VictorSPX(IntakeRight);
 	Motor_Intake_Right->SetNeutralMode(NeutralMode::Brake);
 	Motor_Intake_Right->SetInverted(false);
@@ -26,6 +26,8 @@ X23_Intake::X23_Intake(int IntakeLeft, int IntakeRight)
 
 	this->_dly_re_intake_on = new Debouncer(C_INTAKEMOTOR_DELAY_TIME, Debouncer::kRising); // Delay intake motors on until the intake is extended partially
 	
+	this->SetDefaultCommand(frc2::RunCommand([&]() { StopIntake(); }, {this}));
+
 }
 
 
@@ -37,40 +39,57 @@ X23_Intake::~X23_Intake()
 	if(this->_dly_re_intake_on != NULL) { delete this->_dly_re_intake_on; }
 }
 
-void X23_Intake::Collect(bool ButtonA, bool ButtonB, bool ButtonC, bool ButtonD)
+void X23_Intake::Collect(bool Run, bool ButtonA, bool ButtonB, bool ButtonC, bool ButtonD)
 {
-if(Motor_Intake_Left != nullptr && Motor_Intake_Right != nullptr)
-{
-		if(ButtonA != false) 
+	if(Motor_Intake_Left != nullptr && Motor_Intake_Right != nullptr)
+	{
+		if(Run != false) 
 		{
-		//Suck In Cubes
-		Motor_Intake_Right->Set(ControlMode::PercentOutput, 1.0);
-		Motor_Intake_Left->Set(ControlMode::PercentOutput, -1.0);
-		}
-		else if(ButtonB != false)
-		{
-		//Knock Cone One Way
-		Motor_Intake_Right->Set(ControlMode::PercentOutput, -1.0);
-		Motor_Intake_Left->Set(ControlMode::PercentOutput, -1.0);
-		}
-
-		else if(ButtonC != false)
-		{
-		//Knock Cone Other Way
-		Motor_Intake_Right->Set(ControlMode::PercentOutput, 1.0);
-		Motor_Intake_Left->Set(ControlMode::PercentOutput, 1.0);
-		}
-
-		else if(ButtonD != false)
-		{
-		//Spit Out Cubes
-		Motor_Intake_Right->Set(ControlMode::PercentOutput, -1.0);
-		Motor_Intake_Left->Set(ControlMode::PercentOutput, 1.0);
+			if(ButtonA != false) 
+			{
+				//Suck In Cubes
+				Motor_Intake_Right->Set(ControlMode::PercentOutput, 1.0);
+				Motor_Intake_Left->Set(ControlMode::PercentOutput, -1.0);
+			}
+			else if(ButtonB != false)
+			{
+				//Knock Cone One Way
+				Motor_Intake_Right->Set(ControlMode::PercentOutput, -1.0);
+				Motor_Intake_Left->Set(ControlMode::PercentOutput, -1.0);
+			}
+			else if(ButtonC != false)
+			{
+				//Knock Cone Other Way
+				Motor_Intake_Right->Set(ControlMode::PercentOutput, 1.0);
+				Motor_Intake_Left->Set(ControlMode::PercentOutput, 1.0);
+			}
+			else if(ButtonD != false)
+			{
+				//Sphit Out Cubes
+				Motor_Intake_Right->Set(ControlMode::PercentOutput, -1.0);
+				Motor_Intake_Left->Set(ControlMode::PercentOutput, 1.0);
+			}
+			else
+			{
+				Motor_Intake_Right->Set(ControlMode::PercentOutput, 0.0);
+				Motor_Intake_Left->Set(ControlMode::PercentOutput, 0.0);	
+			}
 		}
 		else
 		{
-		Motor_Intake_Right->Set(ControlMode::PercentOutput, 0.0);
-		Motor_Intake_Left->Set(ControlMode::PercentOutput, 0.0);	
+			Motor_Intake_Right->Set(ControlMode::PercentOutput, 0.0);
+			Motor_Intake_Left->Set(ControlMode::PercentOutput, 0.0);	
 		}
+	}
 }
+
+/* Commands */
+void X23_Intake::Collect_ConeLeft()
+{
+
+}
+
+void X23_Intake::StopIntake()
+{
+
 }
