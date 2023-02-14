@@ -18,7 +18,7 @@ SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
 
  ~X23_Elevator();
 
-    void Elevate(double TiltAngle, double ElevatorHeight);
+    void Elevate();
 
     void ToggleClaw(bool ClawToggleClose, bool ClawTiltDown);
 
@@ -49,8 +49,8 @@ double E_P;
 double E_I_Min;
 double E_I_Max;
 double E_I = 0; 
-double xArrayMotorPOS [10] ;//Actuator stroke position
-double yArrayAnglePOS [10] ;//Tilt
+double xArrayMotorPOS [10] {0, 1.19, 2.4, 3.63, 4.86, 6.08, 7.29, 8.47, 9.63, 10.08} ;//Actuator stroke position
+double yArrayAnglePOS [10] {0, 14.875, 30, 45.375, 60.75, 76, 91.125, 105.875, 120.375, 126} ;//Tilt
 double yArrayFooFighters [10] {10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
 double xArrayElevate [10] = {0, 5, 10, 15, 20, 25, 30, 35, 40, 42};
 double yArrayElevate [10] = {56.5, 56.5, 57.5, 59.5, 61.5, 64.5, 67.5, 68.5, 68.5, 68.5};
@@ -63,6 +63,11 @@ double T_I_Max;
 double T_I;
 double T_Error_ZminusOne;
 double T_D;
+double CalcHeight;
+double CalcAngle;
+double TiltAngle;
+double ElevatorHeight;
+
 };
 
 #endif // Elevator_H

@@ -14,20 +14,29 @@ X23_Elevator::X23_Elevator(int ElevateMotor,int TiltMotor,SC::SC_Solenoid ChClaw
 SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax)
 {
 // set elevate motors
-if(ElevateMotor != C_DISABLED_CHANNEL) { ElevateFalcon = new WPI_TalonFX (ElevateMotor); 
-        TiltFalcon->SetNeutralMode(NeutralMode::Brake);
-        TiltFalcon->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
-	    TiltFalcon->SetSelectedSensorPosition(0);
+if(ElevateMotor != C_DISABLED_CHANNEL) 
+    {
+    ElevateFalcon = new WPI_TalonFX (ElevateMotor); 
+    ElevateFalcon->SetNeutralMode(NeutralMode::Brake);
+    ElevateFalcon->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
+	ElevateFalcon->SetSelectedSensorPosition(0);
     }
-	else { TiltFalcon = nullptr; }
+else 
+    {
+    TiltFalcon = nullptr; 
+    }
 // Set tilt motor
-    if(TiltMotor != C_DISABLED_CHANNEL) { TiltFalcon = new WPI_TalonFX (TiltMotor); 
-        TiltFalcon->SetNeutralMode(NeutralMode::Brake);
-        TiltFalcon->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
-	    TiltFalcon->SetSelectedSensorPosition(0);
+    if(TiltMotor != C_DISABLED_CHANNEL) 
+    { 
+    TiltFalcon = new WPI_TalonFX (TiltMotor); 
+    TiltFalcon->SetNeutralMode(NeutralMode::Brake);
+    TiltFalcon->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
+	TiltFalcon->SetSelectedSensorPosition(0);
     }
-	else { TiltFalcon = nullptr; }
-
+	else 
+    {
+    TiltFalcon = nullptr; 
+    }
     //Set Digital Inputs
     this->TiltHome = new DigitalInput(TiltHome);
     this->TiltLimit = new DigitalInput(TiltMax);
@@ -46,6 +55,26 @@ if(ElevateMotor != C_DISABLED_CHANNEL) { ElevateFalcon = new WPI_TalonFX (Elevat
     this->rTrigPinch = new R_TRIG();
     //set Bool
     this->PincherSolenoidState = 0;
+    //set variable values
+E_CV = 0;
+E_FooFighters = 0;
+E_P = 0;
+E_I_Min = 0;
+E_I_Max = 100;
+E_I = 0; 
+E_Error_ZminusOne = 0;
+E_D = 0;
+T_CV = 0;
+T_P = 0;
+T_I_Min = 0;
+T_I_Max = 100;
+T_I = 0;
+T_Error_ZminusOne = 0;
+T_D = 0;
+CalcHeight = 0;
+CalcAngle = 0;
+TiltAngle = 0;
+ElevatorHeight = 0;
 }
 
 
@@ -65,9 +94,8 @@ X23_Elevator::~X23_Elevator()
     if (DebounceTilt != nullptr) { delete DebounceTilt; DebounceTilt = nullptr; }
 }
 
-void X23_Elevator::Elevate(double TiltAngle, double ElevatorHeight)
+void X23_Elevator::Elevate()
 {
-
 if(ElevatorHome != nullptr && TiltFalcon != nullptr && ElevateFalcon != nullptr && TiltLimit != nullptr && TiltHome != nullptr)
 {
 this->rTrigEHome->Check(ElevatorHome->Get());
@@ -92,7 +120,7 @@ this->rTrigTLimit->Check(TiltLimit->Get());
 
 
 //Define Locals
-        double CalcAngle, CalcHeight, Elevator_Error, Tilt_Error;
+        double Elevator_Error, Tilt_Error;
         CalcAngle = (F_XYCurve<double>(xArrayMotorPOS, yArrayAnglePOS,TiltFalcon->GetSelectedSensorVelocity(0), 10));
 
 //second FXY curve stuff for max height
