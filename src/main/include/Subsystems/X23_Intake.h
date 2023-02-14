@@ -59,6 +59,15 @@ public:
 	/* Run the intake for left-oriented cones */
 	void Collect_ConeLeft();
 
+	/* Run the intake for right-oriented cones */
+	void Collect_ConeRight();
+
+	/*Run the intake for center-oriented cones*/
+	void Collect_Cube_Or_ConeCenter();
+
+	/*Run the ejection procedure*/
+	void Collect_Eject();
+
 	/* Stop the intake motors */
 	void StopIntake();
 

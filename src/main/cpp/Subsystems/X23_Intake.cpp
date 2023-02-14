@@ -47,7 +47,7 @@ void X23_Intake::Collect(bool Run, bool ButtonA, bool ButtonB, bool ButtonC, boo
 		{
 			if(ButtonA != false) 
 			{
-				//Suck In Cubes
+				//Suck In Cubes $
 				Motor_Intake_Right->Set(ControlMode::PercentOutput, 1.0);
 				Motor_Intake_Left->Set(ControlMode::PercentOutput, -1.0);
 			}
@@ -86,10 +86,30 @@ void X23_Intake::Collect(bool Run, bool ButtonA, bool ButtonB, bool ButtonC, boo
 /* Commands */
 void X23_Intake::Collect_ConeLeft()
 {
-
+	Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
+	Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
+}
+void X23_Intake::Collect_ConeRight()
+{
+	Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
+	Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
+}
+void X23_Intake::Collect_Cube_Or_ConeCenter()
+{
+	//Suck The Cubical Object!
+	Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
+	Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
+}
+void X23_Intake::Collect_Eject()
+{
+	//Eject Cubes
+	Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
+	Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
 }
 
 void X23_Intake::StopIntake()
 {
-
+	//Stop
+	Motor_Intake_Right->Set(ControlMode::PercentOutput, 0.0);
+	Motor_Intake_Left->Set(ControlMode::PercentOutput, 0.0);
 }

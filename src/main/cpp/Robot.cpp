@@ -66,6 +66,12 @@ void Robot::TeleopInit()
 	{
 		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_LEFT).OnTrue(frc2::cmd::RunOnce([this] { this->_intake->Collect_ConeLeft(); }));
 		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_LEFT).OnFalse(frc2::cmd::RunOnce([this] { this->_intake->StopIntake(); }));
+		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_RIGHT).OnTrue(frc2::cmd::RunOnce([this] { this->_intake->Collect_ConeRight(); }));
+		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_RIGHT).OnFalse(frc2::cmd::RunOnce([this] { this->_intake->StopIntake(); }));
+		BB_GameDevice->GetButton(C_GD_COLLECT_CUBE_OR_CONECENTER).OnTrue(frc2::cmd::RunOnce([this] { this->_intake->Collect_Cube_Or_ConeCenter(); }));
+		BB_GameDevice->GetButton(C_GD_COLLECT_CUBE_OR_CONECENTER).OnFalse(frc2::cmd::RunOnce([this] { this->_intake->StopIntake(); }));
+		BB_GameDevice->GetButton(C_GD_COLLECT_EJECT).OnTrue(frc2::cmd::RunOnce([this] { this->_intake->Collect_Eject(); }));
+		BB_GameDevice->GetButton(C_GD_COLLECT_EJECT).OnFalse(frc2::cmd::RunOnce([this] { this->_intake->StopIntake(); }));
 	}
 }
 
@@ -120,12 +126,14 @@ void Robot::TeleopPeriodic()
 	/*==========================*/
 	/*===Game Device Controls===*/
 	/*==========================*/
-
-	_intake->Collect(BB_GameDevice->IsButtonPressed(C_GD_INTAKE), 
-					 BB_GameDevice->IsButtonPressed(C_GD_DIRCET_L_INTAKE),
-					 BB_GameDevice->IsButtonPressed(C_GD_DIRECT_R_INTAKE),
-					 false,
-					 false);
+/*
+*_intake->Collect(BB_GameDevice->IsButtonPressed(C_GD_INTAKE), 
+					 *BB_GameDevice->IsButtonPressed(C_GD_DIRCET_L_INTAKE),
+					 *BB_GameDevice->IsButtonPressed(C_GD_DIRCET_R_INTAKE),
+					 *false,
+					 *false);
+*/
+	
 }
 
 /**
