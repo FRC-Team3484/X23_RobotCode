@@ -40,6 +40,8 @@
 #define C_PDP					   40
 #define C_FX_ELEVATEMOTOR           8
 #define C_FX_TILTMOTOR              9
+#define C_SPX_IntakeLeft		   10
+#define C_SPX_IntakeRight          11
 /*===================*/
 /* Solenoid Channels */
 /*===================*/

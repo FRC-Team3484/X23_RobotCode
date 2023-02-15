@@ -22,7 +22,7 @@ void Robot::RobotInit()
                                    std::make_tuple<int, int>(C_FX_BR_MASTER, C_FX_BR_SLAVE),
                                    SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_DRIVE_SOL}); 
 
-	_intake = new X23_Intake (int IntakeLeft, int IntakeRight);
+	_intake = new X23_Intake(C_SPX_IntakeLeft, C_SPX_IntakeRight);
 
 	
 	Throttle_Range_Normal(-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND);
@@ -111,7 +111,9 @@ void Robot::TeleopPeriodic()
 
 	_intake->Collect(BB_GameDevice->GetRawButton(C_GD_INTAKE), 
 					 BB_GameDevice->GetRawButton(C_GD_DIRCET_L_INTAKE),
-					 BB_GameDevice->GetRawButton(C_GD_DIRECT_R_INTAKE));
+					 BB_GameDevice->GetRawButton(C_GD_DIRECT_R_INTAKE), 
+					 false, 
+					 false);
 }
 
 /**
