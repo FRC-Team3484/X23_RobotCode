@@ -126,14 +126,6 @@ void Robot::TeleopPeriodic()
 	/*==========================*/
 	/*===Game Device Controls===*/
 	/*==========================*/
-/*
-*_intake->Collect(BB_GameDevice->IsButtonPressed(C_GD_INTAKE), 
-					 *BB_GameDevice->IsButtonPressed(C_GD_DIRCET_L_INTAKE),
-					 *BB_GameDevice->IsButtonPressed(C_GD_DIRCET_R_INTAKE),
-					 *false,
-					 *false);
-*/
-	
 }
 
 /**
