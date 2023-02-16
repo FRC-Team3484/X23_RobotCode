@@ -7,6 +7,8 @@
 #include "FRC3484_Lib/utils/SC_Functions.h"
 #include "Subsystems/X23_Intake.h"
 #include "frc/PneumaticsModuleType.h"
+#include <pathplanner/lib/auto/MecanumAutoBuilder.h>
+#include <pathplanner/lib/PathPlanner.h>
 #include "frc2/command/Commands.h"
 #include "frc2/command/CommandScheduler.h"
 
@@ -14,7 +16,7 @@ using namespace frc;
 using namespace frc2;
 using namespace SC;
 using namespace ctre;
-
+using namespace pathplanner;
 void Robot::RobotInit() 
 {
 	GP1_Driver = new XboxController(/*USB Port*/ C_DRIVER_USB);
@@ -120,10 +122,10 @@ void Robot::TeleopPeriodic()
 	if(Gyroscope != nullptr)
 	{
 		_drivetrain->Drive(SC::F_Deadband(X_Demand, C_DRIVE_DEADBAND),
-							SC::F_Deadband(Y_Demand, C_DRIVE_DEADBAND), 
-							SC::F_Deadband(Z_Demand, C_DRIVE_DEADBAND), 
-							Gyroscope->GetYaw(),
-							drivetrain_mode);
+					 SC::F_Deadband(Y_Demand, C_DRIVE_DEADBAND), 
+					 SC::F_Deadband(Z_Demand, C_DRIVE_DEADBAND), 
+					 Gyroscope->GetYaw(),
+					 drivetrain_mode);
 	}
 	else
 	{
@@ -151,4 +153,5 @@ void Robot::TestPeriodic() {}
 int main() {
   return frc::StartRobot<Robot>();
 }
+
 #endif

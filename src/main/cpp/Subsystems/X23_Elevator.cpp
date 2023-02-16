@@ -13,21 +13,6 @@ using namespace ctre::phoenix::motorcontrol::can;
 X23_Elevator::X23_Elevator(int ElevateMotor,int TiltMotor,SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt,
 SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax)
 {
-<<<<<<< HEAD
-	// set elevate motors
-	if(ElevateMotor != C_DISABLED_CHANNEL) { ElevateFalcon = new WPI_TalonFX (ElevateMotor); 
-        TiltFalcon->SetNeutralMode(NeutralMode::Brake);
-        TiltFalcon->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
-	    TiltFalcon->SetSelectedSensorPosition(0);
-    }
-	else { TiltFalcon = nullptr; }
-	
-	// Set tilt motor
-    if(TiltMotor != C_DISABLED_CHANNEL) { TiltFalcon = new WPI_TalonFX (TiltMotor); 
-        TiltFalcon->SetNeutralMode(NeutralMode::Brake);
-        TiltFalcon->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
-	    TiltFalcon->SetSelectedSensorPosition(0);
-=======
 // set elevate motors
 if(ElevateMotor != C_DISABLED_CHANNEL) 
     {
@@ -38,7 +23,7 @@ if(ElevateMotor != C_DISABLED_CHANNEL)
     }
 else 
     {
-    TiltFalcon = nullptr; 
+    ElevateFalcon = nullptr; 
     }
 // Set tilt motor
     if(TiltMotor != C_DISABLED_CHANNEL) 
@@ -51,7 +36,6 @@ else
 	else 
     {
     TiltFalcon = nullptr; 
->>>>>>> 1525807d2aefd0facd5ba10d80c56f0fa2418d67
     }
     //Set Digital Inputs
     this->TiltHome = new DigitalInput(TiltHome);
@@ -73,11 +57,6 @@ else
     
 	//set Trigger
     this->rTrigPinch = new R_TRIG();
-<<<<<<< HEAD
-    
-	//set Bool
-    this->PincherSolenoidState = false;
-=======
     //set Bool
     this->PincherSolenoidState = 0;
     //set variable values
@@ -100,7 +79,6 @@ CalcHeight = 0;
 CalcAngle = 0;
 TiltAngle = 0;
 ElevatorHeight = 0;
->>>>>>> 1525807d2aefd0facd5ba10d80c56f0fa2418d67
 }
 
 
@@ -122,19 +100,6 @@ X23_Elevator::~X23_Elevator()
 
 void X23_Elevator::Elevate()
 {
-<<<<<<< HEAD
-	if(ElevatorHome != nullptr && TiltFalcon != nullptr && ElevateFalcon != nullptr && TiltLimit != nullptr && TiltHome != nullptr)
-	{
-		this->rTrigEHome->Check(ElevatorHome->Get());
-		this->rTrigTHome->Check(TiltHome->Get());
-		this->rTrigTLimit->Check(TiltLimit->Get());
-
-		if (rTrigEHome->Q)
-		{
-			E_FooFighters = E_D = E_I = E_P = 0;
-			ElevateFalcon->SetSelectedSensorPosition(0);
-		}
-=======
 if(ElevatorHome != nullptr && TiltFalcon != nullptr && ElevateFalcon != nullptr && TiltLimit != nullptr && TiltHome != nullptr)
 {
 this->rTrigEHome->Check(ElevatorHome->Get());
@@ -156,7 +121,6 @@ this->rTrigTLimit->Check(TiltLimit->Get());
     ;
     }
 //scary code
->>>>>>> 1525807d2aefd0facd5ba10d80c56f0fa2418d67
 
 		if (rTrigTHome->Q)
 			T_D = T_I = T_P = 0;
