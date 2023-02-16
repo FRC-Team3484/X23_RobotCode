@@ -112,7 +112,7 @@ void X23_Elevator::Elevate()
 	}
 }
 
-void X23_Elevator::ToggleClaw(bool ClawToggleClose, bool ClawTiltDown)
+void X23_Elevator::ToggleClaw()
 {
     if((this->rTrigPinch != NULL)) 
     {
@@ -137,8 +137,9 @@ void X23_Elevator::ToggleClaw(bool ClawToggleClose, bool ClawTiltDown)
     }
 
     if(this->PincherSolenoid != NULL) { this->PincherSolenoid->Set(this->PincherSolenoidState); }
-
+}
 // set debounce on tilt
+void X23_Elevator::ToggleTilt(bool ClawTiltDown){
     if(this->DebounceTilt != NULL)
        if(this->TiltSolenoid != NULL) { this->TiltSolenoid->Set(this->DebounceTilt->Calculate(ClawTiltDown)); } 
     else
