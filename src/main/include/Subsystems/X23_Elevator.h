@@ -8,8 +8,9 @@
 #include "frc/filter/Debouncer.h"
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
 #include "frc/filter/Debouncer.h"
+#include "frc2/command/SubsystemBase.h"
 
-class X23_Elevator
+class X23_Elevator : public frc2::SubsystemBase
 {
 public:
     X23_Elevator(int ElevateMotor,int TiltMotor,SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt,

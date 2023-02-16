@@ -6,6 +6,7 @@
 #include "Constants.h"
 #include "Subsystems/X23_Drivetrain.h"
 #include "Subsystems/X23_Intake.h"
+#include "Subsystems/X23_Elevator.h"
 #include <frc/TimedRobot.h>
 #include <frc2/command/Command.h>
 
@@ -35,6 +36,7 @@ class Robot : public frc::TimedRobot {
 
   X23_Drivetrain *_drivetrain = nullptr;
   X23_Intake *_intake = nullptr;
+  X23_Elevator *_elevator = nullptr; 
 
   SC::SC_Range<double> Throttle_Range_Normal = {-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND};
   SC::SC_Range<double> Throttle_Range_Fine = {-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE};

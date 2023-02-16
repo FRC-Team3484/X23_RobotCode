@@ -46,13 +46,15 @@
 #define C_DRIVE_SOL					0 // Octocanum Shifter
 #define C_SOL_CLAW_GRIP				1
 #define C_SOL_CLAW_TILT				2
+#define C_SOL_ELEVATOR_BRAKE		3
 
 /*==============*/
 /* DIO Channels */
 /*==============*/
 #define C_DI_CH_STORED_SW			0
-#define C_DI_CH_TURRET_LS_MIN		1
-#define C_DI_CH_TURRET_LS_MAX		2
+#define C_DI_CH_ELEVATOR_TILT_HOME	1
+#define C_DI_CH_ELEVATOR_HOME		2
+#define C_DI_CH_ELEVATOR_TILT_MAX	3
 
 
 /*==========*/
@@ -155,6 +157,8 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 	#define C_GD_COLLECT_CONE_RIGHT					2
 	#define C_GD_COLLECT_CUBE_OR_CONECENTER			3
 	#define C_GD_COLLECT_EJECT						4
+	#define C_GD_CLAW_GRAB							5
+	#define C_GD_CLAW_PIV							6
 #endif
 
 /*==================*/
