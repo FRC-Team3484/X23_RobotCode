@@ -116,36 +116,27 @@ void X23_Elevator::ToggleClaw()
 {
     if((this->rTrigPinch != NULL)) 
     {
-        if((this->DebouncePincher != NULL) )
-            this->rTrigPinch->Check(this->DebouncePincher->Calculate(ClawToggleClose));
-        else // Debouncer's are not instantiated, read button change directly.
-            this->rTrigPinch->Check(ClawToggleClose);
+        this->rTrigPinch->Check(ClawToggleClose);
     	
 		this->PincherSolenoidState  = (this->PincherSolenoidState && (!this->rTrigPinch->Q)) || (!this->PincherSolenoidState && this->rTrigPinch->Q);
     }
     else
     {
-        if(this->DebouncePincher != NULL)
-        {
-            bool Claw;
-            Claw = this->DebouncePincher->Calculate(ClawToggleClose);
-
-            this->PincherSolenoidState = (this->PincherSolenoidState && !Claw) || (!this->PincherSolenoidState && Claw);
-        }
-        else
             this->PincherSolenoidState = (this->PincherSolenoidState && !ClawToggleClose) || (!this->PincherSolenoidState && ClawToggleClose);
     }
 
     if(this->PincherSolenoid != NULL) { this->PincherSolenoid->Set(this->PincherSolenoidState); }
 }
 // set debounce on tilt
-void X23_Elevator::ToggleTilt(bool ClawTiltDown){
-    if(this->DebounceTilt != NULL)
-       if(this->TiltSolenoid != NULL) { this->TiltSolenoid->Set(this->DebounceTilt->Calculate(ClawTiltDown)); } 
-    else
-        if(this->TiltSolenoid != NULL) { this->TiltSolenoid->Set(ClawTiltDown); } 
+void X23_Elevator::ClawTilt(){
+        if(this->TiltSolenoid != NULL) 
+            {this->TiltSolenoid->Set(true); } 
 }
-
+void X23_Elevator::StopTilt(){
+        if(this->TiltSolenoid != NULL)
+            {this->TiltSolenoid->Set(false); }
+            
+}
 void X23_Elevator::StopMotors()
 {
     if(ElevateFalcon != nullptr) { ElevateFalcon->Set(0.0); }

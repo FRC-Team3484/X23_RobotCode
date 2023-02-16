@@ -24,7 +24,9 @@ SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
 
     void ToggleClaw();
 
-    void ToggleTilt(bool ClawTiltDown);
+    void ClawTilt();
+
+    void StopTilt();
 
     void StopMotors();
 
@@ -32,6 +34,7 @@ SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
 
 private:
     void _setOutputs();
+
     bool ClawToggleClose = 0;
 // Declare Tilt 
     ctre::phoenix::motorcontrol::can::WPI_TalonFX *TiltFalcon, *ElevateFalcon;  

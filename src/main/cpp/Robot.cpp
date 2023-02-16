@@ -82,8 +82,10 @@ void Robot::TeleopInit()
 		BB_GameDevice->GetButton(C_GD_COLLECT_EJECT).OnFalse(frc2::cmd::RunOnce([this] { this->_intake->StopIntake(); }));
 		//claw controls on the button box
 		BB_GameDevice->GetButton(C_GD_CLAW_GRAB).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ToggleClaw(); }));
-		BB_GameDevice->GetButton(C_GD_CLAW_PIV).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ToggleTilt(); }));
-		BB_GameDevice->GetButton(C_GD_CLAW_PIV).OnFalse(frc2::cmd::RunOnce([this]{ this->_elevator->(); }));}
+		BB_GameDevice->GetButton(C_GD_CLAW_PIV).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ClawTilt(); }));
+		BB_GameDevice->GetButton(C_GD_CLAW_PIV).OnFalse(frc2::cmd::RunOnce([this]{ this->_elevator->StopTilt(); }));
+		
+	}
 }
 
 /**
