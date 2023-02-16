@@ -29,8 +29,8 @@ void Robot::RobotInit()
                                    SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_DRIVE_SOL}); 
 
 	_intake = new X23_Intake(C_SPX_INTAKE_LEFT, C_SPX_INTAKE_RIGHT);
-	_elevator = new X23_Elevator(std::make_tuple<int> (C_FX_ELEVATEMOTOR),
-								std::make_tuple<int> (C_FX_TILTMOTOR),
+	_elevator = new X23_Elevator(C_FX_ELEVATEMOTOR,
+								C_FX_TILTMOTOR,
 								SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_CLAW_GRIP},
 								SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_CLAW_TILT},
 								SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_ELEVATOR_BRAKE},
@@ -83,8 +83,9 @@ void Robot::TeleopInit()
 		BB_GameDevice->GetButton(C_GD_COLLECT_EJECT).OnTrue(frc2::cmd::RunOnce([this] { this->_intake->Collect_Eject(); }));
 		BB_GameDevice->GetButton(C_GD_COLLECT_EJECT).OnFalse(frc2::cmd::RunOnce([this] { this->_intake->StopIntake(); }));
 		//claw controls on the button box
-		BB_GameDevice->GetButton(C_GD_CLAW_GRAB).OnTrue(frc2::cmd::RunOnce([this]{this->_elevator->ToggleClaw();}));
-	}
+		BB_GameDevice->GetButton(C_GD_CLAW_GRAB).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ToggleClaw(); }));
+		BB_GameDevice->GetButton(C_GD_CLAW_PIV).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ToggleTilt(); }));
+		BB_GameDevice->GetButton(C_GD_CLAW_PIV).OnFalse(frc2::cmd::RunOnce([this]{ this->_elevator->(); }));}
 }
 
 /**

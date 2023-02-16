@@ -13,6 +13,7 @@
 class X23_Elevator : public frc2::SubsystemBase
 {
 public:
+
     X23_Elevator(int ElevateMotor,int TiltMotor,SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt,
 SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
      //Emc is Elevator motor Controller,Master and Slave//
@@ -21,7 +22,9 @@ SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
 
     void Elevate();
 
-    void ToggleClaw(bool ClawToggleClose, bool ClawTiltDown);
+    void ToggleClaw();
+
+    void ToggleTilt(bool ClawTiltDown);
 
     void StopMotors();
 
@@ -29,7 +32,7 @@ SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
 
 private:
     void _setOutputs();
-
+    bool ClawToggleClose = 0;
 // Declare Tilt 
     ctre::phoenix::motorcontrol::can::WPI_TalonFX *TiltFalcon, *ElevateFalcon;  
 // Declare Pincher Solenoids
