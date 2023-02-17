@@ -2,8 +2,11 @@
 #define X23_Drivetrain_h
 
 #include "FRC3484_Lib/components/drive/SC_MecanumKinematics.h"
+#include <frc/kinematics/MecanumDriveOdometry.h>
+#include "frc/geometry/Pose2d.h"
 #include "frc/Solenoid.h"
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h"
+#include "ctre/phoenix/sensors/Pigeon2.h"
 
 class X23_Drivetrain
 {
@@ -12,11 +15,12 @@ public:
                 std::tuple<int, int> chFL, 
                 std::tuple<int, int> chBR, 
                 std::tuple<int, int> chBL,
-                SC::SC_Solenoid ch_shift);
+                SC::SC_Solenoid ch_shift,
+                int PIGIMON);
 
     ~X23_Drivetrain();
 
-    void Drive(double direction_x, double direction_y, double rotation_z, double gyro, bool shift);
+    void Drive(double direction_x, double direction_y, double rotation_z, bool DriverOrient, bool shift);
 
     void DriveAuto(double magnitude, double angle, double heading, bool shift);
     
@@ -34,6 +38,12 @@ public:
      *          of the drivetrain.
      */
     void Ramp();
+
+    void SetPose(frc::Pose2d &NewPose);
+
+    void UpdateOdometry();
+
+    frc::Pose2d GetPose();
 
     void StopMotors();
 
@@ -53,6 +63,9 @@ private:
 
     SC::SC_MecanumKinematics *md;
     frc::Solenoid *shifter;
+
+    frc::Pose2d dtPose;
+    ctre::phoenix::sensors::Pigeon2 *Gyroscope;
 
     // Declare all four master controllers
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX *FR, *FR_Slave;

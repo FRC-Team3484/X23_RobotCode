@@ -77,8 +77,8 @@ T_Error_ZminusOne = 0;
 T_D = 0;
 CalcHeight = 0;
 CalcAngle = 0;
-TiltAngle = 0;
-ElevatorHeight = 0;
+TiltAngleSP = 0;
+ElevatorHeightSP = 0;
 }
 
 
@@ -132,7 +132,7 @@ this->rTrigTLimit->Check(TiltLimit->Get());
         CalcAngle = (F_XYCurve<double>(xArrayMotorPOS, yArrayAnglePOS,TiltFalcon->GetSelectedSensorVelocity(0), 10));
 
 //second XY curve stuff for max height
-        CalcHeight = fmin(F_XYCurve<double>(xArrayElevate, yArrayElevate, CalcAngle , 10 ), ElevatorHeight);
+        CalcHeight = fmin(F_XYCurve<double>(xArrayElevate, yArrayElevate, CalcAngle , 10 ), ElevatorHeightSP);
         Elevator_Error = CalcHeight - ElevateFalcon->GetSelectedSensorPosition(); 
 
         this->E_FooFighters = (F_XYCurve<double>(xArrayElevate, yArrayFooFighters, CalcAngle, 10));
@@ -142,7 +142,7 @@ this->rTrigTLimit->Check(TiltLimit->Get());
         this->E_CV = E_P + E_I + E_D + E_FooFighters;
 
 		// Tilt Motor PID
-   		Tilt_Error = TiltAngle - CalcAngle;
+   		Tilt_Error = TiltAngleSP - CalcAngle;
         
         this->T_P = Tilt_Error * T_Kp;
         this->T_I = F_Limit(T_I_Max, T_I_Min, T_I+(T_Ki * Tilt_Error *T_dt));
@@ -195,4 +195,39 @@ void X23_Elevator::ControlDirect(double RawElevate, double RawTiltFalcon)
 {
     if(ElevateFalcon != nullptr) { ElevateFalcon->Set( F_Limit(-1.0, 1.0, RawElevate)); }
     if(TiltFalcon != nullptr) { TiltFalcon->Set(ControlMode::PercentOutput, F_Limit(-1.0, 1.0, RawTiltFalcon)); }
+}
+void X23_Elevator::HybridZone()
+{
+ElevatorHeightSP = 14.5;
+TiltAngleSP = 40;
+}
+void X23_Elevator::ConeOne()
+{
+ElevatorHeightSP = 47.5;
+TiltAngleSP = 34;
+}
+void X23_Elevator::ConeTwo()
+{
+ElevatorHeightSP = 68.5;
+TiltAngleSP = 40;
+}
+void X23_Elevator::CubeOne()
+{
+ElevatorHeightSP = 41.5;
+TiltAngleSP = 40;
+}
+void X23_Elevator::CubeTwo()
+{
+ElevatorHeightSP = 68.5;
+TiltAngleSP = 42;
+}
+void X23_Elevator::Substation()
+{
+ElevatorHeightSP = 38;
+TiltAngleSP = 15;
+}
+void X23_Elevator::HomePOS()
+{
+ElevatorHeightSP = 0;
+TiltAngleSP = 0;
 }

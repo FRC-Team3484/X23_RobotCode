@@ -24,6 +24,20 @@ SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
 
     void ToggleClaw();
 
+    void HybridZone();
+
+    void ConeOne();
+
+    void ConeTwo();
+
+    void CubeOne();
+
+    void CubeTwo();
+
+    void Substation();
+
+    void HomePOS();
+ 
     void ToggleTilt(bool ClawTiltDown);
 
     void StopMotors();
@@ -67,10 +81,10 @@ double T_I_Max;
 double T_I;
 double T_Error_ZminusOne;
 double T_D;
-double CalcHeight;
+double CalcHeight;//sp
 double CalcAngle;
-double TiltAngle;
-double ElevatorHeight;
+double TiltAngleSP;
+double ElevatorHeightSP;//sp
 
 };
 
