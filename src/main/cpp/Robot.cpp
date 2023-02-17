@@ -84,7 +84,14 @@ void Robot::TeleopInit()
 		BB_GameDevice->GetButton(C_GD_CLAW_GRAB).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ToggleClaw(); }));
 		BB_GameDevice->GetButton(C_GD_CLAW_PIV).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ClawTilt(); }));
 		BB_GameDevice->GetButton(C_GD_CLAW_PIV).OnFalse(frc2::cmd::RunOnce([this]{ this->_elevator->StopTilt(); }));
-		
+		//elevator controls on the button box
+		BB_GameDevice->GetButton(C_GD_ELE_CUBEMID).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->(); }));
+		BB_GameDevice->GetButton(C_GD_ELE_CONEMID).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->(); }));
+		BB_GameDevice->GetButton(C_GD_ELE_UNIVERSAL).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->(); }));
+		BB_GameDevice->GetButton(C_GD_ELE_HOME).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->(); }));
+		BB_GameDevice->GetButton(C_GD_ELE_CUBEHI).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->(); }));
+		BB_GameDevice->GetButton(C_GD_ELE_CONEHI).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->(); }));
+		BB_GameDevice->GetButton(C_GD_ELE_FEEDER).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->(); }));
 	}
 }
 
