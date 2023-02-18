@@ -182,9 +182,12 @@ void X23_Elevator::StopMotors()
     if(TiltFalcon != nullptr) { TiltFalcon->Set(ControlMode::PercentOutput, 0.0); }
 }
 
-void X23_Elevator::ControlDirect(double RawElevate, double RawTiltFalcon)
+void X23_Elevator::ControlDirectElevate(double RawElevate)
 {
     if(ElevateFalcon != nullptr) { ElevateFalcon->Set( F_Limit(-1.0, 1.0, RawElevate)); }
+}
+void X23_Elevator::ControlDirectTilt(double RawTiltFalcon)
+{
     if(TiltFalcon != nullptr) { TiltFalcon->Set(ControlMode::PercentOutput, F_Limit(-1.0, 1.0, RawTiltFalcon)); }
 }
 void X23_Elevator::HybridZone()

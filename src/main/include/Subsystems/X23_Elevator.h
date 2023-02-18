@@ -27,7 +27,7 @@ SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
     void ClawTilt();
 
     void StopTilt();
-    
+
     void HybridZone();
 
     void ConeOne();
@@ -44,7 +44,9 @@ SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
 
     void StopMotors();
 
-    void ControlDirect(double RawElevate, double RawTiltFalcon);
+    void ControlDirectElevate( double RawElevate);
+
+    void ControlDirectTilt( double RawTiltFalcon);
 
 private:
     void _setOutputs();

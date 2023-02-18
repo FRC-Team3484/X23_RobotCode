@@ -58,7 +58,7 @@
 /*=========================*/
 // Analog Axes
 #define L_JOY_Y         0
-#define R_JOY_Y         1
+#define R_JOY_X         1
 // Buttons
 #define BTN_1         1
 #define BTN_2         2
