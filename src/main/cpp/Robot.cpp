@@ -79,23 +79,28 @@ void Robot::TeleopInit()
 		//intake controls on the button box
 		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_LEFT).OnTrue(frc2::cmd::RunOnce([this] { this->_intake->Collect_ConeLeft(); }));
 		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_LEFT).OnFalse(frc2::cmd::RunOnce([this] { this->_intake->StopIntake(); }));
+
 		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_RIGHT).OnTrue(frc2::cmd::RunOnce([this] { this->_intake->Collect_ConeRight(); }));
 		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_RIGHT).OnFalse(frc2::cmd::RunOnce([this] { this->_intake->StopIntake(); }));
+
 		BB_GameDevice->GetButton(C_GD_COLLECT_CUBE_OR_CONECENTER).OnTrue(frc2::cmd::RunOnce([this] { this->_intake->Collect_Cube_Or_ConeCenter(); }));
 		BB_GameDevice->GetButton(C_GD_COLLECT_CUBE_OR_CONECENTER).OnFalse(frc2::cmd::RunOnce([this] { this->_intake->StopIntake(); }));
+
 		BB_GameDevice->GetButton(C_GD_COLLECT_EJECT).OnTrue(frc2::cmd::RunOnce([this] { this->_intake->Collect_Eject(); }));
 		BB_GameDevice->GetButton(C_GD_COLLECT_EJECT).OnFalse(frc2::cmd::RunOnce([this] { this->_intake->StopIntake(); }));
 		//claw controls on the button box
 		BB_GameDevice->GetButton(C_GD_CLAW_GRAB).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ToggleClaw(); }));
-		BB_GameDevice->GetButton(C_GD_CLAW_PIV).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ClawTilt(); }));
-		BB_GameDevice->GetButton(C_GD_CLAW_PIV).OnFalse(frc2::cmd::RunOnce([this]{ this->_elevator->StopTilt(); }));
+		BB_GameDevice->GetButton(C_GD_CLAW_TILT).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ClawTilt(); }));
+		BB_GameDevice->GetButton(C_GD_CLAW_TILT).OnFalse(frc2::cmd::RunOnce([this]{ this->_elevator->StopTilt(); }));
 		//elevator controls on the button box
 		BB_GameDevice->GetButton(C_GD_ELE_CUBEMID).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->CubeOne(); }));
+		BB_GameDevice->GetButton(C_GD_ELE_CUBEHI).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->CubeTwo(); }));
+
 		BB_GameDevice->GetButton(C_GD_ELE_CONEMID).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ConeOne(); }));
+		BB_GameDevice->GetButton(C_GD_ELE_CONEHI).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ConeTwo(); }));
+
 		BB_GameDevice->GetButton(C_GD_ELE_UNIVERSAL).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->HybridZone(); }));
 		BB_GameDevice->GetButton(C_GD_ELE_HOME).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->HomePOS(); }));
-		BB_GameDevice->GetButton(C_GD_ELE_CUBEHI).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->CubeTwo(); }));
-		BB_GameDevice->GetButton(C_GD_ELE_CONEHI).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ConeTwo(); }));
 		BB_GameDevice->GetButton(C_GD_ELE_FEEDER).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->Substation(); }));
 	}
 }
@@ -110,7 +115,7 @@ void Robot::TeleopPeriodic()
 	/*====Driver Controls===*/
 	/*======================*/
 
-	if(GP1_Driver->GetRightBumper())
+	if(GP1_Driver->GetLeftBumper())
 	{
 		// Fine control mode; Scales driver input to smaller range for finer control
 		Y_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, -GP1_Driver->GetLeftY());
@@ -123,11 +128,6 @@ void Robot::TeleopPeriodic()
 		Y_Demand = F_Limit(Throttle_Range_Normal, GP1_Driver->GetLeftY());
 		X_Demand = F_Limit(Throttle_Range_Normal, GP1_Driver->GetLeftX());
 		Z_Demand = F_Limit(Throttle_Range_Normal, GP1_Driver->GetRightX());
-		// Y_Demand = -GP1_Driver->GetLeftY();
-		// X_Demand = GP1_Driver->GetLeftX();
-		// X_Demand = (GP1_Driver->GetLeftX());
-		// Y_Demand = (GP1_Driver->GetLeftY());
-		// Z_Demand = (GP1_Driver->GetRightX());
 	}
 
 	drivetrain_mode = GP1_Driver->GetRawButton(XBOX_RB);

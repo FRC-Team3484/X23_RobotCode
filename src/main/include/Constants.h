@@ -152,13 +152,12 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 #elif defined(GD_SCHEME_DS4)
 	#define C_GD_INTAKE					DS4_CROSS
 #elif defined(GD_SCHEME_BB)
-	// TODO Define button box input mapping
 	#define C_GD_COLLECT_CUBE_OR_CONECENTER			0
 	#define C_GD_COLLECT_EJECT						1
 	#define C_GD_CLAW_GRAB							2
 	#define C_GD_COLLECT_CONE_LEFT					3
 	#define C_GD_COLLECT_CONE_RIGHT					4
-	#define C_GD_CLAW_PIV							5
+	#define C_GD_CLAW_TILT							5
 	#define C_GD_ELE_CUBEMID						6
 	#define C_GD_ELE_CONEMID						7
 	#define C_GD_ELE_UNIVERSAL						8
