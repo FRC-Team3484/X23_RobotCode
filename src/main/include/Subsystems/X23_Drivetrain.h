@@ -7,6 +7,12 @@
 #include "frc/Solenoid.h"
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h"
 #include "ctre/phoenix/sensors/Pigeon2.h"
+#include "frc/kinematics/MecanumDriveWheelSpeeds.h"
+
+#include "Eigen/QR"
+#include "frc/EigenCore.h"
+#include "frc/geometry/Translation2d.h"
+#include "frc/geometry/Twist2d.h"
 
 class X23_Drivetrain
 {
@@ -60,12 +66,20 @@ public:
 private:
     void _setOutputs();
     void _InitMotor(ctre::phoenix::motorcontrol::can::WPI_TalonSRX* Motor, bool Invert, ctre::phoenix::motorcontrol::can::WPI_TalonSRX* Master);
-
+    
+    Rotation2d _GyroAngle();
+    MecanumDriveWheelPositions _GetdtPOS();
+    
     SC::SC_MecanumKinematics *md;
     frc::Solenoid *shifter;
 
+
     frc::Pose2d dtPose;
     ctre::phoenix::sensors::Pigeon2 *Gyroscope;
+    MecanumDriveWheelPositions dt_previousWheelPositions;
+    Rotation2d dt_previousAngle;
+    Rotation2d dt_gyroOffset;
+
 
     // Declare all four master controllers
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX *FR, *FR_Slave;

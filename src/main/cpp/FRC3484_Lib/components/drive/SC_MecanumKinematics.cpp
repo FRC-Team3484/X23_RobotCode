@@ -2,7 +2,10 @@
 
 #include "wpi/sendable/SendableBuilder.h"
 #include "wpi/sendable/SendableRegistry.h"
-
+#include "Eigen/QR"
+#include "frc/EigenCore.h"
+#include "frc/geometry/Translation2d.h"
+#include "frc/geometry/Twist2d.h"
 #include "units/math.h"
 #include "units/dimensionless.h"
 
@@ -99,6 +102,19 @@ void SC::SC_MecanumKinematics::InitSendable(wpi::SendableBuilder &builder)
 	builder.AddDoubleProperty("BL", [=,this] { return wheelSpeed_SP.WS_BackLeft; }, 	[=,this](double val) { wheelSpeed_SP.WS_BackLeft = val;});
 	builder.AddDoubleProperty("BR", [=,this] { return wheelSpeed_SP.WS_BackRight; }, 	[=,this](double val) { wheelSpeed_SP.WS_BackRight = val;});
 }
+
+Twist2d MecanumDriveKinematics::ToTwist2d(
+    const MecanumDriveWheelPositions& wheelDeltas) const {
+  Vectord<4> wheelDeltasVector{
+      wheelDeltas.frontLeft.value(), wheelDeltas.frontRight.value(),
+      wheelDeltas.rearLeft.value(), wheelDeltas.rearRight.value()};
+
+  Eigen::Vector3d twistVector = m_forwardKinematics.solve(wheelDeltasVector);
+
+  return {units::meter_t{twistVector(0)},  // NOLINT
+          units::meter_t{twistVector(1)}, units::radian_t{twistVector(2)}};
+}
+
 
 /*===================*/
 /* Private Functions */

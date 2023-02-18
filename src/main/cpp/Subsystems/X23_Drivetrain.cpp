@@ -22,6 +22,10 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
     md = new SC::SC_MecanumKinematics();
     shifter = new Solenoid(ch_shift.CtrlID, ch_shift.CtrlType, ch_shift.Channel);
 	Gyroscope = new Pigeon2(PIGIMON);
+    dt_previousAngle = dtPose.Rotation();
+    //this->dtPose(somestuffidk);
+    dt_gyroOffset = dtPose.Rotation() - _GyroAngle();
+    wpi::math::MathSharedStore::ReportUsage(wpi::math::MathUsageId::kOdometry_MecanumDrive, 1);
 
     int sCh = -1;
 
@@ -180,12 +184,65 @@ void X23_Drivetrain::SetPose(frc::Pose2d &NewPose)
 
 void X23_Drivetrain::UpdateOdometry()
 {
-dtPose.Update(Gyroscope->GetYaw(), GetCurrentWheelDistances());
-}
+    {
+  auto angle = _GyroAngle() + dt_gyroOffset;
+
+  MecanumDriveWheelPositions wheelDeltas{
+      _GetdtPOS().frontLeft - dt_previousWheelPositions.frontLeft,
+      _GetdtPOS().frontRight - dt_previousWheelPositions.frontRight,
+      _GetdtPOS().rearLeft - dt_previousWheelPositions.rearLeft,
+      _GetdtPOS().rearRight - dt_previousWheelPositions.rearRight,
+  };
+
+  auto twist = dt_kinematics.ToTwist2d(wheelDeltas);
+  twist.dtheta = (angle - dt_previousAngle).Radians();
+
+  auto newPose = dtPose.Exp(twist);
+
+  dt_previousAngle = angle;
+  dt_previousWheelPositions = _GetdtPOS();
+  dtPose = {newPose.Translation(), angle};
+
+  return dtPose;
+}}
 
 frc::Pose2d X23_Drivetrain::GetPose()
 {
     return dtPose;
+}
+Rotation2d X23_Drivetrain::_GyroAngle()
+{
+    if (Gyroscope != nullptr)
+    {
+        return Rotation2d{units::make_unit<units::degree_t>(Gyroscope->GetYaw())};
+    }
+    else
+    {
+       return Rotation2d{0_deg};
+    }
+}
+MecanumDriveWheelPositions X23_Drivetrain::_GetdtPOS()
+{
+   if (FR != nullptr && BR != nullptr && FL != nullptr && BL != nullptr)
+   {
+    return
+    MecanumDriveWheelPositions
+    {
+
+    units::make_unit<meter_t> (FL->GetSelectedSensorPosition() * C_DT_SCALE_FACTOR),
+    units::make_unit<meter_t> (FR->GetSelectedSensorPosition() * C_DT_SCALE_FACTOR),
+    units::make_unit<meter_t> (BL->GetSelectedSensorPosition() * C_DT_SCALE_FACTOR),
+    units::make_unit<meter_t> (BR->GetSelectedSensorPosition() * C_DT_SCALE_FACTOR)
+    };
+   }
+   else
+   {
+    return
+    MecanumDriveWheelPositions
+    {
+    0_m,0_m,0_m,0_m
+    };
+   }
 }
 
 void X23_Drivetrain::StopMotors()
