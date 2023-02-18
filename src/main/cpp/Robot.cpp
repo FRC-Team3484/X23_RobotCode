@@ -7,6 +7,8 @@
 #include "FRC3484_Lib/utils/SC_Functions.h"
 #include "Subsystems/X23_Intake.h"
 #include "frc/PneumaticsModuleType.h"
+#include <pathplanner/lib/auto/MecanumAutoBuilder.h>
+#include <pathplanner/lib/PathPlanner.h>
 #include "frc2/command/Commands.h"
 #include "frc2/command/CommandScheduler.h"
 
@@ -14,17 +16,17 @@ using namespace frc;
 using namespace frc2;
 using namespace SC;
 using namespace ctre;
-
+using namespace pathplanner;
 void Robot::RobotInit() 
 {
 	GP1_Driver = new XboxController(/*USB Port*/ C_DRIVER_USB);
 	BB_GameDevice = new SC_OperatorInput(/*USB Port*/ 1);
-	Gyroscope = nullptr; //new phoenix::sensors::Pigeon2(C_PIGEON_IMU);
   	_drivetrain = new X23_Drivetrain(std::make_tuple<int, int>(C_FX_FL_MASTER, C_FX_FL_SLAVE),
                                    std::make_tuple<int, int>(C_FX_FR_MASTER, C_FX_FR_SLAVE),
 								   std::make_tuple<int, int>(C_FX_BL_MASTER, C_FX_BL_SLAVE),
                                    std::make_tuple<int, int>(C_FX_BR_MASTER, C_FX_BR_SLAVE),
-                                   SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_DRIVE_SOL}); 
+                                   SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_DRIVE_SOL},
+								   C_PIGEON_IMU); 
 
 	_intake = new X23_Intake(C_SPX_INTAKE_LEFT, C_SPX_INTAKE_RIGHT);
 	_elevator = new X23_Elevator(C_FX_ELEVATEMOTOR,
@@ -63,7 +65,10 @@ void Robot::DisabledPeriodic() {}
  * This autonomous runs the autonomous command selected by your {@link
  * RobotContainer} class.
  */
-void Robot::AutonomousInit() {}
+void Robot::AutonomousInit() 
+{
+
+}
 
 void Robot::AutonomousPeriodic() {}
 
@@ -127,22 +132,12 @@ void Robot::TeleopPeriodic()
 
 	drivetrain_mode = GP1_Driver->GetRawButton(XBOX_RB);
 
-	if(Gyroscope != nullptr)
-	{
-		_drivetrain->Drive(SC::F_Deadband(X_Demand, C_DRIVE_DEADBAND),
-							SC::F_Deadband(Y_Demand, C_DRIVE_DEADBAND), 
-							SC::F_Deadband(Z_Demand, C_DRIVE_DEADBAND), 
-							Gyroscope->GetYaw(),
-							drivetrain_mode);
-	}
-	else
-	{
+
 		_drivetrain->Drive(SC::F_Deadband(X_Demand, C_DRIVE_DEADBAND),
 					 SC::F_Deadband(Y_Demand, C_DRIVE_DEADBAND), 
 					 SC::F_Deadband(Z_Demand, C_DRIVE_DEADBAND), 
-					 0.0,
+					 true,
 					 drivetrain_mode);
-	}
 	/*==========================*/
 	/*===Game Device Controls===*/
 	/*==========================*/
@@ -161,4 +156,5 @@ void Robot::TestPeriodic() {}
 int main() {
   return frc::StartRobot<Robot>();
 }
+
 #endif

@@ -10,16 +10,18 @@ using namespace units::length;
 using namespace units::velocity;
 using namespace ctre::phoenix::motorcontrol;
 using namespace ctre::phoenix::motorcontrol::can;
-
+using namespace ctre::phoenix::sensors;
 
 X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR, 
                     			std::tuple<int, int> chFL, 
                     			std::tuple<int, int> chBR, 
                     			std::tuple<int, int> chBL, 
-                    			SC_Solenoid ch_shift)
+                    			SC_Solenoid ch_shift,
+                                int PIGIMON)
 {
     md = new SC::SC_MecanumKinematics();
     shifter = new Solenoid(ch_shift.CtrlID, ch_shift.CtrlType, ch_shift.Channel);
+	Gyroscope = new Pigeon2(PIGIMON);
 
     int sCh = -1;
 
@@ -106,7 +108,7 @@ X23_Drivetrain::~X23_Drivetrain()
 
 }
 
-void X23_Drivetrain::Drive(double direction_x, double direction_y, double rotation_z, double gyro, bool shift)
+void X23_Drivetrain::Drive(double direction_x, double direction_y, double rotation_z, bool DriverOrient, bool shift)
 {
     // octocanum shifter
     if(shifter != nullptr)
@@ -118,10 +120,14 @@ void X23_Drivetrain::Drive(double direction_x, double direction_y, double rotati
         {
             direction_x = 0;
         }
-
-        md->DriveCartesian(direction_x, direction_y, rotation_z, 
-                            units::make_unit<units::degree_t>(gyro));
-        
+if (Gyroscope != nullptr)
+{        md->DriveCartesian(direction_x, direction_y, rotation_z, 
+                            DriverOrient?units::make_unit<units::degree_t>(Gyroscope->GetYaw()):0_deg);
+}
+else
+{
+md->DriveCartesian(direction_x, direction_y, rotation_z, 0_deg);
+}
         _setOutputs();
     }
     else
@@ -165,6 +171,21 @@ void X23_Drivetrain::DriveDirect(double rawFR, double rawFL, double rawBR, doubl
     if(FL != nullptr) { FL->Set(ControlMode::PercentOutput, F_Limit(-1.0, 1.0, rawFL)); }
     if(BR != nullptr) { BR->Set(ControlMode::PercentOutput, F_Limit(-1.0, 1.0, rawBR)); }
     if(BL != nullptr) { BL->Set(ControlMode::PercentOutput, F_Limit(-1.0, 1.0, rawBL)); }
+}
+
+void X23_Drivetrain::SetPose(frc::Pose2d &NewPose)
+{
+    this->dtPose = NewPose;
+}
+
+void X23_Drivetrain::UpdateOdometry()
+{
+dtPose.Update(Gyroscope->GetYaw(), GetCurrentWheelDistances());
+}
+
+frc::Pose2d X23_Drivetrain::GetPose()
+{
+    return dtPose;
 }
 
 void X23_Drivetrain::StopMotors()

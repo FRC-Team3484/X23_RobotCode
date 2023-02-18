@@ -216,3 +216,7 @@ const std::tuple<int, int> C_BLANK_IDS = std::make_tuple<int, int>(C_DISABLED_CH
 
 #define E_SPgt 0.1
 #define T_SPgt 0.1
+/*================================*/
+/*    Autonomous function maps    */
+/*================================*/
+//const std::unordered_map<std::string, std::shared_ptr<frc2::Command> <EventMap>;

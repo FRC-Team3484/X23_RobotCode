@@ -13,19 +13,29 @@ using namespace ctre::phoenix::motorcontrol::can;
 X23_Elevator::X23_Elevator(int ElevateMotor,int TiltMotor,SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt,
 SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax)
 {
-	// set elevate motors
-	if(ElevateMotor != C_DISABLED_CHANNEL) { ElevateFalcon = new WPI_TalonFX (ElevateMotor); 
-        TiltFalcon->SetNeutralMode(NeutralMode::Brake);
-        TiltFalcon->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
-	    TiltFalcon->SetSelectedSensorPosition(0);
+// set elevate motors
+if(ElevateMotor != C_DISABLED_CHANNEL) 
+    {
+    ElevateFalcon = new WPI_TalonFX (ElevateMotor); 
+    ElevateFalcon->SetNeutralMode(NeutralMode::Brake);
+    ElevateFalcon->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
+	ElevateFalcon->SetSelectedSensorPosition(0);
     }
-	else { TiltFalcon = nullptr; }
-	
-	// Set tilt motor
-    if(TiltMotor != C_DISABLED_CHANNEL) { TiltFalcon = new WPI_TalonFX (TiltMotor); 
-        TiltFalcon->SetNeutralMode(NeutralMode::Brake);
-        TiltFalcon->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
-	    TiltFalcon->SetSelectedSensorPosition(0);
+else 
+    {
+    ElevateFalcon = nullptr; 
+    }
+// Set tilt motor
+    if(TiltMotor != C_DISABLED_CHANNEL) 
+    { 
+    TiltFalcon = new WPI_TalonFX (TiltMotor); 
+    TiltFalcon->SetNeutralMode(NeutralMode::Brake);
+    TiltFalcon->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
+	TiltFalcon->SetSelectedSensorPosition(0);
+    }
+	else 
+    {
+    TiltFalcon = nullptr; 
     }
     //Set Digital Inputs
     this->TiltHome = new DigitalInput(TiltHome);
@@ -47,9 +57,28 @@ SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax)
     
 	//set Trigger
     this->rTrigPinch = new R_TRIG();
-    
-	//set Bool
-    this->PincherSolenoidState = false;
+    //set Bool
+    this->PincherSolenoidState = 0;
+    //set variable values
+E_CV = 0;
+E_FooFighters = 0;
+E_P = 0;
+E_I_Min = 0;
+E_I_Max = 100;
+E_I = 0; 
+E_Error_ZminusOne = 0;
+E_D = 0;
+T_CV = 0;
+T_P = 0;
+T_I_Min = 0;
+T_I_Max = 100;
+T_I = 0;
+T_Error_ZminusOne = 0;
+T_D = 0;
+CalcHeight = 0;
+CalcAngle = 0;
+TiltAngleSP = 0;
+ElevatorHeightSP = 0;
 }
 
 
@@ -71,17 +100,27 @@ X23_Elevator::~X23_Elevator()
 
 void X23_Elevator::Elevate()
 {
-	if(ElevatorHome != nullptr && TiltFalcon != nullptr && ElevateFalcon != nullptr && TiltLimit != nullptr && TiltHome != nullptr)
-	{
-		this->rTrigEHome->Check(ElevatorHome->Get());
-		this->rTrigTHome->Check(TiltHome->Get());
-		this->rTrigTLimit->Check(TiltLimit->Get());
-
-		if (rTrigEHome->Q)
-		{
-			E_FooFighters = E_D = E_I = E_P = 0;
-			ElevateFalcon->SetSelectedSensorPosition(0);
-		}
+if(ElevatorHome != nullptr && TiltFalcon != nullptr && ElevateFalcon != nullptr && TiltLimit != nullptr && TiltHome != nullptr)
+{
+this->rTrigEHome->Check(ElevatorHome->Get());
+this->rTrigTHome->Check(TiltHome->Get());
+this->rTrigTLimit->Check(TiltLimit->Get());
+    if (rTrigEHome->Q)
+    {
+    E_FooFighters = E_D = E_I = E_P = 0;
+    ElevateFalcon->SetSelectedSensorPosition(0);
+    }
+    if (rTrigTHome->Q)
+    {
+    T_D = T_I = T_P = 0;
+    
+    }
+    else if (rTrigTLimit->Q)
+    {
+    T_D = T_I = T_P = 0;
+    ;
+    }
+//scary code
 
 		if (rTrigTHome->Q)
 			T_D = T_I = T_P = 0;
@@ -93,7 +132,7 @@ void X23_Elevator::Elevate()
         CalcAngle = (F_XYCurve<double>(xArrayMotorPOS, yArrayAnglePOS,TiltFalcon->GetSelectedSensorVelocity(0), 10));
 
 //second XY curve stuff for max height
-        CalcHeight = fmin(F_XYCurve<double>(xArrayElevate, yArrayElevate, CalcAngle , 10 ), ElevatorHeight);
+        CalcHeight = fmin(F_XYCurve<double>(xArrayElevate, yArrayElevate, CalcAngle , 10 ), ElevatorHeightSP);
         Elevator_Error = CalcHeight - ElevateFalcon->GetSelectedSensorPosition(); 
 
         this->E_FooFighters = (F_XYCurve<double>(xArrayElevate, yArrayFooFighters, CalcAngle, 10));
@@ -103,7 +142,7 @@ void X23_Elevator::Elevate()
         this->E_CV = E_P + E_I + E_D + E_FooFighters;
 
 		// Tilt Motor PID
-   		Tilt_Error = TiltAngle - CalcAngle;
+   		Tilt_Error = TiltAngleSP - CalcAngle;
         
         this->T_P = Tilt_Error * T_Kp;
         this->T_I = F_Limit(T_I_Max, T_I_Min, T_I+(T_Ki * Tilt_Error *T_dt));
@@ -147,4 +186,39 @@ void X23_Elevator::ControlDirect(double RawElevate, double RawTiltFalcon)
 {
     if(ElevateFalcon != nullptr) { ElevateFalcon->Set( F_Limit(-1.0, 1.0, RawElevate)); }
     if(TiltFalcon != nullptr) { TiltFalcon->Set(ControlMode::PercentOutput, F_Limit(-1.0, 1.0, RawTiltFalcon)); }
+}
+void X23_Elevator::HybridZone()
+{
+ElevatorHeightSP = 14.5;
+TiltAngleSP = 40;
+}
+void X23_Elevator::ConeOne()
+{
+ElevatorHeightSP = 47.5;
+TiltAngleSP = 34;
+}
+void X23_Elevator::ConeTwo()
+{
+ElevatorHeightSP = 68.5;
+TiltAngleSP = 40;
+}
+void X23_Elevator::CubeOne()
+{
+ElevatorHeightSP = 41.5;
+TiltAngleSP = 40;
+}
+void X23_Elevator::CubeTwo()
+{
+ElevatorHeightSP = 68.5;
+TiltAngleSP = 42;
+}
+void X23_Elevator::Substation()
+{
+ElevatorHeightSP = 38;
+TiltAngleSP = 15;
+}
+void X23_Elevator::HomePOS()
+{
+ElevatorHeightSP = 0;
+TiltAngleSP = 0;
 }
