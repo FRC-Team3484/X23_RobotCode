@@ -2,17 +2,19 @@
 #define X23_Drivetrain_h
 
 #include "FRC3484_Lib/components/drive/SC_MecanumKinematics.h"
+
 #include <frc/kinematics/MecanumDriveOdometry.h>
-#include "frc/geometry/Pose2d.h"
-#include "frc/Solenoid.h"
-#include "ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h"
-#include "ctre/phoenix/sensors/Pigeon2.h"
 #include "frc/kinematics/MecanumDriveWheelSpeeds.h"
 
-#include "Eigen/QR"
-#include "frc/EigenCore.h"
+#include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Translation2d.h"
-#include "frc/geometry/Twist2d.h"
+
+#include "frc/Solenoid.h"
+
+#include "ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h"
+#include "ctre/phoenix/sensors/Pigeon2.h"
+
+
 
 class X23_Drivetrain
 {
@@ -67,8 +69,8 @@ private:
     void _setOutputs();
     void _InitMotor(ctre::phoenix::motorcontrol::can::WPI_TalonSRX* Motor, bool Invert, ctre::phoenix::motorcontrol::can::WPI_TalonSRX* Master);
     
-    Rotation2d _GyroAngle();
-    MecanumDriveWheelPositions _GetdtPOS();
+    frc::Rotation2d _GyroAngle();
+    frc::MecanumDriveWheelPositions _GetdtPOS();
     
     SC::SC_MecanumKinematics *md;
     frc::Solenoid *shifter;
@@ -76,9 +78,9 @@ private:
 
     frc::Pose2d dtPose;
     ctre::phoenix::sensors::Pigeon2 *Gyroscope;
-    MecanumDriveWheelPositions dt_previousWheelPositions;
-    Rotation2d dt_previousAngle;
-    Rotation2d dt_gyroOffset;
+    frc::MecanumDriveWheelPositions dt_previousWheelPositions;
+    frc::Rotation2d dt_previousAngle;
+    frc::Rotation2d dt_gyroOffset;
 
 
     // Declare all four master controllers

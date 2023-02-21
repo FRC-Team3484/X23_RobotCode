@@ -9,9 +9,13 @@
 #include "frc/PneumaticsModuleType.h"
 #include "units/time.h"
 #include "units/math.h"
+#include "Eigen/Core"
 
 namespace SC
 {
+	template <int Size>
+	using Vectord = Eigen::Vector<double, Size>;
+	
 	typedef struct {double Kp; double Ki; double Kd; double Kf;} SC_PIDConstants;
 
 	// Defines the CAN ID's and motor direction for a motor pairing. Note: In a two motor gearbox, both motors spin the same direction.
