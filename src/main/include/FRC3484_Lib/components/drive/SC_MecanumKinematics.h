@@ -2,14 +2,10 @@
 #define SC_MECANUMDRIVE_H
 
 #include <span>
-
 #include <wpi/sendable/Sendable.h>
 #include <wpi/sendable/SendableHelper.h>
-
 #include <frc/geometry/Translation2d.h>
-
 #include "units/angle.h"
-
 #include "FRC3484_Lib/utils/SC_Datatypes.h"
 
 namespace SC

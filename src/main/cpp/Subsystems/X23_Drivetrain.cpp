@@ -3,6 +3,12 @@
 #include "FRC3484_Lib/utils/SC_Functions.h"
 #include "Constants.h"
 #include "tuple"
+#include "Eigen/QR"
+#include "frc/EigenCore.h"
+#include "frc/geometry/Translation2d.h"
+#include "frc/geometry/Twist2d.h"
+#include "frc/kinematics/ChassisSpeeds.h"
+#include "wpimath/MathShared.h"
 
 using namespace SC;
 using namespace frc;
@@ -177,10 +183,15 @@ void X23_Drivetrain::SetPose(frc::Pose2d &NewPose)
 {
     this->dtPose = NewPose;
 }
-
-void X23_Drivetrain::UpdateOdometry()
+frc::Rotation2d _gyroAngle()
 {
-dtPose.Update(Gyroscope->GetYaw(), GetCurrentWheelDistances());
+return
+frc::Rotation2d(Gyroscope->GetYaw())
+}
+void X23_Drivetrain::UpdateOdometry(
+MecanumDriveWheelPositions& wheelPositions) {
+Rotation2d angle = _gyroAngle() + dt_gyroOffset;
+
 }
 
 frc::Pose2d X23_Drivetrain::GetPose()

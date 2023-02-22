@@ -66,7 +66,8 @@ private:
 
     frc::Pose2d dtPose;
     ctre::phoenix::sensors::Pigeon2 *Gyroscope;
-
+    frc::Rotation2d dt_gyroOffset;
+    frc::Rotation2d _gyroAngle();
     // Declare all four master controllers
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX *FR, *FR_Slave;
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX *FL, *FL_Slave;
