@@ -4,13 +4,12 @@
 #include "wpi/sendable/SendableRegistry.h"
 
 #include "Eigen/QR"
-//#include "frc/EigenCore.h"
+#include "frc/EigenCore.h"
 // #include <frc/geometry/Translation2d.h>
 
 #include "units/math.h"
 #include "units/dimensionless.h"
 
-#include "FRC3484_Lib/utils/SC_Datatypes.h"
 #include "FRC3484_Lib/utils/SC_Functions.h"
 
 using namespace frc;
@@ -22,6 +21,7 @@ SC::SC_MecanumKinematics::SC_MecanumKinematics()
 
 SC::SC_MecanumKinematics::~SC_MecanumKinematics()
 {
+
 }
 
 void SC::SC_MecanumKinematics::DriveCartesian(double X, double Y, double zRotation, units::degree_t gyro)
@@ -51,7 +51,7 @@ void SC::SC_MecanumKinematics::DriveCartesian(double X, double Y, double zRotati
 
 	this->_desaturateWheelSpeeds(vel);
 
-	this->wheelSpeed_SP = {vel[FRONT_LEFT], vel[FRONT_RIGHT], vel[REAR_LEFT], vel[REAR_RIGHT]};
+	this->wheelSpeed_SP = {vel[SC::SC_Wheel::FRONT_LEFT], vel[SC::SC_Wheel::FRONT_RIGHT], vel[SC::SC_Wheel::REAR_LEFT], vel[SC::SC_Wheel::REAR_RIGHT]};
 }
 
 void SC::SC_MecanumKinematics::DrivePolar(double radius, units::degree_t theta, double zRotation)
@@ -127,7 +127,7 @@ frc::ChassisSpeeds SC::SC_MecanumKinematics::ToChassisSpeeds(
       wheelSpeeds.rearLeft.value(), wheelSpeeds.rearRight.value()};
 
   Eigen::Vector3d chassisSpeedsVector =
-      m_forwardKinematics.solve(wheelSpeedsVector);
+      SC_forwardKinematics.solve(wheelSpeedsVector);
 
   return {units::meters_per_second_t{chassisSpeedsVector(0)},  // NOLINT
           units::meters_per_second_t{chassisSpeedsVector(1)},
@@ -140,7 +140,7 @@ frc::Twist2d SC::SC_MecanumKinematics::ToTwist2d(const MecanumDriveWheelPosition
 		wheelDeltas.frontLeft.value(), wheelDeltas.frontRight.value(),
 		wheelDeltas.rearLeft.value(), wheelDeltas.rearRight.value()};
 
-	Eigen::Vector3d twistVector = m_forwardKinematics.solve(wheelDeltasVector);
+	Eigen::Vector3d twistVector = SC_forwardKinematics.solve(wheelDeltasVector);
 
 	return {units::meter_t{twistVector(0)}, // NOLINT
 			units::meter_t{twistVector(1)}, units::radian_t{twistVector(2)}};

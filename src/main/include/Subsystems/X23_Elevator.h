@@ -2,19 +2,21 @@
 #define X23_Elevator_h
 
 #include "frc/Solenoid.h"
-#include "FRC3484_Lib/components/SC_PID.h"
-#include "FRC3484_Lib/utils/SC_Datatypes.h"
 #include "frc/DigitalInput.h"
 #include "frc/filter/Debouncer.h"
-#include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
 #include "frc/filter/Debouncer.h"
+ 
+#include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
+
 #include "frc2/command/SubsystemBase.h"
+
+#include "FRC3484_Lib/utils/SC_Datatypes.h"
 
 class X23_Elevator : public frc2::SubsystemBase
 {
 public:
 
-    X23_Elevator(int ElevateMotor,int TiltMotor,SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt,
+    X23_Elevator(int ElevateMotor,int TiltMotor, SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt,
 SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
      //Emc is Elevator motor Controller,Master and Slave//
 

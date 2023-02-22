@@ -13,8 +13,8 @@
 
 namespace SC
 {
-	template <int Size>
-	using Vectord = Eigen::Vector<double, Size>;
+	//template <int Size>
+	//using Vectord = Eigen::Vector<double, Size>;
 	
 	typedef struct {double Kp; double Ki; double Kd; double Kf;} SC_PIDConstants;
 
