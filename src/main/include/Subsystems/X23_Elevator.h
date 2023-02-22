@@ -52,6 +52,9 @@ private:
     void _setOutputs();
 
     bool ClawToggleClose = 0;
+    bool atHome = 0;
+    bool EHomeLS = 0;
+    bool THomeLS = 0;
 // Declare Tilt 
     ctre::phoenix::motorcontrol::can::WPI_TalonFX *TiltFalcon, *ElevateFalcon;  
 // Declare Pincher Solenoids

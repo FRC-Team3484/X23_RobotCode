@@ -100,38 +100,67 @@ X23_Elevator::~X23_Elevator()
 
 void X23_Elevator::Elevate()
 {
-if(ElevatorHome != nullptr && TiltFalcon != nullptr && ElevateFalcon != nullptr && TiltLimit != nullptr && TiltHome != nullptr)
-{
-this->rTrigEHome->Check(ElevatorHome->Get());
-this->rTrigTHome->Check(TiltHome->Get());
-this->rTrigTLimit->Check(TiltLimit->Get());
-    if (rTrigEHome->Q)
+    /*stops PID*/ 
+    if((ElevatorHeightSP == 0) && (TiltAngleSP == 0 ) && atHome)
     {
-    E_FooFighters = E_D = E_I = E_P = 0;
-    ElevateFalcon->SetSelectedSensorPosition(0);
-    }
-    if (rTrigTHome->Q)
-    {
-    T_D = T_I = T_P = 0;
-    
-    }
-    else if (rTrigTLimit->Q)
-    {
-    T_D = T_I = T_P = 0;
-    ;
-    }
-//scary code
+         //WE NEED TO ZERO ALL OF THIS OUT
+        this->rTrigEHome->Check(ElevatorHome->Get());
+        this->rTrigTHome->Check(TiltHome->Get());
+        this->rTrigTLimit->Check(TiltLimit->Get());
+
+        if (rTrigEHome->Q)
+        {
+            E_FooFighters = E_D = E_I = E_P = 0;
+            ElevateFalcon->SetSelectedSensorPosition(0);
+        }
+        if (rTrigTHome->Q)
+        {
+            T_D = T_I = T_P = 0;   
+        }
+        else if (rTrigTLimit->Q)
+        {
+            T_D = T_I = T_P = 0;
+            ;
+        }
+    //scary code
 
 		if (rTrigTHome->Q)
-			T_D = T_I = T_P = 0;
+	    	T_D = T_I = T_P = 0;
 		else if (rTrigTLimit->Q)
-			T_D = T_I = T_P = 0;
+    		T_D = T_I = T_P = 0;
+    }
+    //PID
+    else if((ElevatorHeightSP != 0) && (TiltAngleSP != 0) && ElevatorHome != nullptr && TiltFalcon != nullptr && ElevateFalcon != nullptr && TiltLimit != nullptr && TiltHome != nullptr)
+    {
+        this->rTrigEHome->Check(ElevatorHome->Get());
+        this->rTrigTHome->Check(TiltHome->Get());
+        this->rTrigTLimit->Check(TiltLimit->Get());
 
-//Define Locals
+        if (rTrigEHome->Q)
+        {
+            E_FooFighters = E_D = E_I = E_P = 0;
+            ElevateFalcon->SetSelectedSensorPosition(0);
+        }
+        if (rTrigTHome->Q)
+        {
+            T_D = T_I = T_P = 0;   
+        }
+        else if (rTrigTLimit->Q)
+        {
+            T_D = T_I = T_P = 0;
+        }
+    //scary code
+
+		if (rTrigTHome->Q)
+	    	T_D = T_I = T_P = 0;
+		else if (rTrigTLimit->Q)
+    		T_D = T_I = T_P = 0;
+
+    //Define Locals
         double Elevator_Error, Tilt_Error;
         CalcAngle = (F_XYCurve<double>(xArrayMotorPOS, yArrayAnglePOS,TiltFalcon->GetSelectedSensorVelocity(0), 10));
 
-//second XY curve stuff for max height
+    //second XY curve stuff for max height
         CalcHeight = fmin(F_XYCurve<double>(xArrayElevate, yArrayElevate, CalcAngle , 10 ), ElevatorHeightSP);
         Elevator_Error = CalcHeight - ElevateFalcon->GetSelectedSensorPosition(); 
 
@@ -142,12 +171,13 @@ this->rTrigTLimit->Check(TiltLimit->Get());
         this->E_CV = E_P + E_I + E_D + E_FooFighters;
 
 		// Tilt Motor PID
-   		Tilt_Error = TiltAngleSP - CalcAngle;
+	    Tilt_Error = TiltAngleSP - CalcAngle;
         
         this->T_P = Tilt_Error * T_Kp;
         this->T_I = F_Limit(T_I_Max, T_I_Min, T_I+(T_Ki * Tilt_Error *T_dt));
         this->T_D = T_Kd * (Tilt_Error - T_Error_ZminusOne)/T_dt;
         this->T_CV = T_P + T_I + T_D; 
+        atHome = EHomeLS && THomeLS;
 	}
 }
 
