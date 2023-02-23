@@ -30,6 +30,14 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 	Gyroscope = new Pigeon2(PIGIMON);
 
     int sCh = -1;
+    // Initialize PreviousPOS
+    Previous_WheelPOS.frontLeft  = units::make_unit<units::meter_t>(0);
+    Previous_WheelPOS.frontRight = units::make_unit<units::meter_t>(0);
+    Previous_WheelPOS.rearLeft   = units::make_unit<units::meter_t>(0);
+    Previous_WheelPOS.rearRight  = units::make_unit<units::meter_t>(0);
+    Gyroscope->SetYaw(0);
+    Previous_Angle = _gyroAngle();
+
 
     // Initialize front right wheel
     if(chFR != C_BLANK_IDS) 
@@ -183,16 +191,33 @@ void X23_Drivetrain::SetPose(frc::Pose2d &NewPose)
 {
     this->dtPose = NewPose;
 }
-frc::Rotation2d _gyroAngle()
+    frc::Rotation2d X23_Drivetrain::_gyroAngle()
 {
 return
-frc::Rotation2d(Gyroscope->GetYaw())
+    frc::Rotation2d(units::make_unit<units::degree_t>(Gyroscope->GetYaw()));
 }
 void X23_Drivetrain::UpdateOdometry(
-MecanumDriveWheelPositions& wheelPositions) {
-Rotation2d angle = _gyroAngle() + dt_gyroOffset;
+MecanumDriveWheelPositions& wheelPositions) 
+{
+    Rotation2d angle = _gyroAngle() + dt_gyroOffset;
 
+    MecanumDriveWheelPositions wheelDeltas{
+      wheelPositions.frontLeft - Previous_WheelPOS.frontLeft,
+      wheelPositions.frontRight - Previous_WheelPOS.frontRight,
+      wheelPositions.rearLeft - Previous_WheelPOS.rearLeft,
+      wheelPositions.rearRight - Previous_WheelPOS.rearRight,
+  };
+
+  Twist2d twist = this->md->ToTwist2d(wheelDeltas);
+  twist.dtheta = (angle - Previous_Angle).Radians();
+
+  Pose2d newPose = dtPose.Exp(twist);
+
+  Previous_Angle = angle;
+  Previous_WheelPOS = wheelPositions;
+  dtPose = {newPose.Translation(), angle};
 }
+
 
 frc::Pose2d X23_Drivetrain::GetPose()
 {

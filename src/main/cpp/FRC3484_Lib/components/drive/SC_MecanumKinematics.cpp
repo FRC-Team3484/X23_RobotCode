@@ -15,7 +15,17 @@ SC::SC_MecanumKinematics::SC_MecanumKinematics()
 {
     wheelSpeed_SP = SC_MD_WheelSpeeds{0.0, 0.0, 0.0, 0.0};
 }
+frc::Twist2d SC::SC_MecanumKinematics::ToTwist2d(const MecanumDriveWheelPositions& wheelDeltas) const
+{
+  Vectord<4> wheelDeltasVector{
+      wheelDeltas.frontLeft.value(), wheelDeltas.frontRight.value(),
+      wheelDeltas.rearLeft.value(), wheelDeltas.rearRight.value()};
 
+  Eigen::Vector3d twistVector = forwardKinematics.solve(wheelDeltasVector);
+
+  return {units::meter_t{twistVector(0)},  // NOLINT
+          units::meter_t{twistVector(1)}, units::radian_t{twistVector(2)}};
+}
 SC::SC_MecanumKinematics::~SC_MecanumKinematics()
 {
 

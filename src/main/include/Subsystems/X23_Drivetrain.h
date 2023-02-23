@@ -7,7 +7,7 @@
 #include "frc/Solenoid.h"
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h"
 #include "ctre/phoenix/sensors/Pigeon2.h"
-
+#include "frc/geometry/Rotation2d.h"
 class X23_Drivetrain
 {
 public:
@@ -41,7 +41,8 @@ public:
 
     void SetPose(frc::Pose2d &NewPose);
 
-    void UpdateOdometry();
+    void UpdateOdometry(
+MecanumDriveWheelPositions& wheelPositions);
 
     frc::Pose2d GetPose();
 
@@ -74,6 +75,8 @@ private:
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX *BR, *BR_Slave;
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX *BL, *BL_Slave;
 
+    frc::MecanumDriveWheelPositions Previous_WheelPOS;
+    frc::Rotation2d                 Previous_Angle;
 };
 
 #endif // DRIVETRAIN_H

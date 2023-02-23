@@ -8,6 +8,12 @@
 #include "units/angle.h"
 #include "FRC3484_Lib/utils/SC_Datatypes.h"
 
+#include "Eigen/QR"
+#include "frc/EigenCore.h"
+#include "frc/geometry/Twist2d.h"
+#include "frc/kinematics/MecanumDriveWheelPositions.h"
+#include "frc/kinematics/MecanumDriveWheelSpeeds.h"
+#include "wpimath/MathShared.h"
 namespace SC
 {
     class SC_MecanumKinematics : public wpi::Sendable,
@@ -21,6 +27,7 @@ namespace SC
 			double WS_BackLeft = 0.0;
 			double WS_BackRight = 0.0;
 		};
+frc::Twist2d ToTwist2d(const frc::MecanumDriveWheelPositions& wheelDeltas) const;
 
         SC_MecanumKinematics();
 
@@ -48,6 +55,12 @@ namespace SC
 
     private:
         SC_MD_WheelSpeeds wheelSpeed_SP;
+  mutable frc::Matrixd<4, 3> inverseKinematics;
+    Eigen::HouseholderQR<frc::Matrixd<4, 3>> forwardKinematics;
+    frc::Translation2d frontLeftWheel;
+    frc::Translation2d frontRightWheel;
+    frc::Translation2d rearLeftWheel;
+    frc::Translation2d rearRightWheel;
 
 		void _desaturateWheelSpeeds(std::span<double> speeds);
     };
