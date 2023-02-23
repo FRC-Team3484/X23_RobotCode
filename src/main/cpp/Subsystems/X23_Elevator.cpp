@@ -147,7 +147,7 @@ void X23_Elevator::Elevate()
         }
         else if (rTrigTLimit->Q)
         {
-            T_D = T_I = T_P = 0;
+            T_D = T_I = T_P = TiltAngleSP-1;
         }
     //scary code
 
