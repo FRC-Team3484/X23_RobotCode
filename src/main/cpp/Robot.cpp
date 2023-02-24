@@ -142,9 +142,7 @@ void Robot::TeleopPeriodic()
 	/*===Game Device Controls===*/
 	/*==========================*/
 
-	//_intake->Collect(BB_GameDevice->GetRawButton(C_GD_INTAKE), 
-					// BB_GameDevice->GetRawButton(C_GD_DIRCET_L_INTAKE),
-					// BB_GameDevice->GetRawButton(C_GD_DIRECT_R_INTAKE));
+	
 }
 
 /**

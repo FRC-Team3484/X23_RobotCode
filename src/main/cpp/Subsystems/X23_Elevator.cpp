@@ -108,26 +108,12 @@ void X23_Elevator::Elevate()
         this->rTrigTHome->Check(TiltHome->Get());
         this->rTrigTLimit->Check(TiltLimit->Get());
 
-        if (rTrigEHome->Q)
-        {
-            E_FooFighters = E_D = E_I = E_P = 0;
-            ElevateFalcon->SetSelectedSensorPosition(0);
-        }
-        if (rTrigTHome->Q)
-        {
-            T_D = T_I = T_P = 0;   
-        }
-        else if (rTrigTLimit->Q)
-        {
-            T_D = T_I = T_P = 0;
-            ;
-        }
-    //scary code
+        E_FooFighters = E_D = E_I = E_P = 0;
+        ElevateFalcon->SetSelectedSensorPosition(0);
+        
+        T_D = T_I = T_P = 0;
+        TiltFalcon->SetSelectedSensorPosition(0);   
 
-		if (rTrigTHome->Q)
-	    	T_D = T_I = T_P = 0;
-		else if (rTrigTLimit->Q)
-    		T_D = T_I = T_P = 0;
     }
     //PID
     else if((ElevatorHeightSP != 0) && (TiltAngleSP != 0) && ElevatorHome != nullptr && TiltFalcon != nullptr && ElevateFalcon != nullptr && TiltLimit != nullptr && TiltHome != nullptr)
@@ -149,12 +135,6 @@ void X23_Elevator::Elevate()
         {
             T_D = T_I = T_P = TiltAngleSP-1;
         }
-    //scary code
-
-		if (rTrigTHome->Q)
-	    	T_D = T_I = T_P = 0;
-		else if (rTrigTLimit->Q)
-    		T_D = T_I = T_P = 0;
 
     //Define Locals
         double Elevator_Error, Tilt_Error;
