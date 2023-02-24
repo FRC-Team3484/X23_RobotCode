@@ -7,7 +7,7 @@
 #include <frc/geometry/Translation2d.h>
 #include "units/angle.h"
 #include "FRC3484_Lib/utils/SC_Datatypes.h"
-
+#include "frc/kinematics/ChassisSpeeds.h"
 #include "Eigen/QR"
 #include "frc/EigenCore.h"
 #include "frc/geometry/Twist2d.h"
@@ -37,7 +37,7 @@ frc::Twist2d ToTwist2d(const frc::MecanumDriveWheelPositions& wheelDeltas) const
          * @brief   DriveCartesian
          */
         void DriveCartesian(double X, double Y, double zRotation, units::angle::degree_t gyro);
-
+        void SetInverseKinematics(Translation2d fl,Translation2d fr,Translation2d rl,Translation2d rr);  
         /**
          * @brief   DrivePolar
          */
@@ -53,8 +53,13 @@ frc::Twist2d ToTwist2d(const frc::MecanumDriveWheelPositions& wheelDeltas) const
 
 		void InitSendable(wpi::SendableBuilder& builder) override;
 
+frc::MecanumDriveWheelSpeeds  SC_MecanumKinematics::ToWheelSpeeds(
+    const frc::ChassisSpeeds& chassisSpeeds,
+    const frc::Translation2d& centerOfRotation = frc::Translation2d{}) const;
+   
     private:
         SC_MD_WheelSpeeds wheelSpeed_SP;
+        Translation2d PreviousCoR;
   mutable frc::Matrixd<4, 3> inverseKinematics;
     Eigen::HouseholderQR<frc::Matrixd<4, 3>> forwardKinematics;
     frc::Translation2d frontLeftWheel;

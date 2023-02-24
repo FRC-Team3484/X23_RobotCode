@@ -49,15 +49,6 @@ class Robot : public frc::TimedRobot {
 //  frc::GenericHID      *BB_GameDevice;  
 
 
-MecanumAutoBuilder autoBuilder(
-    [this]() { return swerveSubsystem.getPose(); }, // Function to supply current robot pose
-    [this](auto initPose) { swerveSubsystem.resetPose(initPose); }, // Function used to reset odometry at the beginning of auto
-    PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-    PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
-    [this](auto speeds) { swerveSubsystem.driveFieldRelative(speeds); }, // Output function that accepts field relative ChassisSpeeds
-    eventMap, // Our event map
-    { &swerveSubsystem }, // Drive requirements, usually just a single drive subsystem
-    true // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-);
+MecanumAutoBuilder *autoBuilder;
 
 };

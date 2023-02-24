@@ -42,12 +42,11 @@ public:
     void SetPose(frc::Pose2d &NewPose);
 
     void UpdateOdometry(
-MecanumDriveWheelPositions& wheelPositions);
+frc::MecanumDriveWheelPositions& wheelPositions);
 
     frc::Pose2d GetPose();
-
+    void ResetPose();
     void StopMotors();
-
 	/**
 	 * @brief	Switches all motor controllers to brake mode
 	*/

@@ -30,6 +30,34 @@ SC::SC_MecanumKinematics::~SC_MecanumKinematics()
 {
 
 }
+frc::MecanumDriveWheelSpeeds  SC::SC_MecanumKinematics::ToWheelSpeeds(
+    const frc::ChassisSpeeds& chassisSpeeds,
+    const Translation2d& centerOfRotation) const 
+    {
+  // We have a new center of rotation. We need to compute the matrix again.
+  if (centerOfRotation != PreviousCoR) {
+    auto fl = frontLeftWheel - centerOfRotation;
+    auto fr = frontRightWheel - centerOfRotation;
+    auto rl = rearLeftWheel - centerOfRotation;
+    auto rr = rearRightWheel - centerOfRotation;
+
+    frc::Translation2d SetInverseKinematics(Translation2d fl,Translation2d fr,Translation2d rl,Translation2d rr);
+
+   PreviousCoR != centerOfRotation;
+  }
+
+  Eigen::Vector3d chassisSpeedsVector{chassisSpeeds.vx.value(),
+                                      chassisSpeeds.vy.value(),
+                                      chassisSpeeds.omega.value()};
+
+  Vectord<4> wheelsVector = inverseKinematics * chassisSpeedsVector;
+
+   SC::SC_MecanumKinematics::SC_MD_WheelSpeeds wheelSpeed_SP;
+  wheelSpeed_SP.WS_FrontLeft = units::meters_per_second_t{wheelsVector(0)}.to<double>();
+  wheelSpeed_SP.WS_FrontRight = units::meters_per_second_t{wheelsVector(1)}.to<double>();
+  wheelSpeed_SP.WS_BackLeft = units::meters_per_second_t{wheelsVector(2)}.to<double>();
+  wheelSpeed_SP.WS_BackRight = units::meters_per_second_t{wheelsVector(3)}.to<double>();
+}
 
 void SC::SC_MecanumKinematics::DriveCartesian(double X, double Y, double zRotation, units::degree_t gyro)
 {
