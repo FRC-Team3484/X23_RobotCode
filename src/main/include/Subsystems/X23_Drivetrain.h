@@ -13,9 +13,13 @@
 
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h"
 #include "ctre/phoenix/sensors/Pigeon2.h"
+<<<<<<< HEAD
 
 
 
+=======
+#include "frc/geometry/Rotation2d.h"
+>>>>>>> 786686ca790d166c33ad2f3e83fab0fcfc0f5ed2
 class X23_Drivetrain
 {
 public:
@@ -49,12 +53,12 @@ public:
 
     void SetPose(frc::Pose2d &NewPose);
 
-    void UpdateOdometry();
+    void UpdateOdometry(
+frc::MecanumDriveWheelPositions& wheelPositions);
 
     frc::Pose2d GetPose();
-
+    void ResetPose();
     void StopMotors();
-
 	/**
 	 * @brief	Switches all motor controllers to brake mode
 	*/
@@ -78,17 +82,24 @@ private:
 
     frc::Pose2d dtPose;
     ctre::phoenix::sensors::Pigeon2 *Gyroscope;
+<<<<<<< HEAD
     frc::MecanumDriveWheelPositions dt_previousWheelPositions;
     frc::Rotation2d dt_previousAngle;
     frc::Rotation2d dt_gyroOffset;
 
 
+=======
+    frc::Rotation2d dt_gyroOffset;
+    frc::Rotation2d _gyroAngle();
+>>>>>>> 786686ca790d166c33ad2f3e83fab0fcfc0f5ed2
     // Declare all four master controllers
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX *FR, *FR_Slave;
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX *FL, *FL_Slave;
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX *BR, *BR_Slave;
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX *BL, *BL_Slave;
 
+    frc::MecanumDriveWheelPositions Previous_WheelPOS;
+    frc::Rotation2d                 Previous_Angle;
 };
 
 #endif // DRIVETRAIN_H

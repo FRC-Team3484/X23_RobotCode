@@ -67,7 +67,16 @@ void Robot::DisabledPeriodic() {}
  */
 void Robot::AutonomousInit() 
 {
-
+	this -> autoBuilder = new MecanumAutoBuilder {
+    [this]() { return _drivetrain->GetPose(); }, // Function to supply current robot pose
+    [this](auto initPose) { _drivetrain->SetPose(initPose); }, // Function used to reset odometry at the beginning of auto
+    PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+    PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+    [this](auto speeds) { _drivetrain->ToWheelSpeeds(speeds); }, // Output function that accepts field relative ChassisSpeeds
+    eventMap, // Our event map
+    { &_drivetrain }, // Drive requirements, usually just a single drive subsystem
+    true // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+	};
 }
 
 void Robot::AutonomousPeriodic() {}
