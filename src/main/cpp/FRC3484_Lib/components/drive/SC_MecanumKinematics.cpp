@@ -122,7 +122,7 @@ void SC::SC_MecanumKinematics::InitSendable(wpi::SendableBuilder &builder)
 
 frc::ChassisSpeeds SC::SC_MecanumKinematics::ToChassisSpeeds(
     const frc::MecanumDriveWheelSpeeds& wheelSpeeds) const {
-  SC::Vectord<4> wheelSpeedsVector{
+  frc::Vectord<4> wheelSpeedsVector{
       wheelSpeeds.frontLeft.value(), wheelSpeeds.frontRight.value(),
       wheelSpeeds.rearLeft.value(), wheelSpeeds.rearRight.value()};
 
