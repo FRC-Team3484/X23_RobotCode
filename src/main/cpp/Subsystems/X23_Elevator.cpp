@@ -235,3 +235,8 @@ void X23_Elevator::HomePOS()
 ElevatorHeightSP = 0;
 TiltAngleSP = 0;
 }
+
+bool X23_Elevator::IsAtHome()
+{
+    return this->atHome;
+}

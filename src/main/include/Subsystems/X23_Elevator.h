@@ -9,7 +9,8 @@
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
 
 #include "frc2/command/SubsystemBase.h"
-
+#include <frc2/command/Command.h>
+#include <frc2/command/CommandHelper.h>
 #include "FRC3484_Lib/utils/SC_Datatypes.h"
 
 class X23_Elevator : public frc2::SubsystemBase
@@ -17,10 +18,10 @@ class X23_Elevator : public frc2::SubsystemBase
 public:
 
     X23_Elevator(int ElevateMotor,int TiltMotor, SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt,
-SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
+                SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
      //Emc is Elevator motor Controller,Master and Slave//
 
- ~X23_Elevator();
+    ~X23_Elevator();
 
     void Elevate();
 
@@ -49,6 +50,8 @@ SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
     void ControlDirectElevate( double RawElevate);
 
     void ControlDirectTilt( double RawTiltFalcon);
+
+    bool IsAtHome();
 
 private:
     void _setOutputs();
@@ -97,5 +100,28 @@ double TiltAngleSP;
 double ElevatorHeightSP;//sp
 
 };
+
+/*===================*/
+/* ELEVATOR COMMANDS */
+/*===================*/
+
+class Cmd_Elev_HybridZone : public frc2::CommandHelper<frc2::CommandBase, Cmd_Elev_HybridZone>
+{
+public:
+    explicit Cmd_Elev_HybridZone(X23_Elevator *subsys) : _elevator(subsys) {} ;
+
+    void Initialize() override;
+
+    void Execute() override { if(_elevator != nullptr) { if(_elevator->IsAtHome()) { _elevator->HybridZone(); } } } ;
+
+    void End(bool interrupted) override;
+
+    bool IsFinished() override;
+
+private:
+    X23_Elevator* _elevator;
+
+};
+
 
 #endif // Elevator_H

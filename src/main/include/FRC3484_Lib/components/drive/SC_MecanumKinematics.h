@@ -37,8 +37,6 @@ namespace SC
 			double WS_BackLeft = 0.0;
 			double WS_BackRight = 0.0;
 		};
-frc::Twist2d ToTwist2d(const frc::MecanumDriveWheelPositions& wheelDeltas) const;
-
 		SC_MecanumKinematics();
 
 		~SC_MecanumKinematics();
@@ -47,15 +45,25 @@ frc::Twist2d ToTwist2d(const frc::MecanumDriveWheelPositions& wheelDeltas) const
          * @brief   DriveCartesian
          */
         void DriveCartesian(double X, double Y, double zRotation, units::angle::degree_t gyro);
-        void SetInverseKinematics(Translation2d fl,Translation2d fr,Translation2d rl,Translation2d rr);  
+
         /**
          * @brief   DrivePolar
          */
+
+        frc::Twist2d ToTwist2d(const frc::MecanumDriveWheelPositions &wheelDeltas) const;
+		frc::ChassisSpeeds ToChassisSpeeds(const frc::MecanumDriveWheelSpeeds& wheelSpeeds) const;
         void DrivePolar(double radius, units::angle::degree_t theta, double zRotation);
 
 		SC_MD_WheelSpeeds GetWheelSpeedsSetpoint();
 
 		double GetWheelOutput(SC::SC_Wheel wheelIdx);
+
+
+        void SetInverseKinematics(frc::Translation2d fl,frc::Translation2d fr,frc::Translation2d rl,frc::Translation2d rr);  
+
+		void  ToWheelSpeeds(
+				const frc::ChassisSpeeds& chassisSpeeds,
+				const frc::Translation2d& centerOfRotation = frc::Translation2d{}) const;
 
 		/*
 		  Inherited Function Overrides
@@ -63,19 +71,16 @@ frc::Twist2d ToTwist2d(const frc::MecanumDriveWheelPositions& wheelDeltas) const
 
 		void InitSendable(wpi::SendableBuilder &builder) override;
 
-frc::MecanumDriveWheelSpeeds  SC_MecanumKinematics::ToWheelSpeeds(
-    const frc::ChassisSpeeds& chassisSpeeds,
-    const frc::Translation2d& centerOfRotation = frc::Translation2d{}) const;
    
     private:
         SC_MD_WheelSpeeds wheelSpeed_SP;
-        Translation2d PreviousCoR;
-  mutable frc::Matrixd<4, 3> inverseKinematics;
-    Eigen::HouseholderQR<frc::Matrixd<4, 3>> forwardKinematics;
-    frc::Translation2d frontLeftWheel;
-    frc::Translation2d frontRightWheel;
-    frc::Translation2d rearLeftWheel;
-    frc::Translation2d rearRightWheel;
+        frc::Translation2d PreviousCoR;
+		mutable frc::Matrixd<4, 3> inverseKinematics;
+		Eigen::HouseholderQR<frc::Matrixd<4, 3>> forwardKinematics;
+		frc::Translation2d frontLeftWheel;
+		frc::Translation2d frontRightWheel;
+		frc::Translation2d rearLeftWheel;
+		frc::Translation2d rearRightWheel;
 
 		void _desaturateWheelSpeeds(std::span<double> speeds);
 	};

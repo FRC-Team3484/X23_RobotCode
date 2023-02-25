@@ -21,6 +21,7 @@
 
 #define C_DISABLED_CHANNEL			-1	// Device or channel is not used.
 
+
 /*==========*/
 /* CAN ID's */
 /*==========*/
@@ -224,4 +225,3 @@ const std::tuple<int, int> C_BLANK_IDS = std::make_tuple<int, int>(C_DISABLED_CH
 /*================================*/
 /*    Autonomous function maps    */
 /*================================*/
-//const std::unordered_map<std::string, std::shared_ptr<frc2::Command> <EventMap>;
