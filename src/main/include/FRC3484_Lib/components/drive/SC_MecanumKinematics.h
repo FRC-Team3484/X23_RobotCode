@@ -58,12 +58,11 @@ namespace SC
 
 		double GetWheelOutput(SC::SC_Wheel wheelIdx);
 
-
         void SetInverseKinematics(frc::Translation2d fl,frc::Translation2d fr,frc::Translation2d rl,frc::Translation2d rr);  
 
 		void  ToWheelSpeeds(
 				const frc::ChassisSpeeds& chassisSpeeds,
-				const frc::Translation2d& centerOfRotation = frc::Translation2d{}) const;
+				const frc::Translation2d& centerOfRotation = frc::Translation2d{});
 
 		/*
 		  Inherited Function Overrides

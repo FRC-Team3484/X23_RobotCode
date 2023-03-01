@@ -24,7 +24,7 @@ SC::SC_MecanumKinematics::~SC_MecanumKinematics()
 
 void  SC::SC_MecanumKinematics::ToWheelSpeeds(
     const frc::ChassisSpeeds& chassisSpeeds,
-    const Translation2d& centerOfRotation) const 
+    const Translation2d& centerOfRotation) 
     {
   // We have a new center of rotation. We need to compute the matrix again.
   if (centerOfRotation != PreviousCoR) {
@@ -33,9 +33,9 @@ void  SC::SC_MecanumKinematics::ToWheelSpeeds(
     auto rl = rearLeftWheel - centerOfRotation;
     auto rr = rearRightWheel - centerOfRotation;
 
-    frc::Translation2d SetInverseKinematics(Translation2d fl,Translation2d fr,Translation2d rl,Translation2d rr);
+    SetInverseKinematics(fl, fr, rl, rr);
 
-   PreviousCoR != centerOfRotation;
+   	PreviousCoR != centerOfRotation;
   }
 
   Eigen::Vector3d chassisSpeedsVector{chassisSpeeds.vx.value(),
@@ -170,6 +170,11 @@ frc::Twist2d SC::SC_MecanumKinematics::ToTwist2d(const MecanumDriveWheelPosition
 
 	return {units::meter_t{twistVector(0)}, // NOLINT
 			units::meter_t{twistVector(1)}, units::radian_t{twistVector(2)}};
+}
+
+void SC::SC_MecanumKinematics::SetInverseKinematics(Translation2d FL, Translation2d FR, Translation2d BL, Translation2d BR)
+{
+
 }
 
 /*===================*/

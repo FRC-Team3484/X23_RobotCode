@@ -10,13 +10,13 @@
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Translation2d.h"
 #include "frc/geometry/Translation2d.h"
-
+#include "frc2/command/SubsystemBase.h"
 #include "frc/Solenoid.h"
 
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h"
 #include "ctre/phoenix/sensors/Pigeon2.h"
 
-class X23_Drivetrain
+class X23_Drivetrain : public frc2::SubsystemBase
 {
 public:
     X23_Drivetrain(std::tuple<int, int> chFR, 

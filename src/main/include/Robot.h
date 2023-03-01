@@ -17,7 +17,8 @@
 #include "FRC3484_Lib/components/SC_OperatorInput.h"
 
 #include <frc/XboxController.h>
-
+#include <frc2/command/Command.h>
+#include <frc2/command/CommandHelper.h>
 #include "ctre/phoenix/sensors/Pigeon2.h"
 #include <memory>
 
