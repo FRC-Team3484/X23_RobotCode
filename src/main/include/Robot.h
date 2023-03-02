@@ -7,15 +7,21 @@
 #include "Subsystems/X23_Drivetrain.h"
 #include "Subsystems/X23_Intake.h"
 #include "Subsystems/X23_Elevator.h"
+#include "X23_RobotContainer.h"
+
 #include <frc/TimedRobot.h>
 #include <frc2/command/Command.h>
 
+#include <pathplanner/lib/PathPlanner.h>
+#include <pathplanner/lib/auto/MecanumAutoBuilder.h>
 #include "FRC3484_Lib/utils/SC_Datatypes.h"
 #include "FRC3484_Lib/components/SC_OperatorInput.h"
 
 #include <frc/XboxController.h>
-
+#include <frc2/command/Command.h>
+#include <frc2/command/CommandHelper.h>
 #include "ctre/phoenix/sensors/Pigeon2.h"
+#include <memory>
 
 
 class Robot : public frc::TimedRobot {
@@ -34,9 +40,10 @@ class Robot : public frc::TimedRobot {
   // Have it null by default so that if testing teleop it
   // doesn't have undefined behavior and potentially crash.
 
-  X23_Drivetrain *_drivetrain = nullptr;
-  X23_Intake *_intake = nullptr;
-  X23_Elevator *_elevator = nullptr; 
+  // X23_Drivetrain *_drivetrain = nullptr;
+  // X23_Intake *_intake = nullptr;
+  // X23_Elevator *_elevator = nullptr; 
+  RobotContainer X23;
 
   SC::SC_Range<double> Throttle_Range_Normal = {-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND};
   SC::SC_Range<double> Throttle_Range_Fine = {-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE};
@@ -47,8 +54,7 @@ class Robot : public frc::TimedRobot {
   frc::XboxController  *GP1_Driver;// GP = Gamepad
   SC::SC_OperatorInput	*BB_GameDevice;
 //  frc::GenericHID      *BB_GameDevice;  
+  pathplanner::MecanumAutoBuilder *autoBuilder;
 
-
-MecanumAutoBuilder *autoBuilder;
-
+  /*const*/ std::unordered_map<std::string, std::shared_ptr<frc2::Command>> FunEvents;
 };

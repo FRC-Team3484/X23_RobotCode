@@ -43,7 +43,7 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
     Previous_WheelPOS.rearLeft   = units::make_unit<units::meter_t>(0);
     Previous_WheelPOS.rearRight  = units::make_unit<units::meter_t>(0);
     Gyroscope->SetYaw(0);
-    Previous_Angle = _gyroAngle();
+    Previous_Angle = _GyroAngle();
 
 
 	// Initialize front right wheel
@@ -199,6 +199,16 @@ void X23_Drivetrain::DriveAuto(double magnitude, double angle, double heading, b
 	}
 }
 
+void X23_Drivetrain::DriveAuto(frc::ChassisSpeeds Speeds)
+{
+if (md != nullptr)
+	{
+		md->DriveCartesian( Speeds.vx.to<double>(), Speeds.vy.to<double>(), Speeds.omega.to<double>(),
+		0_deg);
+		
+		_setOutputs();
+	}
+}
 void X23_Drivetrain::_InitMotor(WPI_TalonSRX *Motor, bool Invert, WPI_TalonSRX *Master)
 {
 	if (Motor != NULL)
@@ -229,33 +239,10 @@ void X23_Drivetrain::SetPose(frc::Pose2d &NewPose)
 {
 	this->dtPose = NewPose;
 }
-    frc::Rotation2d X23_Drivetrain::_gyroAngle()
+
+void X23_Drivetrain::UpdateOdometry(MecanumDriveWheelPositions& wheelPositions) 
 {
-
-	auto angle = _GyroAngle() + dt_gyroOffset;
-
-	MecanumDriveWheelPositions wheelDeltas{
-		_GetdtPOS().frontLeft - dt_previousWheelPositions.frontLeft,
-		_GetdtPOS().frontRight - dt_previousWheelPositions.frontRight,
-		_GetdtPOS().rearLeft - dt_previousWheelPositions.rearLeft,
-		_GetdtPOS().rearRight - dt_previousWheelPositions.rearRight,
-	};
-
-	auto twist = dt_kinematics.ToTwist2d(wheelDeltas);
-	twist.dtheta = (angle - dt_previousAngle).Radians();
-
-	auto newPose = dtPose.Exp(twist);
-
-	dt_previousAngle = angle;
-	dt_previousWheelPositions = _GetdtPOS();
-	dtPose = {newPose.Translation(), angle};
-
-	return dtPose;
-}
-void X23_Drivetrain::UpdateOdometry(
-MecanumDriveWheelPositions& wheelPositions) 
-{
-    Rotation2d angle = _gyroAngle() + dt_gyroOffset;
+    Rotation2d angle = _GyroAngle() + dt_gyroOffset;
 
     MecanumDriveWheelPositions wheelDeltas{
       wheelPositions.frontLeft - Previous_WheelPOS.frontLeft,
@@ -279,6 +266,7 @@ frc::Pose2d X23_Drivetrain::GetPose()
 {
 	return dtPose;
 }
+
 Rotation2d X23_Drivetrain::_GyroAngle()
 {
 	if (Gyroscope != nullptr)
@@ -290,6 +278,7 @@ Rotation2d X23_Drivetrain::_GyroAngle()
 		return Rotation2d{0_deg};
 	}
 }
+
 MecanumDriveWheelPositions X23_Drivetrain::_GetdtPOS()
 {
 	if (FR != nullptr && BR != nullptr && FL != nullptr && BL != nullptr)
