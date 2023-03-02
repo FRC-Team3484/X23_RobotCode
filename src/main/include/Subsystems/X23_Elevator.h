@@ -7,6 +7,7 @@
 #include "frc/filter/Debouncer.h"
  
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
+#include "frc2/command/Commands.h"
 
 #include "frc2/command/SubsystemBase.h"
 #include <frc2/command/Command.h>
@@ -25,27 +26,29 @@ public:
 
     void Elevate();
 
-    void ToggleClaw();
+    frc2::CommandPtr ToggleClawOpen();
 
-    void ClawTilt();
+    frc2::CommandPtr ToggleClawShut();
 
-    void StopTilt();
+    frc2::CommandPtr ClawTilt();
 
-    void HybridZone();
+    frc2::CommandPtr StopTilt();
 
-    void ConeOne();
+    frc2::CommandPtr HybridZone();
 
-    void ConeTwo();
+    frc2::CommandPtr ConeOne();
 
-    void CubeOne();
+    frc2::CommandPtr ConeTwo();
 
-    void CubeTwo();
+    frc2::CommandPtr CubeOne();
 
-    void Substation();
+    frc2::CommandPtr CubeTwo();
 
-    void HomePOS();
+    frc2::CommandPtr Substation();
 
-    void StopMotors();
+    frc2::CommandPtr HomePOS();
+
+    frc2::CommandPtr StopMotors();
 
     void ControlDirectElevate( double RawElevate);
 
@@ -108,18 +111,18 @@ double ElevatorHeightSP;//sp
 class Cmd_Elev_HybridZone : public frc2::CommandHelper<frc2::CommandBase, Cmd_Elev_HybridZone>
 { 
 public:
-    explicit Cmd_Elev_HybridZone(X23_Elevator *subsys) : _elevator(subsys) {} ;
+    explicit Cmd_Elev_HybridZone(X23_Elevator &subsys) : _elevator(subsys) {} ;
 
     void Initialize() override;
 
-    void Execute() override { if(_elevator != nullptr) { if(_elevator->IsAtHome()) { _elevator->HybridZone(); } } } ;
+    void Execute() override { if(_elevator.IsAtHome()) { _elevator.HybridZone(); } } ;
 
     void End(bool interrupted) override;
 
     bool IsFinished() override;
 
 private:
-    X23_Elevator* _elevator;
+    X23_Elevator& _elevator;
 
 };
 

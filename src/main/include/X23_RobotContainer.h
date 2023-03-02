@@ -8,7 +8,6 @@
 #include "FRC3484_Lib/utils/SC_Functions.h"
 #include <units/acceleration.h>
 #include <units/velocity.h>
-#include "Robot.h"
 
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/DriverStation.h>
@@ -38,7 +37,6 @@
  * scheduler calls).  Instead, the structure of the robot (including subsystems,
  * commands, and trigger mappings) should be declared here.
  */
-class Cmd_Elev_HybridZone;
 class RobotContainer {
  public:
   RobotContainer();
@@ -48,17 +46,6 @@ class RobotContainer {
 
   void startAutoCommand();
   void endAutoCommand();
-
- private: 
-  void ConfigureBindings(); 
-
-  /**************
-   * Subsystems *
-   **************/
-  // X23_Drivetrain *_drivetrain = nullptr;
-  // X23_Intake *_intake = nullptr;
-  // X23_Elevator *_elevator = nullptr;  
-
   X23_Drivetrain _drivetrain{ std::make_tuple<int, int>(C_FX_FL_MASTER, C_FX_FL_SLAVE),
                               std::make_tuple<int, int>(C_FX_FR_MASTER, C_FX_FR_SLAVE),
 								              std::make_tuple<int, int>(C_FX_BL_MASTER, C_FX_BL_SLAVE),
@@ -73,6 +60,14 @@ class RobotContainer {
                           C_DI_CH_ELEVATOR_TILT_HOME,
                           C_DI_CH_ELEVATOR_HOME, 
                           C_DI_CH_ELEVATOR_TILT_MAX};
+ private: 
+  void ConfigureBindings(); 
+
+  /**************
+   * Subsystems *
+   **************/
+
+
 
   /****************
    * Path Planner *
@@ -83,8 +78,7 @@ class RobotContainer {
     //{"drivetrain_balance", std::make_shared<BalanceCommand>()},
 
     //Manipulator Commands
-    {"manipulator_compact", std::make_shared<Cmd_Elev_HybridZone>(&_elevator)}/*,
-
+    {"manipulator_compact", _elevator.HybridZone().Unwrap()}/*,
     {"manipulator_cube_high", manipulatorSubsystem.getStateCommand(
       ManipulatorSubsystem::cubeHighState
     ).Unwrap()},

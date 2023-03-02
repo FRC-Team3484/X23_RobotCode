@@ -4,7 +4,8 @@
 #include "FRC3484_Lib/components/SC_Limelight.h"
 #include "FRC3484_Lib/components/SC_ColorSensor.h"
 #include "FRC3484_Lib/components/SC_PID.h"
-
+#include <frc2/command/Command.h>
+#include "frc2/command/Commands.h"
 #include "FRC3484_Lib/utils/SC_Datatypes.h"
 #include "FRC3484_Lib/utils/SC_Functions.h"
 
@@ -57,19 +58,19 @@ public:
 	*/
 
 	/* Run the intake for left-oriented cones */
-	void Collect_ConeLeft();
+	frc2::CommandPtr Collect_ConeLeft();
 
 	/* Run the intake for right-oriented cones */
-	void Collect_ConeRight();
+	frc2::CommandPtr Collect_ConeRight();
 
 	/*Run the intake for center-oriented cones*/
-	void Collect_Cube_Or_ConeCenter();
+	frc2::CommandPtr Collect_Cube_Or_ConeCenter();
 
 	/*Run the ejection procedure*/
-	void Collect_Eject();
+	frc2::CommandPtr Collect_Eject();
 
 	/* Stop the intake motors */
-	void StopIntake();
+	frc2::CommandPtr StopIntake();
 
 private:
 

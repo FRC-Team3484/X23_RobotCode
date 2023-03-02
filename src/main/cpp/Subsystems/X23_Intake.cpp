@@ -84,32 +84,37 @@ void X23_Intake::Collect(bool Run, bool ButtonA, bool ButtonB, bool ButtonC, boo
 }
 
 /* Commands */
-void X23_Intake::Collect_ConeLeft()
+frc2::CommandPtr X23_Intake::Collect_ConeLeft()
 {
+	return frc2::cmd::RunOnce([this]{
 	Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
-	Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
+	Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);});
 }
-void X23_Intake::Collect_ConeRight()
+frc2::CommandPtr X23_Intake::Collect_ConeRight()
 {
+	return frc2::cmd::RunOnce([this]{
 	Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
-	Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
+	Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);});
 }
-void X23_Intake::Collect_Cube_Or_ConeCenter()
+frc2::CommandPtr X23_Intake::Collect_Cube_Or_ConeCenter()
 {
+	return frc2::cmd::RunOnce([this]{
 	//Suck The Cubical Object!
 	Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
-	Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
+	Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);});
 }
-void X23_Intake::Collect_Eject()
+frc2::CommandPtr X23_Intake::Collect_Eject()
 {
+	return frc2::cmd::RunOnce([this]{
 	//Eject Cubes
 	Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
-	Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
+	Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);});
 }
 
-void X23_Intake::StopIntake()
+frc2::CommandPtr X23_Intake::StopIntake()
 {
+	return frc2::cmd::RunOnce([this]{
 	//Stop
 	Motor_Intake_Right->Set(ControlMode::PercentOutput, 0.0);
-	Motor_Intake_Left->Set(ControlMode::PercentOutput, 0.0);
+	Motor_Intake_Left->Set(ControlMode::PercentOutput, 0.0);});
 }

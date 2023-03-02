@@ -161,35 +161,35 @@ void X23_Elevator::Elevate()
 	}
 }
 
-void X23_Elevator::ToggleClaw()
+frc2::CommandPtr X23_Elevator::ToggleClawOpen()
 {
-    if((this->rTrigPinch != NULL)) 
-    {
-        this->rTrigPinch->Check(ClawToggleClose);
-    	
-		this->PincherSolenoidState  = (this->PincherSolenoidState && (!this->rTrigPinch->Q)) || (!this->PincherSolenoidState && this->rTrigPinch->Q);
-    }
-    else
-    {
-            this->PincherSolenoidState = (this->PincherSolenoidState && !ClawToggleClose) || (!this->PincherSolenoidState && ClawToggleClose);
-    }
+    return frc2::cmd::RunOnce([this]{
+    if(this->PincherSolenoid != NULL) 
+        { this->PincherSolenoid->Set(false); }});
+}
 
-    if(this->PincherSolenoid != NULL) { this->PincherSolenoid->Set(this->PincherSolenoidState); }
+frc2::CommandPtr X23_Elevator::ToggleClawShut()
+{
+    return frc2::cmd::RunOnce([this]{
+    if(this->PincherSolenoid != NULL)
+         { this->PincherSolenoid->Set(true); }});
 }
 // set debounce on tilt
-void X23_Elevator::ClawTilt(){
+frc2::CommandPtr X23_Elevator::ClawTilt(){
+    return frc2::cmd::RunOnce([this]{
         if(this->TiltSolenoid != NULL) 
-            {this->TiltSolenoid->Set(true); } 
+            {this->TiltSolenoid->Set(true); }});
 }
-void X23_Elevator::StopTilt(){
-        if(this->TiltSolenoid != NULL)
-            {this->TiltSolenoid->Set(false); }
-            
+frc2::CommandPtr X23_Elevator::StopTilt(){
+    return frc2::cmd::RunOnce([this]{
+        if(this->TiltSolenoid != NULL) 
+            {this->TiltSolenoid->Set(false); }});
 }
-void X23_Elevator::StopMotors()
+frc2::CommandPtr X23_Elevator::StopMotors()
 {
+    return frc2::cmd::RunOnce([this]{
     if(ElevateFalcon != nullptr) { ElevateFalcon->Set(0.0); }
-    if(TiltFalcon != nullptr) { TiltFalcon->Set(ControlMode::PercentOutput, 0.0); }
+    if(TiltFalcon != nullptr) { TiltFalcon->Set(ControlMode::PercentOutput, 0.0); }});
 }
 
 void X23_Elevator::ControlDirectElevate(double RawElevate)
@@ -200,41 +200,48 @@ void X23_Elevator::ControlDirectTilt(double RawTiltFalcon)
 {
     if(TiltFalcon != nullptr) { TiltFalcon->Set(ControlMode::PercentOutput, F_Limit(-1.0, 1.0, RawTiltFalcon)); }
 }
-void X23_Elevator::HybridZone()
+frc2::CommandPtr X23_Elevator::HybridZone()
 {
+return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 14.5;
 TiltAngleSP = 40;
-}
-void X23_Elevator::ConeOne()
+});}
+frc2::CommandPtr X23_Elevator::ConeOne()
 {
+return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 47.5;
 TiltAngleSP = 34;
-}
-void X23_Elevator::ConeTwo()
+});}
+frc2::CommandPtr X23_Elevator::ConeTwo()
 {
+return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 68.5;
 TiltAngleSP = 40;
-}
-void X23_Elevator::CubeOne()
+});}
+frc2::CommandPtr X23_Elevator::CubeOne()
 {
+return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 41.5;
 TiltAngleSP = 40;
-}
-void X23_Elevator::CubeTwo()
+});}
+frc2::CommandPtr X23_Elevator::CubeTwo()
 {
+return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 68.5;
 TiltAngleSP = 42;
-}
-void X23_Elevator::Substation()
+});}
+frc2::CommandPtr X23_Elevator::Substation()
 {
-ElevatorHeightSP = 38;
-TiltAngleSP = 15;
-}
-void X23_Elevator::HomePOS()
+return frc2::cmd::RunOnce([this]{
+ElevatorHeightSP = 15;
+TiltAngleSP = 38;
+});}
+frc2::CommandPtr X23_Elevator::HomePOS()
 {
+return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 0;
 TiltAngleSP = 0;
-}
+});}
 
 bool X23_Elevator::IsAtHome()
 {
