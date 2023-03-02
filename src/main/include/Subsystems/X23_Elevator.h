@@ -7,11 +7,20 @@
 #include "frc/filter/Debouncer.h"
  
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
+#include "networktables/NetworkTableInstance.h"
+#include "networktables/DoubleTopic.h"
+
+#include <frc/shuffleboard/Shuffleboard.h>
+#include <frc/shuffleboard/ShuffleboardLayout.h>
+#include <frc/shuffleboard/ShuffleboardTab.h>
+#include <networktables/GenericEntry.h>
 
 #include "frc2/command/SubsystemBase.h"
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 #include "FRC3484_Lib/utils/SC_Datatypes.h"
+
+#include <frc/Joystick.h>
 
 class X23_Elevator : public frc2::SubsystemBase
 {
@@ -120,6 +129,21 @@ public:
 
 private:
     X23_Elevator* _elevator;
+
+		/*nt::DoubleSubcriber*/ nt::GenericEntry *ntSP, *ntKp, *ntKi, *ntkd, *ntBias, *ntMaxTravel;
+		nt::DoublePublisher ntPV,ntCV, ntP, ntI, ntD, ntErr, ntManOut; 
+
+		double P,I,D,CV;
+		double err_last;
+
+		double Kp = 0.1, Ki = 0.1, Kd = 0.1, dt = 0.01;
+		double bias = 0;
+		double SP;
+		double output;
+
+		double maxTravel;
+
+		bool PID_En;
 
 };
 

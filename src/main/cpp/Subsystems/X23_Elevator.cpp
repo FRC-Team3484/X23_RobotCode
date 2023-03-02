@@ -100,6 +100,10 @@ X23_Elevator::~X23_Elevator()
 
 void X23_Elevator::Elevate()
 {
+    double encVal = 0;, error = 0;
+
+    
+    
     /*stops PID*/ 
     if((ElevatorHeightSP == 0) && (TiltAngleSP == 0 ) && atHome)
     {

@@ -77,6 +77,7 @@ namespace SC
 		frc::ShuffleboardTab *_tab;
 		frc::SimpleWidget *_widget;
 		nt::NetworkTableEntry _entry;
+
 	};
 
 /* ============================================================================== */

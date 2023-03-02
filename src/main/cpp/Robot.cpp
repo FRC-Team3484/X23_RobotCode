@@ -124,6 +124,7 @@ void Robot::TeleopInit()
  */
 void Robot::TeleopPeriodic() 
 {
+   double encVal = 0, error = 0;
 
 	/*======================*/
 	/*====Driver Controls===*/
