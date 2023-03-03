@@ -100,9 +100,14 @@ X23_Elevator::~X23_Elevator()
 
 void X23_Elevator::Elevate()
 {
-    double encVal = 0;, error = 0;
+    double encVal = 0, error = 0;
 
-    
+    if(ntMaxTravel != nullptr) { maxTravel = ntMaxTravel->GetDouble(25.0); } else { maxTravel = 25.0; }
+    if(ntSP !- nullptr) { SP = std::clamp(ntSP->GetDouble(0.0), 0.0, maxTravel); } else { SP = 0.0; }
+    if(ntKp != nullptr) {Kp = ntKp->GetDouble(0.1); } else { Kp = 0.0; }
+    if(ntKi != nullptr) {Ki = ntKi->GetDouble(0.1); } else { Ki = 0.0; }
+    if(ntKd != nullptr) {Kd = ntKd->GetDouble(0.1); } else { Kd = 0.0; }
+    if(ntbias != nullptr) { bias = ntKd->GetDouble(0.1); } else { bias = 0.0; }
     
     /*stops PID*/ 
     if((ElevatorHeightSP == 0) && (TiltAngleSP == 0 ) && atHome)

@@ -130,9 +130,6 @@ public:
 private:
     X23_Elevator* _elevator;
 
-		/*nt::DoubleSubcriber*/ nt::GenericEntry *ntSP, *ntKp, *ntKi, *ntkd, *ntBias, *ntMaxTravel;
-		nt::DoublePublisher ntPV,ntCV, ntP, ntI, ntD, ntErr, ntManOut; 
-
 		double P,I,D,CV;
 		double err_last;
 
@@ -144,7 +141,8 @@ private:
 		double maxTravel;
 
 		bool PID_En;
-
+    /*nt::DoubleSubcriber*/ nt::GenericEntry *ntSP, *ntKp, *ntKi, *ntkd, *ntBias, *ntMaxTravel;
+		nt::DoublePublisher ntPV,ntCV, ntP, ntI, ntD, ntErr, ntManOut; 
 };
 
 
