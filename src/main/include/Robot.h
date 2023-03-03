@@ -9,7 +9,7 @@
 #include "Subsystems/X23_Elevator.h"
 #include "X23_RobotContainer.h"
 
-#include <frc/TimedRobot.h>
+#include <frc/TimedRobot.h> 
 #include <frc2/command/Command.h>
 
 #include <pathplanner/lib/PathPlanner.h>
@@ -17,7 +17,8 @@
 #include "FRC3484_Lib/utils/SC_Datatypes.h"
 #include "FRC3484_Lib/components/SC_OperatorInput.h"
 
-#include <frc/XboxController.h>
+#include <frc/XboxController.h> 
+#include <frc/Joystick.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 #include "ctre/phoenix/sensors/Pigeon2.h"
@@ -57,4 +58,5 @@ class Robot : public frc::TimedRobot {
   pathplanner::MecanumAutoBuilder *autoBuilder;
 
   /*const*/ std::unordered_map<std::string, std::shared_ptr<frc2::Command>> FunEvents;
+
 };
