@@ -100,10 +100,21 @@ X23_Elevator::~X23_Elevator()
 
 void X23_Elevator::Elevate()
 {
-    double encVal = 0;, error = 0;
+    double encVal = 0, error = 0;
 
+    if(E_ntSP != nullptr) {ElevatorHeightSP = std::clamp(E_ntSP->GetDouble(0.0), 0.0, 68.5); } else { ElevatorHeightSP = 0.0; }
+    if(E_ntKp != nullptr) {E_kpTune = E_ntKp->GetDouble(0.1); } else { E_kpTune = 0.0; }
+    if(E_ntKi != nullptr) {E_kiTune = E_ntKi->GetDouble(0.1); } else { E_kiTune = 0.0; }
+    if(E_ntKd != nullptr) {E_kdTune = E_ntKd->GetDouble(0.1); } else { E_kdTune = 0.0; }
+    if(E_ntBias != nullptr) {E_BiasTune = E_ntBias->GetDouble(0.1); } else { E_BiasTune = 0.0; }
     
     
+    if(T_ntSP != nullptr) {TiltAngleSP = std::clamp(T_ntSP->GetDouble(0.0), 0.0, 68.5); } else { TiltAngleSP = 0.0; }
+    if(T_ntKp != nullptr) {T_kpTune = T_ntKp->GetDouble(0.1); } else { T_kpTune = 0.0; }
+    if(T_ntKi != nullptr) {T_kiTune = T_ntKi->GetDouble(0.1); } else { T_kiTune = 0.0; }
+    if(T_ntKd != nullptr) {T_kdTune = T_ntKd->GetDouble(0.1); } else { T_kdTune = 0.0; }
+    if(T_ntBias != nullptr) {T_BiasTune = T_ntBias->GetDouble(0.1); } else { T_BiasTune = 0.0; }
+
     /*stops PID*/ 
     if((ElevatorHeightSP == 0) && (TiltAngleSP == 0 ) && atHome)
     {
@@ -141,27 +152,56 @@ void X23_Elevator::Elevate()
         }
 
     //Define Locals
-        double Elevator_Error, Tilt_Error;
-        CalcAngle = (F_XYCurve<double>(xArrayMotorPOS, yArrayAnglePOS,TiltFalcon->GetSelectedSensorVelocity(0), 10));
-
+        double Elevator_Error, Tilt_Error, ElevatePV, TiltPV;
+        CalcAngle = (F_XYCurve<double>(xArrayMotorPOS, yArrayAnglePOS, TiltPV, 10));
+        ElevatePV = (ElevateFalcon->GetSelectedSensorPosition());
+        TiltPV = (TiltFalcon->GetSelectedSensorVelocity(0));
     //second XY curve stuff for max height
         CalcHeight = fmin(F_XYCurve<double>(xArrayElevate, yArrayElevate, CalcAngle , 10 ), ElevatorHeightSP);
-        Elevator_Error = CalcHeight - ElevateFalcon->GetSelectedSensorPosition(); 
-
+        Elevator_Error = CalcHeight - ElevatePV; 
+/*
         this->E_FooFighters = (F_XYCurve<double>(xArrayElevate, yArrayFooFighters, CalcAngle, 10));
         this->E_P = Elevator_Error * E_Kp;
         this->E_I = F_Limit(E_I_Max, E_I_Min, E_I+(E_Ki * Elevator_Error *E_dt));
         this->E_D = E_Kd * (Elevator_Error - E_Error_ZminusOne)/E_dt;
         this->E_CV = E_P + E_I + E_D + E_FooFighters;
+*/
+        this->E_FooFighters = (F_XYCurve<double>(xArrayElevate, yArrayFooFighters, CalcAngle, 10));
+        this->E_P = Elevator_Error * E_kpTune;
+        this->E_I = F_Limit(E_I_Max, E_I_Min, E_I+(E_kiTune * Elevator_Error *E_dt));
+        this->E_D = E_kdTune * (Elevator_Error - E_Error_ZminusOne)/E_dt;
+        this->E_CV = E_kdTune + E_kiTune + E_kpTune + E_FooFighters;
 
 		// Tilt Motor PID
 	    Tilt_Error = TiltAngleSP - CalcAngle;
-        
+       /* 
         this->T_P = Tilt_Error * T_Kp;
         this->T_I = F_Limit(T_I_Max, T_I_Min, T_I+(T_Ki * Tilt_Error *T_dt));
         this->T_D = T_Kd * (Tilt_Error - T_Error_ZminusOne)/T_dt;
         this->T_CV = T_P + T_I + T_D; 
         atHome = EHomeLS && THomeLS;
+*/
+        this->T_P = Tilt_Error * T_kpTune;
+        this->T_I = F_Limit(T_I_Max, T_I_Min, T_I+(T_kiTune * Tilt_Error *T_dt));
+        this->T_D = T_kdTune * (Tilt_Error - T_Error_ZminusOne)/T_dt;
+        this->T_CV = T_P + T_I + T_D; 
+
+
+        atHome = EHomeLS && THomeLS;
+        
+        E_ntPV.Set(ElevatePV);
+        T_ntPV.Set(TiltPV);
+        T_ntAnglePV.Set(CalcAngle);
+        E_ntCV.Set(E_CV);
+        T_ntCV.Set(T_CV);
+        E_ntP.Set(E_P);
+        T_ntP.Set(T_P);
+        E_ntI.Set(E_I);
+        T_ntI.Set(T_I);
+        E_ntD.Set(E_D);
+        T_ntD.Set(T_D);
+        E_ntErr.Set(Elevator_Error);
+        T_ntErr.Set(Tilt_Error);
 	}
 }
 

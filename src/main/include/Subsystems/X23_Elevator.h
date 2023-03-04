@@ -7,9 +7,7 @@
 #include "frc/filter/Debouncer.h"
  
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
-<<<<<<< HEAD
 #include "frc2/command/Commands.h"
-=======
 #include "networktables/NetworkTableInstance.h"
 #include "networktables/DoubleTopic.h"
 
@@ -17,7 +15,6 @@
 #include <frc/shuffleboard/ShuffleboardLayout.h>
 #include <frc/shuffleboard/ShuffleboardTab.h>
 #include <networktables/GenericEntry.h>
->>>>>>> 7eea106614de941dc386d7c5c57c7373671eac85
 
 #include "frc2/command/SubsystemBase.h"
 #include <frc2/command/Command.h>
@@ -109,11 +106,22 @@ double T_I_Max;
 double T_I;
 double T_Error_ZminusOne;
 double T_D;
-double CalcHeight;//sp
+double CalcHeight;
 double CalcAngle;
 double TiltAngleSP;
 double ElevatorHeightSP;//sp
-
+double E_kpTune;
+double E_kiTune;
+double E_kdTune;
+double E_BiasTune;
+double E_spTune;
+double T_kpTune;
+double T_kiTune;
+double T_kdTune;
+double T_BiasTune;
+double T_spTune;
+nt::GenericEntry *E_ntSP, *E_ntKp, *E_ntKi, *E_ntKd, *E_ntBias, *T_ntSP, *T_ntKp, *T_ntKi, *T_ntKd, *T_ntBias;
+nt::DoublePublisher E_ntPV,E_ntCV, E_ntP, E_ntI, E_ntD, E_ntErr, T_ntPV, T_ntCV, T_ntP, T_ntI, T_ntD, T_ntErr, T_ntAnglePV; 
 };
 
 /*===================*/
@@ -135,22 +143,6 @@ public:
 
 private:
     X23_Elevator& _elevator;
-
-		/*nt::DoubleSubcriber*/ nt::GenericEntry *ntSP, *ntKp, *ntKi, *ntkd, *ntBias, *ntMaxTravel;
-		nt::DoublePublisher ntPV,ntCV, ntP, ntI, ntD, ntErr, ntManOut; 
-
-		double P,I,D,CV;
-		double err_last;
-
-		double Kp = 0.1, Ki = 0.1, Kd = 0.1, dt = 0.01;
-		double bias = 0;
-		double SP;
-		double output;
-
-		double maxTravel;
-
-		bool PID_En;
-
 };
 
 
