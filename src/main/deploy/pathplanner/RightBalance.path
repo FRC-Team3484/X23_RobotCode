@@ -42,9 +42,9 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "RightBalanceElevatorOut",
-          "RightBalanceDropPiece",
-          "RightBalanceElevatorHome"
+          "HybridZone",
+          "DropPiece",
+          "ElevatorHome"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",

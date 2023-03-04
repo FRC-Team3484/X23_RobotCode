@@ -78,13 +78,13 @@
 
 const double C_GEAR_RATIO			= 1.0 / 18.0;
 
-const double C_DT_MOTOR_MAX_RPM		= 6380.0;
-const double C_DT_MOTOR_MAX_RPM_ACT = 6000.0; // TODO: Get max achievable RPM of drivetrain motors.
-const double C_DT_ENC_CPR			= 2048.0;
+const double C_FALCON_MOTOR_MAX_RPM		= 6380.0;
+const double C_FALCON_MOTOR_MAX_RPM_ACT = 6000.0; // TODO: Get max achievable RPM of drivetrain motors.
+const double C_FALCON_ENC_CPR			= 2048.0;
 
-const double C_MAX_GEAR_ENC      	= (C_DT_MOTOR_MAX_RPM / 600.0) * (C_DT_ENC_CPR / C_GEAR_RATIO);
+const double C_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_GEAR_RATIO);
 
-const double C_DT_SCALE_FACTOR   	= ((600.0 * C_GEAR_RATIO) / C_DT_ENC_CPR) * C_DT_RPM_TO_FPS;
+const double C_DT_SCALE_FACTOR   	= ((600.0 * C_GEAR_RATIO) / C_FALCON_ENC_CPR) * C_DT_RPM_TO_FPS;
 
 const units::feet_per_second_t C_GEAR_MAX_SPEED 	= 17.0_fps;
 const units::feet_per_second_t C_SHIFT_UP_SPEED     = 5.0_fps;

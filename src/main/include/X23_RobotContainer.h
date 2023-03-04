@@ -74,38 +74,10 @@ class RobotContainer {
    ****************/
 
   std::unordered_map<std::string, std::shared_ptr<frc2::Command>> FunEvents {
-    // Drivetrain Commands
-    //{"drivetrain_balance", std::make_shared<BalanceCommand>()},
 
-    //Manipulator Commands
-    {"manipulator_compact", _elevator.HybridZone().Unwrap()}/*,
-    {"manipulator_cube_high", manipulatorSubsystem.getStateCommand(
-      ManipulatorSubsystem::cubeHighState
-    ).Unwrap()},
-
-    {"manipulator_cube_mid", manipulatorSubsystem.getStateCommand(
-      ManipulatorSubsystem::cubeMidState
-    ).Unwrap()},
-
-    {"manipulator_cube_pickup", manipulatorSubsystem.getStateCommand(
-      ManipulatorSubsystem::cubePickupState
-    ).Unwrap()},
-
-    {"manipulator_cone_mid", manipulatorSubsystem.getStateCommand(
-      ManipulatorSubsystem::coneMidState
-    ).Unwrap()},
-
-    {"manipulator_cone_pickup", manipulatorSubsystem.getStateCommand(
-      ManipulatorSubsystem::conePickupState
-    ).Unwrap()},
-
-    {"manipulator_substation", manipulatorSubsystem.getStateCommand(
-      ManipulatorSubsystem::substationState
-    ).Unwrap()},
- 
-    // Claw Commands
-    {"claw_close", clawSubsystem.getClosedCommand(true).Unwrap()},
-    {"claw_open", clawSubsystem.getClosedCommand(false).Unwrap()},*/
+    {"HybridZone", _elevator.HybridZone().Unwrap()},
+    {"ElevatorHome", _elevator.HomePOS().Unwrap()},
+    {"DropPiece", _elevator.ToggleClawOpen().Unwrap()}
   };
 
   // Auto Builder

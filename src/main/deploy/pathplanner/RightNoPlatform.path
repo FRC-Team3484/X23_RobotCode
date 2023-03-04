@@ -39,9 +39,9 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "RightNPElevatorOut",
-          "RightNPDropPiece",
-          "RightNPElevatorHome"
+          "HybridZone",
+          "DropPiece",
+          "ElevatorHome"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",

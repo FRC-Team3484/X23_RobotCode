@@ -70,22 +70,15 @@ void Robot::DisabledPeriodic() {}
  * RobotContainer} class.
  */
 void Robot::AutonomousInit() 
-{
-// 	this ->autoBuilder = new MecanumAutoBuilder
-// (
-//     [this]() { return _drivetrain->GetPose(); }, // Function to supply current robot pose
-//     [this](auto initPose) { _drivetrain->SetPose(initPose); }, // Function used to reset odometry at the beginning of auto
-//     PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-//     PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
-//     [this](auto speeds) { _drivetrain->DriveAuto(speeds); }, // Output function that accepts field relative ChassisSpeeds
-//     FunEvents, // Our event map
-//     std::initializer_list<frc2::Subsystem*>( _drivetrain ), // Drive requirements, usually just a single drive subsystem
-//     true // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-// );
+{ 
+	X23.startAutoCommand();
 }
 
 void Robot::AutonomousPeriodic() {}
-
+void Robot::AutonomousExit()
+{
+	X23.endAutoCommand();
+}
 void Robot::TeleopInit() 
 {
 	if(BB_GameDevice != nullptr)
@@ -125,7 +118,6 @@ void Robot::TeleopInit()
  */
 void Robot::TeleopPeriodic() 
 {
-   double encVal = 0, error = 0;
 
 	/*======================*/
 	/*====Driver Controls===*/

@@ -100,7 +100,7 @@ X23_Elevator::~X23_Elevator()
 
 void X23_Elevator::Elevate()
 {
-    double encVal = 0, error = 0;
+    double Elevator_Error, Tilt_Error, ElevatePV, TiltPV;
 
     if(E_ntSP != nullptr) {ElevatorHeightSP = std::clamp(E_ntSP->GetDouble(0.0), 0.0, 68.5); } else { ElevatorHeightSP = 0.0; }
     if(E_ntKp != nullptr) {E_kpTune = E_ntKp->GetDouble(0.1); } else { E_kpTune = 0.0; }
@@ -150,15 +150,25 @@ void X23_Elevator::Elevate()
         {
             T_D = T_I = T_P = TiltAngleSP-1;
         }
-
     //Define Locals
-        double Elevator_Error, Tilt_Error, ElevatePV, TiltPV;
         CalcAngle = (F_XYCurve<double>(xArrayMotorPOS, yArrayAnglePOS, TiltPV, 10));
         ElevatePV = (ElevateFalcon->GetSelectedSensorPosition());
         TiltPV = (TiltFalcon->GetSelectedSensorVelocity(0));
     //second XY curve stuff for max height
         CalcHeight = fmin(F_XYCurve<double>(xArrayElevate, yArrayElevate, CalcAngle , 10 ), ElevatorHeightSP);
         Elevator_Error = CalcHeight - ElevatePV; 
+
+    if (abs(Elevator_Error)<0.25) 
+    {
+        Elevator_Error = 0;
+        Tilt_Error = 0;
+        E_CV = 0;
+        ElevateBrake->Set(true);
+    }
+    else
+    {
+        ElevateBrake->Set(false);
+
 /*
         this->E_FooFighters = (F_XYCurve<double>(xArrayElevate, yArrayFooFighters, CalcAngle, 10));
         this->E_P = Elevator_Error * E_Kp;
@@ -183,8 +193,13 @@ void X23_Elevator::Elevate()
 */
         this->T_P = Tilt_Error * T_kpTune;
         this->T_I = F_Limit(T_I_Max, T_I_Min, T_I+(T_kiTune * Tilt_Error *T_dt));
-        this->T_D = T_kdTune * (Tilt_Error - T_Error_ZminusOne)/T_dt;
-        this->T_CV = T_P + T_I + T_D; 
+        this->T_D = T_kdTune * (Tilt_Error - T_Error_ZminusOne)/T_dt; 
+        E_CV = std::clamp<double>(E_P + E_I + E_D + E_FooFighters, -100, 100);
+        T_CV = std::clamp<double>(T_P + T_I + T_D, -100, 100);
+
+    }
+        ElevateFalcon->Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,(E_CV/100.0));
+        TiltFalcon->Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,(E_CV/100.0));
 
 
         atHome = EHomeLS && THomeLS;
