@@ -207,11 +207,10 @@ const std::tuple<int, int> C_BLANK_IDS = std::make_tuple<int, int>(C_DISABLED_CH
 /*===========================*/
 /*Elevator PID Loop Variables*/
 /*===========================*/
-#define E_Kp 0.1
-#define E_Ki 0.0
+#define E_Kp 1.1
+#define E_Ki 0.9
 #define E_dt 0.01
-#define E_Kd 0.1
-
+#define E_Kd 3.0
 /*================================*/
 /*Elevator Tilt PID Loop Variables*/
 /*================================*/

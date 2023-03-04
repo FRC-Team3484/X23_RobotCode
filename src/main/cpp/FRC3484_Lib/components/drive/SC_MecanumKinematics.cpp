@@ -13,42 +13,51 @@
 #include "FRC3484_Lib/utils/SC_Functions.h"
 
 using namespace frc;
-SC::SC_MecanumKinematics::SC_MecanumKinematics()
-{
+SC::SC_MecanumKinematics::SC_MecanumKinematics(Translation2d sc_frontLeftWheel, Translation2d sc_frontRightWheel, Translation2d sc_rearLeftWheel, Translation2d sc_rearRightWheel)
+:
+		frontLeftWheel{sc_frontLeftWheel},
+        frontRightWheel{sc_frontRightWheel},
+        rearLeftWheel{sc_rearLeftWheel},
+        rearRightWheel{sc_rearRightWheel} {
+    SetInverseKinematics(frontLeftWheel, frontRightWheel, rearLeftWheel,
+                         rearRightWheel);
+    forwardKinematics = inverseKinematics.householderQr();
+
 	wheelSpeed_SP = SC_MD_WheelSpeeds{0.0, 0.0, 0.0, 0.0};
 }
+
+
+
 SC::SC_MecanumKinematics::~SC_MecanumKinematics()
 {
 
 }
 
-void  SC::SC_MecanumKinematics::ToWheelSpeeds(
-    const frc::ChassisSpeeds& chassisSpeeds,
-    const Translation2d& centerOfRotation) 
-    {
+void  SC::SC_MecanumKinematics::ToWheelSpeeds(const frc::ChassisSpeeds& chassisSpeeds,const Translation2d& centerOfRotation) 
+{
   // We have a new center of rotation. We need to compute the matrix again.
   if (centerOfRotation != PreviousCoR) {
-    auto fl = frontLeftWheel - centerOfRotation;
-    auto fr = frontRightWheel - centerOfRotation;
-    auto rl = rearLeftWheel - centerOfRotation;
-    auto rr = rearRightWheel - centerOfRotation;
+		auto fl = frontLeftWheel - centerOfRotation;
+		auto fr = frontRightWheel - centerOfRotation;
+		auto rl = rearLeftWheel - centerOfRotation;
+		auto rr = rearRightWheel - centerOfRotation;
 
-    SetInverseKinematics(fl, fr, rl, rr);
+		SetInverseKinematics(fl, fr, rl, rr);
 
-   	PreviousCoR != centerOfRotation;
-  }
+		PreviousCoR != centerOfRotation;
+	}
 
-  Eigen::Vector3d chassisSpeedsVector{chassisSpeeds.vx.value(),
-                                      chassisSpeeds.vy.value(),
-                                      chassisSpeeds.omega.value()};
+	Eigen::Vector3d chassisSpeedsVector{chassisSpeeds.vx.value(),
+										chassisSpeeds.vy.value(),
+										chassisSpeeds.omega.value()};
 
-  Vectord<4> wheelsVector = inverseKinematics * chassisSpeedsVector;
+	Vectord<4> wheelsVector = inverseKinematics * chassisSpeedsVector;
 
-   SC::SC_MecanumKinematics::SC_MD_WheelSpeeds wheelSpeed_SP;
-  wheelSpeed_SP.WS_FrontLeft = units::meters_per_second_t{wheelsVector(0)}.to<double>();
-  wheelSpeed_SP.WS_FrontRight = units::meters_per_second_t{wheelsVector(1)}.to<double>();
-  wheelSpeed_SP.WS_BackLeft = units::meters_per_second_t{wheelsVector(2)}.to<double>();
-  wheelSpeed_SP.WS_BackRight = units::meters_per_second_t{wheelsVector(3)}.to<double>();
+	SC::SC_MecanumKinematics::SC_MD_WheelSpeeds wheelSpeed_SP;
+	wheelSpeed_SP.WS_FrontLeft = units::meters_per_second_t{wheelsVector(0)}.to<double>();
+	wheelSpeed_SP.WS_FrontRight = units::meters_per_second_t{wheelsVector(1)}.to<double>();
+	wheelSpeed_SP.WS_BackLeft = units::meters_per_second_t{wheelsVector(2)}.to<double>();
+	wheelSpeed_SP.WS_BackRight = units::meters_per_second_t{wheelsVector(3)}.to<double>();
 }
 
 void SC::SC_MecanumKinematics::DriveCartesian(double X, double Y, double zRotation, units::degree_t gyro)
@@ -152,8 +161,7 @@ frc::ChassisSpeeds SC::SC_MecanumKinematics::ToChassisSpeeds(const frc::MecanumD
       wheelSpeeds.frontLeft.value(), wheelSpeeds.frontRight.value(),
       wheelSpeeds.rearLeft.value(), wheelSpeeds.rearRight.value()};
 
-  Eigen::Vector3d chassisSpeedsVector =
-      forwardKinematics.solve(wheelSpeedsVector);
+  Eigen::Vector3d chassisSpeedsVector = forwardKinematics.solve(wheelSpeedsVector);
 
   return {units::meters_per_second_t{chassisSpeedsVector(0)},  // NOLINT
           units::meters_per_second_t{chassisSpeedsVector(1)},
