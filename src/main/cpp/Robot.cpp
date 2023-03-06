@@ -157,7 +157,7 @@ void Robot::TeleopPeriodic()
 	/*===Game Device Controls===*/
 	/*==========================*/
 
-	
+	BB_GameDevice->GetAxis
 }
 
 /**

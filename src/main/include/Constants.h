@@ -58,7 +58,7 @@
 #define C_DI_CH_ELEVATOR_TILT_MAX	3
 
 
-/*==========*/
+ /*==========*/
 /* Settings */
 /*==========*/
 #define C_DRIVE_DEADBAND			0.05    // 5% Joystick input
@@ -68,36 +68,61 @@
 #define C_THROTTLE_SCALE_COEFF		1.5     // Scaling Coefficient for throttle input
 
 
-/*=======================*/
-/* Drivetrain Parameters */
+  /*=======================*/
+ /* Drivetrain Parameters */
 /*=======================*/
 #define C_X23_TRACK_WIDTH			30.0_in
 #define C_X23_DT_WHEEL_DIAM			6.0 // in
 
 #define C_DT_RPM_TO_FPS				(units::constants::pi * C_X23_DT_WHEEL_DIAM) / (60.0 * 12.0)
 
-const double C_GEAR_RATIO			= 1.0 / 18.0;
+const double C_GEAR_RATIO			= 1.0/((62.0/12.0)*(34.0/18.0));
 
-const double C_DT_MOTOR_MAX_RPM		= 6380.0;
-const double C_DT_MOTOR_MAX_RPM_ACT = 6000.0; // TODO: Get max achievable RPM of drivetrain motors.
-const double C_DT_ENC_CPR			= 2048.0;
+const double C_FALCON_MOTOR_MAX_RPM		= 6380.0;
+const double C_FALCON_MOTOR_MAX_RPM_ACT = 6000.0; // TODO: Get max achievable RPM of drivetrain motors.
+const double C_FALCON_ENC_CPR			= 2048.0;
 
-const double C_MAX_GEAR_ENC      	= (C_DT_MOTOR_MAX_RPM / 600.0) * (C_DT_ENC_CPR / C_GEAR_RATIO);
+const double C_DT_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_GEAR_RATIO);
 
-const double C_DT_SCALE_FACTOR   	= ((600.0 * C_GEAR_RATIO) / C_DT_ENC_CPR) * C_DT_RPM_TO_FPS;
+const double C_DT_SCALE_FACTOR   	= ((600.0 * C_GEAR_RATIO) / C_FALCON_ENC_CPR) * C_DT_RPM_TO_FPS;
 
 const units::feet_per_second_t C_GEAR_MAX_SPEED 	= 17.0_fps;
 const units::feet_per_second_t C_SHIFT_UP_SPEED     = 5.0_fps;
 const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 
 
-/*===================*/
-/* Intake Parameters */
+  /*===================*/
+ /* Intake Parameters */
 /*===================*/
 #define C_INTAKE_DRIVE_SPEED		1.0 // *100%
 #define C_INTAKE_CW_SPEED			C_INTAKE_DRIVE_SPEED
 #define C_INTAKE_CCW_SPEED			-1 * C_INTAKE_DRIVE_SPEED
 
+  /*=====================*/
+ /* Elevator Parameters */
+/*=====================*/
+#define Stage_1_ratio  		(58.0/12.0) // (Stage 1 driven)/( Stage 1 driver )
+#define Stage_2_ratio  		(50.0/26.0) // (Stage 2 driven)/( Stage 2 driver )
+#define Winch_ratio  		(15.0/12.0) // (Winch sprocket)/( Gear Out sprocket )
+#define Winch_Diameter  	(1*units::constants::pi) // (Stage 1 driven)/( Stage 1 driver )
+
+const double C_ELE_GEAR_RATIO			= 1.0 / (Stage_1_ratio * Stage_2_ratio * Winch_ratio * Winch_Diameter);
+
+const double C_ELE_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_ELE_GEAR_RATIO);
+
+const double C_ELE_SCALE_FACTOR  	 	= ((600.0 * C_ELE_GEAR_RATIO) / C_FALCON_ENC_CPR);
+
+  /*=================*/
+ /* Tilt Parameters */
+/*=================*/
+#define Actuator_ratio  		(30.0/12.0) // (Actuator driven)/(Actuator driver )
+#define Lead_pitch  			(0.2) // (inches)/(revelutions )
+
+const double C_TILT_GEAR_RATIO			=  0.08 ; //measured  // not measured 1.0  (Actuator_ratio * Lead_pitch);
+
+const double C_TLIT_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_TILT_GEAR_RATIO);
+
+const double C_TILT_SCALE_FACTOR  	 	= ((600.0 * C_TILT_GEAR_RATIO) / C_FALCON_ENC_CPR);
 
 /*======================*/
 /* CONTROLLER CONSTANTS */
