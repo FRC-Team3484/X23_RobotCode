@@ -22,22 +22,22 @@ void Robot::RobotInit()
 {
 	GP1_Driver = new XboxController(/*USB Port*/ C_DRIVER_USB);
 	BB_GameDevice = new SC_OperatorInput(/*USB Port*/ 1);
-  	_drivetrain = new X23_Drivetrain(std::make_tuple<int, int>(C_FX_FL_MASTER, C_FX_FL_SLAVE),
-                                   std::make_tuple<int, int>(C_FX_FR_MASTER, C_FX_FR_SLAVE),
-								   std::make_tuple<int, int>(C_FX_BL_MASTER, C_FX_BL_SLAVE),
-                                   std::make_tuple<int, int>(C_FX_BR_MASTER, C_FX_BR_SLAVE),
-                                   SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_DRIVE_SOL},
-								   C_PIGEON_IMU); 
+  	// _drivetrain = new X23_Drivetrain(std::make_tuple<int, int>(C_FX_FL_MASTER, C_FX_FL_SLAVE),
+    //                                std::make_tuple<int, int>(C_FX_FR_MASTER, C_FX_FR_SLAVE),
+	// 							   std::make_tuple<int, int>(C_FX_BL_MASTER, C_FX_BL_SLAVE),
+    //                                std::make_tuple<int, int>(C_FX_BR_MASTER, C_FX_BR_SLAVE),
+    //                                SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_DRIVE_SOL},
+	// 							   C_PIGEON_IMU); 
 
-	_intake = new X23_Intake(C_SPX_INTAKE_LEFT, C_SPX_INTAKE_RIGHT);
-	_elevator = new X23_Elevator(C_FX_ELEVATEMOTOR,
-								C_FX_TILTMOTOR,
-								SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_CLAW_GRIP},
-								SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_CLAW_TILT},
-								SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_ELEVATOR_BRAKE},
-								C_DI_CH_ELEVATOR_TILT_HOME,
-								C_DI_CH_ELEVATOR_HOME, 
-								C_DI_CH_ELEVATOR_TILT_MAX);
+	// _intake = new X23_Intake(C_SPX_INTAKE_LEFT, C_SPX_INTAKE_RIGHT);
+	// _elevator = new X23_Elevator(C_FX_ELEVATEMOTOR,
+	// 							C_FX_TILTMOTOR,
+	// 							SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_CLAW_GRIP},
+	// 							SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_CLAW_TILT},
+	// 							SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_ELEVATOR_BRAKE},
+	// 							C_DI_CH_ELEVATOR_TILT_HOME,
+	// 							C_DI_CH_ELEVATOR_HOME, 
+	// 							C_DI_CH_ELEVATOR_TILT_MAX);
 
 
 	Throttle_Range_Normal(-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND);
@@ -70,52 +70,46 @@ void Robot::DisabledPeriodic() {}
  * RobotContainer} class.
  */
 void Robot::AutonomousInit() 
-{
-// 	this ->autoBuilder = new MecanumAutoBuilder
-// (
-//     [this]() { return _drivetrain->GetPose(); }, // Function to supply current robot pose
-//     [this](auto initPose) { _drivetrain->SetPose(initPose); }, // Function used to reset odometry at the beginning of auto
-//     PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-//     PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
-//     [this](auto speeds) { _drivetrain->DriveAuto(speeds); }, // Output function that accepts field relative ChassisSpeeds
-//     FunEvents, // Our event map
-//     std::initializer_list<frc2::Subsystem*>( _drivetrain ), // Drive requirements, usually just a single drive subsystem
-//     true // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-// );
+{ 
+	X23.startAutoCommand();
 }
 
 void Robot::AutonomousPeriodic() {}
-
+void Robot::AutonomousExit()
+{
+	X23.endAutoCommand();
+}
 void Robot::TeleopInit() 
 {
 	if(BB_GameDevice != nullptr)
 	{
 		//intake controls on the button box
-		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_LEFT).OnTrue(frc2::cmd::RunOnce([this] { this->_intake->Collect_ConeLeft(); }));
-		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_LEFT).OnFalse(frc2::cmd::RunOnce([this] { this->_intake->StopIntake(); }));
+		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_LEFT).OnTrue(X23._intake.Collect_ConeLeft());
+		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_LEFT).OnFalse(X23._intake.StopIntake());
 
-		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_RIGHT).OnTrue(frc2::cmd::RunOnce([this] { this->_intake->Collect_ConeRight(); }));
-		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_RIGHT).OnFalse(frc2::cmd::RunOnce([this] { this->_intake->StopIntake(); }));
+		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_RIGHT).OnTrue(X23._intake.Collect_ConeRight());
+		BB_GameDevice->GetButton(C_GD_COLLECT_CONE_RIGHT).OnFalse(X23._intake.StopIntake());
 
-		BB_GameDevice->GetButton(C_GD_COLLECT_CUBE_OR_CONECENTER).OnTrue(frc2::cmd::RunOnce([this] { this->_intake->Collect_Cube_Or_ConeCenter(); }));
-		BB_GameDevice->GetButton(C_GD_COLLECT_CUBE_OR_CONECENTER).OnFalse(frc2::cmd::RunOnce([this] { this->_intake->StopIntake(); }));
+		BB_GameDevice->GetButton(C_GD_COLLECT_CUBE_OR_CONECENTER).OnTrue(X23._intake.Collect_Cube_Or_ConeCenter());
+		BB_GameDevice->GetButton(C_GD_COLLECT_CUBE_OR_CONECENTER).OnFalse(X23._intake.StopIntake());
 
-		BB_GameDevice->GetButton(C_GD_COLLECT_EJECT).OnTrue(frc2::cmd::RunOnce([this] { this->_intake->Collect_Eject(); }));
-		BB_GameDevice->GetButton(C_GD_COLLECT_EJECT).OnFalse(frc2::cmd::RunOnce([this] { this->_intake->StopIntake(); }));
+		BB_GameDevice->GetButton(C_GD_COLLECT_EJECT).OnTrue(X23._intake.Collect_Eject());
+		BB_GameDevice->GetButton(C_GD_COLLECT_EJECT).OnFalse(X23._intake.StopIntake());
 		//claw controls on the button box
-		BB_GameDevice->GetButton(C_GD_CLAW_GRAB).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ToggleClaw(); }));
-		BB_GameDevice->GetButton(C_GD_CLAW_TILT).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ClawTilt(); }));
-		BB_GameDevice->GetButton(C_GD_CLAW_TILT).OnFalse(frc2::cmd::RunOnce([this]{ this->_elevator->StopTilt(); }));
+		BB_GameDevice->GetButton(C_GD_CLAW_GRAB).OnTrue(X23._elevator.ToggleClawOpen());
+		BB_GameDevice->GetButton(C_GD_CLAW_GRAB).OnFalse(X23._elevator.ToggleClawShut());
+		BB_GameDevice->GetButton(C_GD_CLAW_TILT).OnTrue(X23._elevator.ClawTilt());
+		BB_GameDevice->GetButton(C_GD_CLAW_TILT).OnFalse(X23._elevator.StopTilt());
 		//elevator controls on the button box
-		BB_GameDevice->GetButton(C_GD_ELE_CUBEMID).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->CubeOne(); }));
-		BB_GameDevice->GetButton(C_GD_ELE_CUBEHI).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->CubeTwo(); }));
+		BB_GameDevice->GetButton(C_GD_ELE_CUBEMID).OnTrue(X23._elevator.CubeOne());
+		BB_GameDevice->GetButton(C_GD_ELE_CUBEHI).OnTrue(X23._elevator.CubeTwo());
 
-		BB_GameDevice->GetButton(C_GD_ELE_CONEMID).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ConeOne(); }));
-		BB_GameDevice->GetButton(C_GD_ELE_CONEHI).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->ConeTwo(); }));
+		BB_GameDevice->GetButton(C_GD_ELE_CONEMID).OnTrue(X23._elevator.ConeOne());
+		BB_GameDevice->GetButton(C_GD_ELE_CONEHI).OnTrue(X23._elevator.ConeTwo());
 
-		BB_GameDevice->GetButton(C_GD_ELE_UNIVERSAL).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->HybridZone(); }));
-		BB_GameDevice->GetButton(C_GD_ELE_HOME).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->HomePOS(); }));
-		BB_GameDevice->GetButton(C_GD_ELE_FEEDER).OnTrue(frc2::cmd::RunOnce([this]{ this->_elevator->Substation(); }));
+		BB_GameDevice->GetButton(C_GD_ELE_UNIVERSAL).OnTrue(X23._elevator.HybridZone());
+		BB_GameDevice->GetButton(C_GD_ELE_HOME).OnTrue(X23._elevator.HomePOS());
+		BB_GameDevice->GetButton(C_GD_ELE_FEEDER).OnTrue(X23._elevator.Substation());
 	}
 }
 
@@ -124,7 +118,6 @@ void Robot::TeleopInit()
  */
 void Robot::TeleopPeriodic() 
 {
-   double encVal = 0, error = 0;
 
 	/*======================*/
 	/*====Driver Controls===*/
@@ -148,11 +141,11 @@ void Robot::TeleopPeriodic()
 	drivetrain_mode = GP1_Driver->GetRawButton(XBOX_RB);
 
 
-		_drivetrain->Drive(SC::F_Deadband(X_Demand, C_DRIVE_DEADBAND),
-					 SC::F_Deadband(Y_Demand, C_DRIVE_DEADBAND), 
-					 SC::F_Deadband(Z_Demand, C_DRIVE_DEADBAND), 
-					 true,
-					 drivetrain_mode);
+	X23._drivetrain.Drive(SC::F_Deadband(X_Demand, C_DRIVE_DEADBAND),
+							SC::F_Deadband(Y_Demand, C_DRIVE_DEADBAND), 
+							SC::F_Deadband(Z_Demand, C_DRIVE_DEADBAND), 
+							true,
+							drivetrain_mode);
 	/*==========================*/
 	/*===Game Device Controls===*/
 	/*==========================*/

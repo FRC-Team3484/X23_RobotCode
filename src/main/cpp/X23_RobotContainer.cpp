@@ -1,6 +1,6 @@
 #include "X23_RobotContainer.h"
 
-#include <iostream>
+// #include <iostream>
 
 #include <frc/DriverStation.h>
 #include <frc/Filesystem.h>
@@ -11,9 +11,9 @@
 
 #include <frc2/command/RunCommand.h>
 
-#include <pathplanner/lib/PathPlanner.h>
+// #include <pathplanner/lib/PathPlanner.h>
 
-#include "Subsystems/X23_Drivetrain.h"
+// #include "Subsystems/X23_Drivetrain.h"
 
 #include "frc2/command/CommandScheduler.h"
 
@@ -29,7 +29,7 @@ RobotContainer::RobotContainer() {
     // Build Commands
     autoCommands.emplace_back(
         autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup(
-            autoConfig, 1_mps, units::acceleration::meters_per_second_squared_t{10}, false)));
+            autoConfig, 1_mps, 10_mps_sq, false)));
 
     // Add to chooser
     autonomousChooser.AddOption(autoConfig, autoCommands.back().get());

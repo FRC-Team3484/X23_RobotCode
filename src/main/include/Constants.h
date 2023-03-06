@@ -82,7 +82,11 @@ const double C_FALCON_MOTOR_MAX_RPM		= 6380.0;
 const double C_FALCON_MOTOR_MAX_RPM_ACT = 6000.0; // TODO: Get max achievable RPM of drivetrain motors.
 const double C_FALCON_ENC_CPR			= 2048.0;
 
+<<<<<<< HEAD
 const double C_DT_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_GEAR_RATIO);
+=======
+const double C_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_GEAR_RATIO);
+>>>>>>> 6ddb359f0213d4c1006e96bb6336c08c1d0a2998
 
 const double C_DT_SCALE_FACTOR   	= ((600.0 * C_GEAR_RATIO) / C_FALCON_ENC_CPR) * C_DT_RPM_TO_FPS;
 
@@ -123,6 +127,10 @@ const double C_TILT_GEAR_RATIO			=  0.08 ; //measured  // not measured 1.0  (Act
 const double C_TLIT_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_TILT_GEAR_RATIO);
 
 const double C_TILT_SCALE_FACTOR  	 	= ((600.0 * C_TILT_GEAR_RATIO) / C_FALCON_ENC_CPR);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6ddb359f0213d4c1006e96bb6336c08c1d0a2998
 
 /*======================*/
 /* CONTROLLER CONSTANTS */
@@ -232,11 +240,10 @@ const std::tuple<int, int> C_BLANK_IDS = std::make_tuple<int, int>(C_DISABLED_CH
 /*===========================*/
 /*Elevator PID Loop Variables*/
 /*===========================*/
-#define E_Kp 0.1
-#define E_Ki 0.0
+#define E_Kp 1.1
+#define E_Ki 0.9
 #define E_dt 0.01
-#define E_Kd 0.1
-
+#define E_Kd 3.0
 /*================================*/
 /*Elevator Tilt PID Loop Variables*/
 /*================================*/

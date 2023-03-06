@@ -7,6 +7,7 @@
 #include "frc/filter/Debouncer.h"
  
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
+#include "frc2/command/Commands.h"
 #include "networktables/NetworkTableInstance.h"
 #include "networktables/DoubleTopic.h"
 
@@ -34,27 +35,29 @@ public:
 
     void Elevate();
 
-    void ToggleClaw();
+    frc2::CommandPtr ToggleClawOpen();
 
-    void ClawTilt();
+    frc2::CommandPtr ToggleClawShut();
 
-    void StopTilt();
+    frc2::CommandPtr ClawTilt();
 
-    void HybridZone();
+    frc2::CommandPtr StopTilt();
 
-    void ConeOne();
+    frc2::CommandPtr HybridZone();
 
-    void ConeTwo();
+    frc2::CommandPtr ConeOne();
 
-    void CubeOne();
+    frc2::CommandPtr ConeTwo();
 
-    void CubeTwo();
+    frc2::CommandPtr CubeOne();
 
-    void Substation();
+    frc2::CommandPtr CubeTwo();
 
-    void HomePOS();
+    frc2::CommandPtr Substation();
 
-    void StopMotors();
+    frc2::CommandPtr HomePOS();
+
+    frc2::CommandPtr StopMotors();
 
     void ControlDirectElevate( double RawElevate);
 
@@ -103,13 +106,28 @@ double T_I_Max;
 double T_I;
 double T_Error_ZminusOne;
 double T_D;
-double CalcHeight;//sp
+double CalcHeight;
 double CalcAngle;
 double TiltAngleSP;
 double ElevatorHeightSP;//sp
+<<<<<<< HEAD
 
 /*nt::DoubleSubcriber*/ nt::GenericEntry *ntSP, *ntKp, *ntKi, *ntKd, *ntBias, *ntMaxTravel;
 nt::DoublePublisher ntPV,ntCV, ntP, ntI, ntD, ntErr, ntManOut;
+=======
+double E_kpTune;
+double E_kiTune;
+double E_kdTune;
+double E_BiasTune;
+double E_spTune;
+double T_kpTune;
+double T_kiTune;
+double T_kdTune;
+double T_BiasTune;
+double T_spTune;
+nt::GenericEntry *E_ntSP, *E_ntKp, *E_ntKi, *E_ntKd, *E_ntBias, *T_ntSP, *T_ntKp, *T_ntKi, *T_ntKd, *T_ntBias;
+nt::DoublePublisher E_ntPV,E_ntCV, E_ntP, E_ntI, E_ntD, E_ntErr, T_ntPV, T_ntCV, T_ntP, T_ntI, T_ntD, T_ntErr, T_ntAnglePV; 
+>>>>>>> 6ddb359f0213d4c1006e96bb6336c08c1d0a2998
 };
 
 /*===================*/
@@ -119,18 +137,22 @@ nt::DoublePublisher ntPV,ntCV, ntP, ntI, ntD, ntErr, ntManOut;
 class Cmd_Elev_HybridZone : public frc2::CommandHelper<frc2::CommandBase, Cmd_Elev_HybridZone>
 { 
 public:
-    explicit Cmd_Elev_HybridZone(X23_Elevator *subsys) : _elevator(subsys) {} ;
+    explicit Cmd_Elev_HybridZone(X23_Elevator &subsys) : _elevator(subsys) {} ;
 
     void Initialize() override;
 
-    void Execute() override { if(_elevator != nullptr) { if(_elevator->IsAtHome()) { _elevator->HybridZone(); } } } ;
+    void Execute() override { if(_elevator.IsAtHome()) { _elevator.HybridZone(); } } ;
 
     void End(bool interrupted) override;
 
     bool IsFinished() override;
 
 private:
+<<<<<<< HEAD
     X23_Elevator* _elevator; 
+=======
+    X23_Elevator& _elevator;
+>>>>>>> 6ddb359f0213d4c1006e96bb6336c08c1d0a2998
 };
 
 

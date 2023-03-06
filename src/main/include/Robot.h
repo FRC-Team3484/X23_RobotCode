@@ -7,6 +7,7 @@
 #include "Subsystems/X23_Drivetrain.h"
 #include "Subsystems/X23_Intake.h"
 #include "Subsystems/X23_Elevator.h"
+#include "X23_RobotContainer.h"
 
 #include <frc/TimedRobot.h> 
 #include <frc2/command/Command.h>
@@ -31,6 +32,7 @@ class Robot : public frc::TimedRobot {
   void DisabledInit() override;
   void DisabledPeriodic() override;
   void AutonomousInit() override;
+  void AutonomousExit() override;
   void AutonomousPeriodic() override;
   void TeleopInit() override;
   void TeleopPeriodic() override;
@@ -40,9 +42,10 @@ class Robot : public frc::TimedRobot {
   // Have it null by default so that if testing teleop it
   // doesn't have undefined behavior and potentially crash.
 
-  X23_Drivetrain *_drivetrain = nullptr;
-  X23_Intake *_intake = nullptr;
-  X23_Elevator *_elevator = nullptr; 
+  // X23_Drivetrain *_drivetrain = nullptr;
+  // X23_Intake *_intake = nullptr;
+  // X23_Elevator *_elevator = nullptr; 
+  RobotContainer X23;
 
   SC::SC_Range<double> Throttle_Range_Normal = {-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND};
   SC::SC_Range<double> Throttle_Range_Fine = {-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE};

@@ -100,15 +100,30 @@ X23_Elevator::~X23_Elevator()
 
 void X23_Elevator::Elevate()
 {
-    double encVal = 0, error = 0;
+    double Elevator_Error, Tilt_Error, ElevatePV, TiltPV;
 
+<<<<<<< HEAD
     if(ntMaxTravel != nullptr) { maxTravel = ntMaxTravel->GetDouble(25.0); } else { maxTravel = 25.0; }
     if(ntSP != nullptr) { SP = std::clamp(ntSP->GetDouble(0.0), 0.0, maxTravel); } else { SP = 0.0; }
     if(ntKp != nullptr) {Kp = ntKp->GetDouble(0.1); } else { Kp = 0.0; }
     if(ntKi != nullptr) {Ki = ntKi->GetDouble(0.1); } else { Ki = 0.0; }
     if(ntKd != nullptr) {Kd = ntKd->GetDouble(0.1); } else { Kd = 0.0; }
     if(ntBias != nullptr) { bias = ntKd->GetDouble(0.1); } else { bias = 0.0; }
+=======
+    if(E_ntSP != nullptr) {ElevatorHeightSP = std::clamp(E_ntSP->GetDouble(0.0), 0.0, 68.5); } else { ElevatorHeightSP = 0.0; }
+    if(E_ntKp != nullptr) {E_kpTune = E_ntKp->GetDouble(0.1); } else { E_kpTune = 0.0; }
+    if(E_ntKi != nullptr) {E_kiTune = E_ntKi->GetDouble(0.1); } else { E_kiTune = 0.0; }
+    if(E_ntKd != nullptr) {E_kdTune = E_ntKd->GetDouble(0.1); } else { E_kdTune = 0.0; }
+    if(E_ntBias != nullptr) {E_BiasTune = E_ntBias->GetDouble(0.1); } else { E_BiasTune = 0.0; }
+>>>>>>> 6ddb359f0213d4c1006e96bb6336c08c1d0a2998
     
+    
+    if(T_ntSP != nullptr) {TiltAngleSP = std::clamp(T_ntSP->GetDouble(0.0), 0.0, 68.5); } else { TiltAngleSP = 0.0; }
+    if(T_ntKp != nullptr) {T_kpTune = T_ntKp->GetDouble(0.1); } else { T_kpTune = 0.0; }
+    if(T_ntKi != nullptr) {T_kiTune = T_ntKi->GetDouble(0.1); } else { T_kiTune = 0.0; }
+    if(T_ntKd != nullptr) {T_kdTune = T_ntKd->GetDouble(0.1); } else { T_kdTune = 0.0; }
+    if(T_ntBias != nullptr) {T_BiasTune = T_ntBias->GetDouble(0.1); } else { T_BiasTune = 0.0; }
+
     /*stops PID*/ 
     if((ElevatorHeightSP == 0) && (TiltAngleSP == 0 ) && atHome)
     {
@@ -144,61 +159,105 @@ void X23_Elevator::Elevate()
         {
             T_D = T_I = T_P = TiltAngleSP-1;
         }
-
     //Define Locals
-        double Elevator_Error, Tilt_Error;
-        CalcAngle = (F_XYCurve<double>(xArrayMotorPOS, yArrayAnglePOS,TiltFalcon->GetSelectedSensorVelocity(0), 10));
-
+        CalcAngle = (F_XYCurve<double>(xArrayMotorPOS, yArrayAnglePOS, TiltPV, 10));
+        ElevatePV = (ElevateFalcon->GetSelectedSensorPosition());
+        TiltPV = (TiltFalcon->GetSelectedSensorVelocity(0));
     //second XY curve stuff for max height
         CalcHeight = fmin(F_XYCurve<double>(xArrayElevate, yArrayElevate, CalcAngle , 10 ), ElevatorHeightSP);
-        Elevator_Error = CalcHeight - ElevateFalcon->GetSelectedSensorPosition(); 
+        Elevator_Error = CalcHeight - ElevatePV; 
 
+    if (abs(Elevator_Error)<0.25) 
+    {
+        Elevator_Error = 0;
+        Tilt_Error = 0;
+        E_CV = 0;
+        ElevateBrake->Set(true);
+    }
+    else
+    {
+        ElevateBrake->Set(false);
+
+/*
         this->E_FooFighters = (F_XYCurve<double>(xArrayElevate, yArrayFooFighters, CalcAngle, 10));
         this->E_P = Elevator_Error * E_Kp;
         this->E_I = F_Limit(E_I_Max, E_I_Min, E_I+(E_Ki * Elevator_Error *E_dt));
         this->E_D = E_Kd * (Elevator_Error - E_Error_ZminusOne)/E_dt;
         this->E_CV = E_P + E_I + E_D + E_FooFighters;
+*/
+        this->E_FooFighters = (F_XYCurve<double>(xArrayElevate, yArrayFooFighters, CalcAngle, 10));
+        this->E_P = Elevator_Error * E_kpTune;
+        this->E_I = F_Limit(E_I_Max, E_I_Min, E_I+(E_kiTune * Elevator_Error *E_dt));
+        this->E_D = E_kdTune * (Elevator_Error - E_Error_ZminusOne)/E_dt;
+        this->E_CV = E_kdTune + E_kiTune + E_kpTune + E_FooFighters;
 
 		// Tilt Motor PID
 	    Tilt_Error = TiltAngleSP - CalcAngle;
-        
+       /* 
         this->T_P = Tilt_Error * T_Kp;
         this->T_I = F_Limit(T_I_Max, T_I_Min, T_I+(T_Ki * Tilt_Error *T_dt));
         this->T_D = T_Kd * (Tilt_Error - T_Error_ZminusOne)/T_dt;
         this->T_CV = T_P + T_I + T_D; 
         atHome = EHomeLS && THomeLS;
+*/
+        this->T_P = Tilt_Error * T_kpTune;
+        this->T_I = F_Limit(T_I_Max, T_I_Min, T_I+(T_kiTune * Tilt_Error *T_dt));
+        this->T_D = T_kdTune * (Tilt_Error - T_Error_ZminusOne)/T_dt; 
+        E_CV = std::clamp<double>(E_P + E_I + E_D + E_FooFighters, -100, 100);
+        T_CV = std::clamp<double>(T_P + T_I + T_D, -100, 100);
+
+    }
+        ElevateFalcon->Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,(E_CV/100.0));
+        TiltFalcon->Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,(E_CV/100.0));
+
+
+        atHome = EHomeLS && THomeLS;
+        
+        E_ntPV.Set(ElevatePV);
+        T_ntPV.Set(TiltPV);
+        T_ntAnglePV.Set(CalcAngle);
+        E_ntCV.Set(E_CV);
+        T_ntCV.Set(T_CV);
+        E_ntP.Set(E_P);
+        T_ntP.Set(T_P);
+        E_ntI.Set(E_I);
+        T_ntI.Set(T_I);
+        E_ntD.Set(E_D);
+        T_ntD.Set(T_D);
+        E_ntErr.Set(Elevator_Error);
+        T_ntErr.Set(Tilt_Error);
 	}
 }
 
-void X23_Elevator::ToggleClaw()
+frc2::CommandPtr X23_Elevator::ToggleClawOpen()
 {
-    if((this->rTrigPinch != NULL)) 
-    {
-        this->rTrigPinch->Check(ClawToggleClose);
-    	
-		this->PincherSolenoidState  = (this->PincherSolenoidState && (!this->rTrigPinch->Q)) || (!this->PincherSolenoidState && this->rTrigPinch->Q);
-    }
-    else
-    {
-            this->PincherSolenoidState = (this->PincherSolenoidState && !ClawToggleClose) || (!this->PincherSolenoidState && ClawToggleClose);
-    }
+    return frc2::cmd::RunOnce([this]{
+    if(this->PincherSolenoid != NULL) 
+        { this->PincherSolenoid->Set(false); }});
+}
 
-    if(this->PincherSolenoid != NULL) { this->PincherSolenoid->Set(this->PincherSolenoidState); }
+frc2::CommandPtr X23_Elevator::ToggleClawShut()
+{
+    return frc2::cmd::RunOnce([this]{
+    if(this->PincherSolenoid != NULL)
+         { this->PincherSolenoid->Set(true); }});
 }
 // set debounce on tilt
-void X23_Elevator::ClawTilt(){
+frc2::CommandPtr X23_Elevator::ClawTilt(){
+    return frc2::cmd::RunOnce([this]{
         if(this->TiltSolenoid != NULL) 
-            {this->TiltSolenoid->Set(true); } 
+            {this->TiltSolenoid->Set(true); }});
 }
-void X23_Elevator::StopTilt(){
-        if(this->TiltSolenoid != NULL)
-            {this->TiltSolenoid->Set(false); }
-            
+frc2::CommandPtr X23_Elevator::StopTilt(){
+    return frc2::cmd::RunOnce([this]{
+        if(this->TiltSolenoid != NULL) 
+            {this->TiltSolenoid->Set(false); }});
 }
-void X23_Elevator::StopMotors()
+frc2::CommandPtr X23_Elevator::StopMotors()
 {
+    return frc2::cmd::RunOnce([this]{
     if(ElevateFalcon != nullptr) { ElevateFalcon->Set(0.0); }
-    if(TiltFalcon != nullptr) { TiltFalcon->Set(ControlMode::PercentOutput, 0.0); }
+    if(TiltFalcon != nullptr) { TiltFalcon->Set(ControlMode::PercentOutput, 0.0); }});
 }
 
 void X23_Elevator::ControlDirectElevate(double RawElevate)
@@ -209,41 +268,48 @@ void X23_Elevator::ControlDirectTilt(double RawTiltFalcon)
 {
     if(TiltFalcon != nullptr) { TiltFalcon->Set(ControlMode::PercentOutput, F_Limit(-1.0, 1.0, RawTiltFalcon)); }
 }
-void X23_Elevator::HybridZone()
+frc2::CommandPtr X23_Elevator::HybridZone()
 {
+return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 14.5;
 TiltAngleSP = 40;
-}
-void X23_Elevator::ConeOne()
+});}
+frc2::CommandPtr X23_Elevator::ConeOne()
 {
+return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 47.5;
 TiltAngleSP = 34;
-}
-void X23_Elevator::ConeTwo()
+});}
+frc2::CommandPtr X23_Elevator::ConeTwo()
 {
+return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 68.5;
 TiltAngleSP = 40;
-}
-void X23_Elevator::CubeOne()
+});}
+frc2::CommandPtr X23_Elevator::CubeOne()
 {
+return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 41.5;
 TiltAngleSP = 40;
-}
-void X23_Elevator::CubeTwo()
+});}
+frc2::CommandPtr X23_Elevator::CubeTwo()
 {
+return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 68.5;
 TiltAngleSP = 42;
-}
-void X23_Elevator::Substation()
+});}
+frc2::CommandPtr X23_Elevator::Substation()
 {
-ElevatorHeightSP = 38;
-TiltAngleSP = 15;
-}
-void X23_Elevator::HomePOS()
+return frc2::cmd::RunOnce([this]{
+ElevatorHeightSP = 15;
+TiltAngleSP = 38;
+});}
+frc2::CommandPtr X23_Elevator::HomePOS()
 {
+return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 0;
 TiltAngleSP = 0;
-}
+});}
 
 bool X23_Elevator::IsAtHome()
 {

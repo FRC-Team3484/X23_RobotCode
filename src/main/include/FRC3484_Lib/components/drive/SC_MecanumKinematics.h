@@ -37,7 +37,8 @@ namespace SC
 			double WS_BackLeft = 0.0;
 			double WS_BackRight = 0.0;
 		};
-		SC_MecanumKinematics();
+
+		SC_MecanumKinematics(frc::Translation2d sc_frontLeftWheel, frc::Translation2d sc_frontRightWheel, frc::Translation2d sc_rearLeftWheel, frc::Translation2d sc_rearRightWheel);
 
 		~SC_MecanumKinematics();
 

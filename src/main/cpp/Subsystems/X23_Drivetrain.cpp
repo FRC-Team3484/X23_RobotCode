@@ -28,7 +28,7 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 							   SC_Solenoid ch_shift,
 							   int PIGIMON)
 {
-	md = new SC::SC_MecanumKinematics();
+	md = new SC::SC_MecanumKinematics(Translation2d{0_m,0_m},Translation2d{0_m,0_m},Translation2d{0_m,0_m},Translation2d{0_m,0_m});
 	shifter = new Solenoid(ch_shift.CtrlID, ch_shift.CtrlType, ch_shift.Channel);
 	Gyroscope = new Pigeon2(PIGIMON);
 	dt_previousAngle = dtPose.Rotation();
