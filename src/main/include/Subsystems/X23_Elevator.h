@@ -108,6 +108,8 @@ double CalcAngle;
 double TiltAngleSP;
 double ElevatorHeightSP;//sp
 
+/*nt::DoubleSubcriber*/ nt::GenericEntry *ntSP, *ntKp, *ntKi, *ntKd, *ntBias, *ntMaxTravel;
+nt::DoublePublisher ntPV,ntCV, ntP, ntI, ntD, ntErr, ntManOut;
 };
 
 /*===================*/
@@ -128,24 +130,7 @@ public:
     bool IsFinished() override;
 
 private:
-    X23_Elevator* _elevator;
-
-		/*nt::DoubleSubcriber*/ nt::GenericEntry *ntSP, *ntKp, *ntKi, *ntkd, *ntBias, *ntMaxTravel;
-		nt::DoublePublisher ntPV,ntCV, ntP, ntI, ntD, ntErr, ntManOut; 
-
-		double P,I,D,CV;
-		double err_last;
-
-		double Kp = 0.1, Ki = 0.1, Kd = 0.1, dt = 0.01;
-		double bias = 0;
-		double SP;
-		double output;
-
-		double maxTravel;
-
-		bool PID_En;
-    /*nt::DoubleSubcriber*/ nt::GenericEntry *ntSP, *ntKp, *ntKi, *ntkd, *ntBias, *ntMaxTravel;
-		nt::DoublePublisher ntPV,ntCV, ntP, ntI, ntD, ntErr, ntManOut; 
+    X23_Elevator* _elevator; 
 };
 
 
