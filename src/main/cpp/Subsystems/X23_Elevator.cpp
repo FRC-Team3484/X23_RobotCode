@@ -102,11 +102,20 @@ void X23_Elevator::Elevate()
 {
     double Elevator_Error, Tilt_Error, ElevatePV, TiltPV;
 
+<<<<<<< HEAD
+    if(ntMaxTravel != nullptr) { maxTravel = ntMaxTravel->GetDouble(25.0); } else { maxTravel = 25.0; }
+    if(ntSP != nullptr) { SP = std::clamp(ntSP->GetDouble(0.0), 0.0, maxTravel); } else { SP = 0.0; }
+    if(ntKp != nullptr) {Kp = ntKp->GetDouble(0.1); } else { Kp = 0.0; }
+    if(ntKi != nullptr) {Ki = ntKi->GetDouble(0.1); } else { Ki = 0.0; }
+    if(ntKd != nullptr) {Kd = ntKd->GetDouble(0.1); } else { Kd = 0.0; }
+    if(ntBias != nullptr) { bias = ntKd->GetDouble(0.1); } else { bias = 0.0; }
+=======
     if(E_ntSP != nullptr) {ElevatorHeightSP = std::clamp(E_ntSP->GetDouble(0.0), 0.0, 68.5); } else { ElevatorHeightSP = 0.0; }
     if(E_ntKp != nullptr) {E_kpTune = E_ntKp->GetDouble(0.1); } else { E_kpTune = 0.0; }
     if(E_ntKi != nullptr) {E_kiTune = E_ntKi->GetDouble(0.1); } else { E_kiTune = 0.0; }
     if(E_ntKd != nullptr) {E_kdTune = E_ntKd->GetDouble(0.1); } else { E_kdTune = 0.0; }
     if(E_ntBias != nullptr) {E_BiasTune = E_ntBias->GetDouble(0.1); } else { E_BiasTune = 0.0; }
+>>>>>>> 6ddb359f0213d4c1006e96bb6336c08c1d0a2998
     
     
     if(T_ntSP != nullptr) {TiltAngleSP = std::clamp(T_ntSP->GetDouble(0.0), 0.0, 68.5); } else { TiltAngleSP = 0.0; }

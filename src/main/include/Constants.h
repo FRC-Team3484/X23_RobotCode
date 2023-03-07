@@ -58,7 +58,7 @@
 #define C_DI_CH_ELEVATOR_TILT_MAX	3
 
 
-/*==========*/
+ /*==========*/
 /* Settings */
 /*==========*/
 #define C_DRIVE_DEADBAND			0.05    // 5% Joystick input
@@ -68,21 +68,25 @@
 #define C_THROTTLE_SCALE_COEFF		1.5     // Scaling Coefficient for throttle input
 
 
-/*=======================*/
-/* Drivetrain Parameters */
+  /*=======================*/
+ /* Drivetrain Parameters */
 /*=======================*/
 #define C_X23_TRACK_WIDTH			30.0_in
 #define C_X23_DT_WHEEL_DIAM			6.0 // in
 
 #define C_DT_RPM_TO_FPS				(units::constants::pi * C_X23_DT_WHEEL_DIAM) / (60.0 * 12.0)
 
-const double C_GEAR_RATIO			= 1.0 / 18.0;
+const double C_GEAR_RATIO			= 1.0/((62.0/12.0)*(34.0/18.0));
 
 const double C_FALCON_MOTOR_MAX_RPM		= 6380.0;
 const double C_FALCON_MOTOR_MAX_RPM_ACT = 6000.0; // TODO: Get max achievable RPM of drivetrain motors.
 const double C_FALCON_ENC_CPR			= 2048.0;
 
+<<<<<<< HEAD
+const double C_DT_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_GEAR_RATIO);
+=======
 const double C_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_GEAR_RATIO);
+>>>>>>> 6ddb359f0213d4c1006e96bb6336c08c1d0a2998
 
 const double C_DT_SCALE_FACTOR   	= ((600.0 * C_GEAR_RATIO) / C_FALCON_ENC_CPR) * C_DT_RPM_TO_FPS;
 
@@ -91,8 +95,8 @@ const units::feet_per_second_t C_SHIFT_UP_SPEED     = 5.0_fps;
 const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 
 
-/*===================*/
-/* Intake Parameters */
+  /*===================*/
+ /* Intake Parameters */
 /*===================*/
 #define C_INTAKE_DRIVE_SPEED		1.0 // *100%
 #define C_INTAKE_CW_SPEED			C_INTAKE_DRIVE_SPEED
@@ -123,7 +127,10 @@ const double C_TILT_GEAR_RATIO			=  0.08 ; //measured  // not measured 1.0  (Act
 const double C_TLIT_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_TILT_GEAR_RATIO);
 
 const double C_TILT_SCALE_FACTOR  	 	= ((600.0 * C_TILT_GEAR_RATIO) / C_FALCON_ENC_CPR);
+<<<<<<< HEAD
+=======
 
+>>>>>>> 6ddb359f0213d4c1006e96bb6336c08c1d0a2998
 
 /*======================*/
 /* CONTROLLER CONSTANTS */
