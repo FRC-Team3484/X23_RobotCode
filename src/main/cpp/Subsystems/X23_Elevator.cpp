@@ -161,7 +161,7 @@ void X23_Elevator::Elevate()
     if (abs(Elevator_Error)<0.25) 
     {
         Elevator_Error = 0;
-        Tilt_Error = 0;
+        Tilt_Error = 0; 
         E_CV = 0;
         ElevateBrake->Set(true);
     }
