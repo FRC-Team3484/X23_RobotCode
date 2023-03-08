@@ -115,6 +115,11 @@ void X23_Elevator::Elevate()
     if(T_ntKd != nullptr) {T_kdTune = T_ntKd->GetDouble(0.1); } else { T_kdTune = 0.0; }
     if(T_ntBias != nullptr) {T_BiasTune = T_ntBias->GetDouble(0.1); } else { T_BiasTune = 0.0; }
 
+    if(TiltAngleSP && ElevatorHeightSP == 0) {
+
+    } else {
+        
+    }
     /*stops PID*/ 
     if((ElevatorHeightSP == 0) && (TiltAngleSP == 0 ) && atHome)
     {
