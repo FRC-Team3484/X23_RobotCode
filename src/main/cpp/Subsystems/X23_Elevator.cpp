@@ -60,6 +60,7 @@ else
     //set Bool
     this->PincherSolenoidState = 0;
     //set variable values
+    
 E_CV = 0;
 E_FooFighters = 0;
 E_P = 0;
@@ -118,12 +119,11 @@ void X23_Elevator::Elevate()
     if(TiltAngleSP && ElevatorHeightSP == 0) {
 
     } else {
-        
+
     }
     /*stops PID*/ 
     if((ElevatorHeightSP == 0) && (TiltAngleSP == 0 ) && atHome)
     {
-         //WE NEED TO ZERO ALL OF THIS OUT
         this->rTrigEHome->Check(ElevatorHome->Get());
         this->rTrigTHome->Check(TiltHome->Get());
         this->rTrigTLimit->Check(TiltLimit->Get());
@@ -170,6 +170,7 @@ void X23_Elevator::Elevate()
         E_CV = 0;
         ElevateBrake->Set(true);
     }
+    //Elevater motor PID
     else
     {
         ElevateBrake->Set(false);
@@ -201,11 +202,11 @@ void X23_Elevator::Elevate()
         this->T_D = T_kdTune * (Tilt_Error - T_Error_ZminusOne)/T_dt; 
         E_CV = std::clamp<double>(E_P + E_I + E_D + E_FooFighters, -100, 100);
         T_CV = std::clamp<double>(T_P + T_I + T_D, -100, 100);
-
     }
+    if(){}
+
         ElevateFalcon->Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,(E_CV/100.0));
         TiltFalcon->Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,(E_CV/100.0));
-
 
         atHome = EHomeLS && THomeLS;
         
@@ -306,7 +307,6 @@ return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 0;
 TiltAngleSP = 0;
 });}
-
 bool X23_Elevator::IsAtHome()
 {
     return this->atHome;
