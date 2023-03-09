@@ -131,22 +131,6 @@ nt::DoublePublisher E_ntPV,E_ntCV, E_ntP, E_ntI, E_ntD, E_ntErr, T_ntPV, T_ntCV,
 /* ELEVATOR COMMANDS */
 /*===================*/
 
-class Cmd_Elev_HybridZone : public frc2::CommandHelper<frc2::CommandBase, Cmd_Elev_HybridZone>
-{ 
-public:
-    explicit Cmd_Elev_HybridZone(X23_Elevator &subsys) : _elevator(subsys) {} ;
-
-    void Initialize() override;
-
-    void Execute() override { if(_elevator.IsAtHome()) { _elevator.HybridZone(); } } ;
-
-    void End(bool interrupted) override;
-
-    bool IsFinished() override;
-
-private:
-    X23_Elevator* _elevator; 
-};
 
 
 #endif // Elevator_H

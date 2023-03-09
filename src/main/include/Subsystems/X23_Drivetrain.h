@@ -68,10 +68,6 @@ public:
 	*/
 	void SetCoastMode();
 
-    frc2::CommandPtr X23_Drivetrain::getBalanceCommand() {
-  // Get balance command for this drivetrain.
-  return frc2::CommandPtr(BalanceCommand(*this))
-
 private:
     void _setOutputs();
     void _InitMotor(ctre::phoenix::motorcontrol::can::WPI_TalonSRX* Motor, bool Invert, ctre::phoenix::motorcontrol::can::WPI_TalonSRX* Master);
