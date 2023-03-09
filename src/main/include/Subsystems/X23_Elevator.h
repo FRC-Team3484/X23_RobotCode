@@ -35,6 +35,8 @@ public:
 
     void Elevate();
 
+    bool pidDisabled();
+
     frc2::CommandPtr ToggleClawOpen();
 
     frc2::CommandPtr ToggleClawShut();

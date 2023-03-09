@@ -149,6 +149,13 @@ void Robot::TeleopPeriodic()
 	/*==========================*/
 	/*===Game Device Controls===*/
 	/*==========================*/
+if(X23._elevator.pidDisabled())
+	if(BB_GameDevice->)
+	{
+		Y_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, -GP1_Driver->GetLeftY());
+		X_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, GP1_Driver->GetLeftX());
+		Z_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, GP1_Driver->GetRightX());
+	}
 }
 
 /**
