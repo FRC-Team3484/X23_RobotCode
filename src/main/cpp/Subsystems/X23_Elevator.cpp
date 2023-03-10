@@ -79,6 +79,9 @@ CalcHeight = 0;
 CalcAngle = 0;
 TiltAngleSP = 0;
 ElevatorHeightSP = 0;
+
+E_PID_isDisabled = false;
+T_PID_isDisabled = false;
 }
 
 
@@ -97,7 +100,7 @@ X23_Elevator::~X23_Elevator()
     if (TiltFalcon != nullptr) { delete TiltFalcon; TiltFalcon = nullptr; }
     if (DebounceTilt != nullptr) { delete DebounceTilt; DebounceTilt = nullptr; }
 }
-    bool pidDisabled()
+    bool X23_Elevator::pidDisabled()
     {
         return
     
