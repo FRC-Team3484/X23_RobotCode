@@ -28,7 +28,7 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 							   SC_Solenoid ch_shift,
 							   int PIGIMON)
 {
-	md = new SC::SC_MecanumKinematics(Translation2d{0_m,0_m},Translation2d{0_m,0_m},Translation2d{0_m,0_m},Translation2d{0_m,0_m});
+	md = new SC::SC_MecanumKinematics(Translation2d{-13.8_in,7.5_in},Translation2d{13.8_in,7.5_in},Translation2d{-13.8_in,-7.5_in},Translation2d{13.8_in,-7.5_in});
 	shifter = new Solenoid(ch_shift.CtrlID, ch_shift.CtrlType, ch_shift.Channel);
 	Gyroscope = new Pigeon2(PIGIMON);
 	dt_previousAngle = dtPose.Rotation();
@@ -38,10 +38,10 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 
     int sCh = -1;
     // Initialize PreviousPOS
-    Previous_WheelPOS.frontLeft  = units::make_unit<units::meter_t>(0);
-    Previous_WheelPOS.frontRight = units::make_unit<units::meter_t>(0);
-    Previous_WheelPOS.rearLeft   = units::make_unit<units::meter_t>(0);
-    Previous_WheelPOS.rearRight  = units::make_unit<units::meter_t>(0);
+    Previous_WheelPOS.frontLeft  = units::make_unit<units::inch_t>(0);
+    Previous_WheelPOS.frontRight = units::make_unit<units::inch_t>(0);
+    Previous_WheelPOS.rearLeft   = units::make_unit<units::inch_t>(0);
+    Previous_WheelPOS.rearRight  = units::make_unit<units::inch_t>(0);
     Gyroscope->SetYaw(0);
     Previous_Angle = _GyroAngle();
 
@@ -49,13 +49,13 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 	// Initialize front right wheel
 	if (chFR != C_BLANK_IDS)
 	{
-		FR = new WPI_TalonSRX(std::get<0>(chFR));
+		FR = new WPI_TalonFX(std::get<0>(chFR));
 		_InitMotor(FR, true, NULL);
 
 		sCh = std::get<1>(chFR);
 		if (sCh != C_DISABLED_CHANNEL)
 		{
-			FR_Slave = new WPI_TalonSRX(sCh);
+			FR_Slave = new WPI_TalonFX(sCh);
 			_InitMotor(FR_Slave, true, FR);
 		}
 		else
@@ -72,13 +72,13 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 	// Initialize front left wheel
 	if (chFL != C_BLANK_IDS)
 	{
-		FL = new WPI_TalonSRX(std::get<0>(chFL));
+		FL = new WPI_TalonFX(std::get<0>(chFL));
 		_InitMotor(FL, false, NULL);
 
 		sCh = std::get<1>(chFL);
 		if (sCh != C_DISABLED_CHANNEL)
 		{
-			FL_Slave = new WPI_TalonSRX(sCh);
+			FL_Slave = new WPI_TalonFX(sCh);
 			_InitMotor(FL_Slave, false, FL);
 		}
 		else
@@ -95,13 +95,13 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 	// Initialize back right wheel
 	if (chBR != C_BLANK_IDS)
 	{
-		BR = new WPI_TalonSRX(std::get<0>(chBR));
+		BR = new WPI_TalonFX(std::get<0>(chBR));
 		_InitMotor(BR, true, NULL);
 
 		sCh = std::get<1>(chBR);
 		if (sCh != C_DISABLED_CHANNEL)
 		{
-			BR_Slave = new WPI_TalonSRX(sCh);
+			BR_Slave = new WPI_TalonFX(sCh);
 			_InitMotor(BR_Slave, true, BR);
 		}
 		else
@@ -118,13 +118,13 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 	// Initialize back left wheel
 	if (chBL != C_BLANK_IDS)
 	{
-		BL = new WPI_TalonSRX(std::get<0>(chBL));
+		BL = new WPI_TalonFX(std::get<0>(chBL));
 		_InitMotor(BL, false, NULL);
 
 		sCh = std::get<1>(chBL);
 		if (sCh != C_DISABLED_CHANNEL)
 		{
-			BL_Slave = new WPI_TalonSRX(sCh);
+			BL_Slave = new WPI_TalonFX(sCh);
 			_InitMotor(BL_Slave, false, BL);
 		}
 		else
@@ -209,7 +209,7 @@ if (md != nullptr)
 		_setOutputs();
 	}
 }
-void X23_Drivetrain::_InitMotor(WPI_TalonSRX *Motor, bool Invert, WPI_TalonSRX *Master)
+void X23_Drivetrain::_InitMotor(WPI_TalonFX *Motor, bool Invert, WPI_TalonFX *Master)
 {
 	if (Motor != NULL)
 	{

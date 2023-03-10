@@ -149,8 +149,6 @@ void Robot::TeleopPeriodic()
 	/*==========================*/
 	/*===Game Device Controls===*/
 	/*==========================*/
-
-	if(frc::X23_ELevator::TiltPID = NULL){}
 }
 
 /**

@@ -13,7 +13,7 @@
 #include "frc2/command/SubsystemBase.h"
 #include "frc/Solenoid.h"
 
-#include "ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h"
+#include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
 #include "ctre/phoenix/sensors/Pigeon2.h"
 
 class X23_Drivetrain : public frc2::SubsystemBase
@@ -68,13 +68,9 @@ public:
 	*/
 	void SetCoastMode();
 
-    frc2::CommandPtr X23_Drivetrain::getBalanceCommand() {
-  // Get balance command for this drivetrain.
-  return frc2::CommandPtr(BalanceCommand(*this))
-
 private:
     void _setOutputs();
-    void _InitMotor(ctre::phoenix::motorcontrol::can::WPI_TalonSRX* Motor, bool Invert, ctre::phoenix::motorcontrol::can::WPI_TalonSRX* Master);
+    void _InitMotor(ctre::phoenix::motorcontrol::can::WPI_TalonFX* Motor, bool Invert, ctre::phoenix::motorcontrol::can::WPI_TalonFX* Master);
     
     frc::Rotation2d _GyroAngle();
     frc::MecanumDriveWheelPositions _GetdtPOS();
@@ -92,10 +88,10 @@ private:
     frc::Rotation2d dt_gyroOffset;
 
     // Declare all four master controllers
-    ctre::phoenix::motorcontrol::can::WPI_TalonSRX *FR, *FR_Slave;
-    ctre::phoenix::motorcontrol::can::WPI_TalonSRX *FL, *FL_Slave;
-    ctre::phoenix::motorcontrol::can::WPI_TalonSRX *BR, *BR_Slave;
-    ctre::phoenix::motorcontrol::can::WPI_TalonSRX *BL, *BL_Slave;
+    ctre::phoenix::motorcontrol::can::WPI_TalonFX *FR, *FR_Slave;
+    ctre::phoenix::motorcontrol::can::WPI_TalonFX *FL, *FL_Slave;
+    ctre::phoenix::motorcontrol::can::WPI_TalonFX *BR, *BR_Slave;
+    ctre::phoenix::motorcontrol::can::WPI_TalonFX *BL, *BL_Slave;
 
     frc::MecanumDriveWheelPositions Previous_WheelPOS;
     frc::Rotation2d                 Previous_Angle;

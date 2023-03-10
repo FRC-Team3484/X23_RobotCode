@@ -203,7 +203,10 @@ void X23_Elevator::Elevate()
         E_CV = std::clamp<double>(E_P + E_I + E_D + E_FooFighters, -100, 100);
         T_CV = std::clamp<double>(T_P + T_I + T_D, -100, 100);
     }
-    if(){}
+    if(abs(Elevator_Error)>=0.25){
+
+        
+    }
 
         ElevateFalcon->Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,(E_CV/100.0));
         TiltFalcon->Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,(E_CV/100.0));
