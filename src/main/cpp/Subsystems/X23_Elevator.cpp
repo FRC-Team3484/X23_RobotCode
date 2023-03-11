@@ -102,10 +102,7 @@ X23_Elevator::~X23_Elevator()
 }
     bool X23_Elevator::pidDisabled()
     {
-        return
-    
-        E_PID_isDisabled = true;
-        T_PID_isDisabled = true;
+        return E_PID_isDisabled && T_PID_isDisabled;
     }    
 void X23_Elevator::Elevate()
 {
@@ -280,42 +277,56 @@ frc2::CommandPtr X23_Elevator::HybridZone()
 return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 14.5;
 TiltAngleSP = 40;
+E_PID_isDisabled = false;
+T_PID_isDisabled = false;
 });}
 frc2::CommandPtr X23_Elevator::ConeOne()
 {
 return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 47.5;
 TiltAngleSP = 34;
+E_PID_isDisabled = false;
+T_PID_isDisabled = false;
 });}
 frc2::CommandPtr X23_Elevator::ConeTwo()
 {
 return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 68.5;
 TiltAngleSP = 40;
+E_PID_isDisabled = false;
+T_PID_isDisabled = false;
 });}
 frc2::CommandPtr X23_Elevator::CubeOne()
 {
 return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 41.5;
 TiltAngleSP = 40;
+E_PID_isDisabled = false;
+T_PID_isDisabled = false;
 });}
 frc2::CommandPtr X23_Elevator::CubeTwo()
 {
 return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 68.5;
 TiltAngleSP = 42;
+E_PID_isDisabled = false;
+T_PID_isDisabled = false;
 });}
 frc2::CommandPtr X23_Elevator::Substation()
 {
 return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 15;
 TiltAngleSP = 38;
+E_PID_isDisabled = false;
+T_PID_isDisabled = false;
 });}
 frc2::CommandPtr X23_Elevator::HomePOS()
 {
 return frc2::cmd::RunOnce([this]{
 ElevatorHeightSP = 0;
 TiltAngleSP = 0;
+E_PID_isDisabled = false;
+T_PID_isDisabled = false;
 });}
 
 bool X23_Elevator::IsAtHome()
