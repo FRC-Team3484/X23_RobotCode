@@ -56,8 +56,5 @@ class Robot : public frc::TimedRobot {
   frc::XboxController  *GP1_Driver;// GP = Gamepad
   SC::SC_OperatorInput	*BB_GameDevice;
 //  frc::GenericHID      *BB_GameDevice;  
-  pathplanner::MecanumAutoBuilder *autoBuilder;
-
-  /*const*/ std::unordered_map<std::string, std::shared_ptr<frc2::Command>> FunEvents;
 
 };

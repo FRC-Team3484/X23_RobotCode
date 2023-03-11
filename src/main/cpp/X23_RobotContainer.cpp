@@ -10,8 +10,8 @@
 // #include <frc/trajectory/TrajectoryUtil.h>
 
 #include <frc2/command/RunCommand.h>
-
-// #include <pathplanner/lib/PathPlanner.h>
+#include <pathplanner/lib/auto/MecanumAutoBuilder.h>
+#include <pathplanner/lib/PathPlanner.h>
 
 // #include "Subsystems/X23_Drivetrain.h"
 
@@ -23,9 +23,14 @@
 
 #include "frc/smartdashboard/SmartDashboard.h"
 
+#include <fmt/format.h>
+
+using namespace pathplanner;
+
 RobotContainer::RobotContainer() {
   // Setup Auto Routines
-  for (auto autoConfig : autoNames) {
+ /* for (auto autoConfig : autoNames) {
+    fmt::print("{}\n", std::string(autoConfig));
     // Build Commands
     autoCommands.emplace_back(
         autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup(
@@ -34,10 +39,12 @@ RobotContainer::RobotContainer() {
     // Add to chooser
     autonomousChooser.AddOption(autoConfig, autoCommands.back().get());
   }
-
+ // autoCommands.emplace_back(autonomousChooser.AddOption(noAutoCommand));
   // Default value and send to ShuffleBoard
+  */
   autonomousChooser.SetDefaultOption("no_auto", noAutoCommand.get());
-  frc::SmartDashboard::PutData("Auto Chooser", &autonomousChooser);
+
+  frc::Shuffleboard::GetTab("X23").Add("Auto Chooser", autonomousChooser).WithWidget("ComboBox Chooser");
 }
 
 void RobotContainer::setAutoDefaults() {
@@ -49,9 +56,10 @@ void RobotContainer::setAutoDefaults() {
 }
 
 void RobotContainer::startAutoCommand() {
-  // Get command from chooser to scheduel
+  // Get command from chooser to scheduel  
   currentAuto = autonomousChooser.GetSelected();
   currentAuto->Schedule();
+
 }
 
 void RobotContainer::endAutoCommand() {

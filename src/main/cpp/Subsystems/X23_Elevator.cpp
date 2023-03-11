@@ -60,6 +60,11 @@ else
     //set Bool
     this->PincherSolenoidState = 0;
     //set variable values
+nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
+    inst.Flush();
+    std::shared_ptr<nt::NetworkTable> table = inst.GetTable("PID_Table");
+
+
 E_CV = 0;
 E_FooFighters = 0;
 E_P = 0;
@@ -79,6 +84,28 @@ CalcHeight = 0;
 CalcAngle = 0;
 TiltAngleSP = 0;
 ElevatorHeightSP = 0;
+E_ntKp = frc::Shuffleboard::GetTab("PID").Add("E_Kp", 1.1).WithWidget("Text Entry").GetEntry();
+E_ntKi = frc::Shuffleboard::GetTab("PID").Add("E_Ki", 0.9).WithWidget("Text Entry").GetEntry();
+E_ntKd = frc::Shuffleboard::GetTab("PID").Add("E_Kd", 3).WithWidget("Text Entry").GetEntry();
+E_ntBias = frc::Shuffleboard::GetTab("PID").Add("E_Bias", 0.7).WithWidget("Text Entry").GetEntry();
+E_ntSP = frc::Shuffleboard::GetTab("PID").Add("E_SP", 0.0).WithWidget("Text Entry").GetEntry();
+T_ntKp = frc::Shuffleboard::GetTab("PID").Add("T_Kp", 0.0).WithWidget("Text Entry").GetEntry();
+T_ntKi = frc::Shuffleboard::GetTab("PID").Add("T_Ki", 0.0).WithWidget("Text Entry").GetEntry();
+T_ntKd = frc::Shuffleboard::GetTab("PID").Add("T_Kd", 0.0).WithWidget("Text Entry").GetEntry();
+T_ntSP = frc::Shuffleboard::GetTab("PID").Add("T_SP", 0.0).WithWidget("Text Entry").GetEntry();
+
+E_ntPV = table->GetDoubleTopic("Outputs/E_PV").Publish();
+E_ntCV = table->GetDoubleTopic("Outputs/E_CV").Publish();
+E_ntP = table->GetDoubleTopic("Outputs/E_P").Publish();
+E_ntI = table->GetDoubleTopic("Outputs/E_I").Publish();
+E_ntD = table->GetDoubleTopic("Outputs/E_D").Publish();
+E_ntErr = table->GetDoubleTopic("Outputs/E_Err").Publish();
+T_ntPV = table->GetDoubleTopic("Outputs/T_PV").Publish();
+T_ntCV = table->GetDoubleTopic("Outputs/T_CV").Publish();
+T_ntP = table->GetDoubleTopic("Outputs/T_P").Publish();
+T_ntI = table->GetDoubleTopic("Outputs/T_I").Publish();
+T_ntD = table->GetDoubleTopic("Outputs/T_D").Publish();
+T_ntErr = table->GetDoubleTopic("Outputs/T_Err").Publish();
 }
 
 

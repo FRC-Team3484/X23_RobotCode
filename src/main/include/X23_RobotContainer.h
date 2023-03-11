@@ -95,7 +95,7 @@ class RobotContainer {
 
   // List of possible autos and relevant configs.
   std::array<std::string, 10> autoNames {
-    {
+    //{
       "left",
       "leftBalance",
       "leftNoPlatform",
@@ -103,8 +103,8 @@ class RobotContainer {
       "middleNoPlatform",
       "Right",
       "RightBalance",
-      "RightNoPlatform",
-    }
+      "RightNoPlatform"//,
+    //}
   };
 
   /****************

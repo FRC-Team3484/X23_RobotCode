@@ -50,13 +50,13 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 	if (chFR != C_BLANK_IDS)
 	{
 		FR = new WPI_TalonFX(std::get<0>(chFR));
-		_InitMotor(FR, true, NULL);
+		_InitMotor(FR, false, NULL);
 
 		sCh = std::get<1>(chFR);
 		if (sCh != C_DISABLED_CHANNEL)
 		{
 			FR_Slave = new WPI_TalonFX(sCh);
-			_InitMotor(FR_Slave, true, FR);
+			_InitMotor(FR_Slave, false, FR);
 		}
 		else
 		{
@@ -73,13 +73,13 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 	if (chFL != C_BLANK_IDS)
 	{
 		FL = new WPI_TalonFX(std::get<0>(chFL));
-		_InitMotor(FL, false, NULL);
+		_InitMotor(FL, true, NULL);
 
 		sCh = std::get<1>(chFL);
 		if (sCh != C_DISABLED_CHANNEL)
 		{
 			FL_Slave = new WPI_TalonFX(sCh);
-			_InitMotor(FL_Slave, false, FL);
+			_InitMotor(FL_Slave, true, FL);
 		}
 		else
 		{
@@ -96,13 +96,13 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 	if (chBR != C_BLANK_IDS)
 	{
 		BR = new WPI_TalonFX(std::get<0>(chBR));
-		_InitMotor(BR, true, NULL);
+		_InitMotor(BR, false, NULL);
 
 		sCh = std::get<1>(chBR);
 		if (sCh != C_DISABLED_CHANNEL)
 		{
 			BR_Slave = new WPI_TalonFX(sCh);
-			_InitMotor(BR_Slave, true, BR);
+			_InitMotor(BR_Slave, false, BR);
 		}
 		else
 		{
@@ -119,13 +119,13 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 	if (chBL != C_BLANK_IDS)
 	{
 		BL = new WPI_TalonFX(std::get<0>(chBL));
-		_InitMotor(BL, false, NULL);
+		_InitMotor(BL, true, NULL);
 
 		sCh = std::get<1>(chBL);
 		if (sCh != C_DISABLED_CHANNEL)
 		{
 			BL_Slave = new WPI_TalonFX(sCh);
-			_InitMotor(BL_Slave, false, BL);
+			_InitMotor(BL_Slave, true, BL);
 		}
 		else
 		{
@@ -215,7 +215,7 @@ void X23_Drivetrain::_InitMotor(WPI_TalonFX *Motor, bool Invert, WPI_TalonFX *Ma
 	{
 		Motor->SetInverted(Invert);
 		Motor->SetNeutralMode(NeutralMode::Brake);
-		Motor->ConfigOpenloopRamp(2);
+		Motor->ConfigOpenloopRamp(0);
 		Motor->ConfigClosedloopRamp(0);
 		Motor->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
 		Motor->SetSelectedSensorPosition(0);

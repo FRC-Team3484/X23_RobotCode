@@ -22,28 +22,11 @@ void Robot::RobotInit()
 {
 	GP1_Driver = new XboxController(/*USB Port*/ C_DRIVER_USB);
 	BB_GameDevice = new SC_OperatorInput(/*USB Port*/ 1);
-  	// _drivetrain = new X23_Drivetrain(std::make_tuple<int, int>(C_FX_FL_MASTER, C_FX_FL_SLAVE),
-    //                                std::make_tuple<int, int>(C_FX_FR_MASTER, C_FX_FR_SLAVE),
-	// 							   std::make_tuple<int, int>(C_FX_BL_MASTER, C_FX_BL_SLAVE),
-    //                                std::make_tuple<int, int>(C_FX_BR_MASTER, C_FX_BR_SLAVE),
-    //                                SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_DRIVE_SOL},
-	// 							   C_PIGEON_IMU); 
-
-	// _intake = new X23_Intake(C_SPX_INTAKE_LEFT, C_SPX_INTAKE_RIGHT);
-	// _elevator = new X23_Elevator(C_FX_ELEVATEMOTOR,
-	// 							C_FX_TILTMOTOR,
-	// 							SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_CLAW_GRIP},
-	// 							SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_CLAW_TILT},
-	// 							SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_ELEVATOR_BRAKE},
-	// 							C_DI_CH_ELEVATOR_TILT_HOME,
-	// 							C_DI_CH_ELEVATOR_HOME, 
-	// 							C_DI_CH_ELEVATOR_TILT_MAX);
 
 
 	Throttle_Range_Normal(-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND);
 	Throttle_Range_Fine(-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE);
 
-	// FunEvents.emplace("ElevatorHybrid", std::make_shared<Cmd_Elev_HybridZone>(_elevator));
 }
 /**
  * This function is called every robot packet, no matter the mode. Use
@@ -53,7 +36,9 @@ void Robot::RobotInit()
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic() {
+void Robot::RobotPeriodic() 
+{
+	frc2::CommandScheduler::GetInstance().Run();
 }
 
 /**
@@ -74,13 +59,19 @@ void Robot::AutonomousInit()
 	X23.startAutoCommand();
 }
 
-void Robot::AutonomousPeriodic() {}
+void Robot::AutonomousPeriodic() 
+{
+
+}
+
 void Robot::AutonomousExit()
 {
 	X23.endAutoCommand();
 }
 void Robot::TeleopInit() 
 {
+	frc2::CommandScheduler::GetInstance().CancelAll();
+	
 	if(BB_GameDevice != nullptr)
 	{
 		//intake controls on the button box
