@@ -7,7 +7,7 @@ SC_OperatorInput::SC_OperatorInput(int Usb_Port) : gHID(Usb_Port) {}
 
 SC_OperatorInput::~SC_OperatorInput() {}
 
-frc2::JoystickButton SC_OperatorInput::GetButton(int buttonIdx)
+frc2::JoystickButton SC_OperatorInput::GetRawButton(int buttonIdx)
 {
 	return frc2::JoystickButton(&this->gHID, buttonIdx);
 }

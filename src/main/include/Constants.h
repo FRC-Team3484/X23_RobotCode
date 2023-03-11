@@ -132,9 +132,9 @@ const double C_TILT_SCALE_FACTOR  	 	= ((600.0 * C_TILT_GEAR_RATIO) / C_FALCON_E
 
 // Game Device control input scheme 
 //#define GD_SCHEME_JOYSTICK	/* Logitech Extreme-3D Pro Joystick Scheme */
-//#define GD_SCHEME_XBOX			/* Xbox Controller Scheme */
+#define GD_SCHEME_XBOX			/* Xbox Controller Scheme */
 //#define GD_SCHEME_DS4 		/* DualShock 4 Controller Scheme */
-#define GD_SCHEME_BB			/* Custom Button Box Scheme*/
+//#define GD_SCHEME_BB			/* Custom Button Box Scheme*/
 
 
 
@@ -168,9 +168,25 @@ const double C_TILT_SCALE_FACTOR  	 	= ((600.0 * C_TILT_GEAR_RATIO) / C_FALCON_E
 /* Game Device Input */
 /*===================*/
 #ifdef GD_SCHEME_XBOX
-	#define C_GD_INTAKE					XBOX_LB
-	#define C_GD_DIRCET_L_INTAKE		XBOX_A
-	#define C_GD_DIRECT_R_INTAKE		XBOX_B
+#define C_GD_COLLECT_CUBE_OR_CONECENTER		XBOX_A
+	#define C_GD_COLLECT_EJECT				XBOX_B
+	#define C_GD_CLAW_GRAB					XBOX_RB
+	#define C_GD_COLLECT_CONE_LEFT			XBOX_X
+	#define C_GD_COLLECT_CONE_RIGHT			XBOX_Y
+	#define C_GD_CLAW_TILT					XBOX_LB
+	#define C_GD_ELE_CUBEMID				XBOX_Y
+	#define C_GD_ELE_CONEMID				XBOX_X
+	#define C_GD_ELE_UNIVERSAL				XBOX_RB
+	#define C_GD_ELE_HOME					XBOX_LB
+	#define C_GD_ELE_CUBEHI					XBOX_A
+	#define C_GD_ELE_CONEHI					XBOX_B
+	#define C_GD_ELE_FEEDER					XBOX_BACK
+		//joysticks!
+	#define C_GD_DEADBAND					0.05    // 5% Joystick input
+	#define C_GD_L_MAX_DEMAND				0.95
+	#define C_GD_R_MAX_DEMAND				0.95
+	#define C_GD_J1_ELE_HIGHT				XBOX_LS_Y
+	#define C_GD_J2_ELE_ANGLE				XBOX_RS_Y
 
 #elif defined(GD_SCHEME_JOYSTICK)
 	#define C_GD_INTAKE					LE3D_BTN_5

@@ -28,7 +28,7 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 							   SC_Solenoid ch_shift,
 							   int PIGIMON)
 {
-	md = new SC::SC_MecanumKinematics(Translation2d{0_m,0_m},Translation2d{0_m,0_m},Translation2d{0_m,0_m},Translation2d{0_m,0_m});
+	md = new SC::SC_MecanumKinematics(Translation2d{-13.8_in,7.5_in},Translation2d{13.8_in,7.5_in},Translation2d{-13.8_in,-7.5_in},Translation2d{13.8_in,-7.5_in});
 	shifter = new Solenoid(ch_shift.CtrlID, ch_shift.CtrlType, ch_shift.Channel);
 	Gyroscope = new Pigeon2(PIGIMON);
 	dt_previousAngle = dtPose.Rotation();
@@ -38,10 +38,10 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 
     int sCh = -1;
     // Initialize PreviousPOS
-    Previous_WheelPOS.frontLeft  = units::make_unit<units::meter_t>(0);
-    Previous_WheelPOS.frontRight = units::make_unit<units::meter_t>(0);
-    Previous_WheelPOS.rearLeft   = units::make_unit<units::meter_t>(0);
-    Previous_WheelPOS.rearRight  = units::make_unit<units::meter_t>(0);
+    Previous_WheelPOS.frontLeft  = units::make_unit<units::inch_t>(0);
+    Previous_WheelPOS.frontRight = units::make_unit<units::inch_t>(0);
+    Previous_WheelPOS.rearLeft   = units::make_unit<units::inch_t>(0);
+    Previous_WheelPOS.rearRight  = units::make_unit<units::inch_t>(0);
     Gyroscope->SetYaw(0);
     Previous_Angle = _GyroAngle();
 
@@ -209,6 +209,7 @@ if (md != nullptr)
 		_setOutputs();
 	}
 }
+void X23_Drivetrain::_InitMotor(WPI_TalonFX *Motor, bool Invert, WPI_TalonFX *Master)
 void X23_Drivetrain::_InitMotor(WPI_TalonFX *Motor, bool Invert, WPI_TalonFX *Master)
 {
 	if (Motor != NULL)

@@ -22,7 +22,7 @@ namespace SC
 		SC_OperatorInput(int Usb_Port);
 		~SC_OperatorInput();
 
-		frc2::JoystickButton GetButton(int buttonIdx);
+		frc2::JoystickButton GetRawButton(int buttonIdx);
 		bool IsButtonPressed(int buttonIdx);
 
 		double GetAxis(int axisIdx);

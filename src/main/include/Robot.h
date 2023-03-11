@@ -52,6 +52,11 @@ class Robot : public frc::TimedRobot {
 
   double X_Demand, Y_Demand, Z_Demand;
   double drivetrain_mode;
+//#ifdef GD_SCHEME_BB
+  SC::SC_OperatorInput	*GP2_Driver;
+//#else
+//  frc::XboxController  *GP2_Driver;
+//#endif
 
   frc::XboxController  *GP1_Driver;// GP = Gamepad
   SC::SC_OperatorInput	*BB_GameDevice;

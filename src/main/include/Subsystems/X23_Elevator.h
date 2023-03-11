@@ -35,6 +35,8 @@ public:
 
     void Elevate();
 
+    bool pidDisabled();
+
     frc2::CommandPtr ToggleClawOpen();
 
     frc2::CommandPtr ToggleClawShut();
@@ -72,6 +74,9 @@ private:
     bool atHome = 0;
     bool EHomeLS = 0;
     bool THomeLS = 0;
+
+    bool E_PID_isDisabled = 0;
+    bool T_PID_isDisabled = 0;
 // Declare Tilt 
     ctre::phoenix::motorcontrol::can::WPI_TalonFX *TiltFalcon, *ElevateFalcon;  
 // Declare Pincher Solenoids
