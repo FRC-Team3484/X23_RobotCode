@@ -52,10 +52,9 @@
 /*==============*/
 /* DIO Channels */
 /*==============*/
-#define C_DI_CH_STORED_SW			0
 #define C_DI_CH_ELEVATOR_TILT_HOME	1
 #define C_DI_CH_ELEVATOR_HOME		2
-#define C_DI_CH_ELEVATOR_TILT_MAX	3
+#define C_DI_CH_ELEVATOR_TILT_MAX	0
 
 
  /*==========*/
@@ -110,8 +109,9 @@ const double C_ELE_GEAR_RATIO			= 1.0 / (Stage_1_ratio * Stage_2_ratio * Winch_r
 
 const double C_ELE_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_ELE_GEAR_RATIO);
 
-const double C_ELE_SCALE_FACTOR  	 	= ((600.0 * C_ELE_GEAR_RATIO) / C_FALCON_ENC_CPR);
+const double C_ELE_SCALE_FACTOR  	 	= (C_ELE_GEAR_RATIO / C_FALCON_ENC_CPR);
 
+//const double C_ELE_SCALE_FACTOR  	 	= ((600.0 * C_ELE_GEAR_RATIO) / C_FALCON_ENC_CPR);
   /*=================*/
  /* Tilt Parameters */
 /*=================*/
@@ -122,7 +122,8 @@ const double C_TILT_GEAR_RATIO			=  0.08 ; //measured  // not measured 1.0  (Act
 
 const double C_TLIT_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_TILT_GEAR_RATIO);
 
-const double C_TILT_SCALE_FACTOR  	 	= ((600.0 * C_TILT_GEAR_RATIO) / C_FALCON_ENC_CPR);
+// const double C_TILT_SCALE_FACTOR  	 	= ((600.0 * C_TILT_GEAR_RATIO) / C_FALCON_ENC_CPR);
+const double C_TILT_SCALE_FACTOR  	 	= (C_TILT_GEAR_RATIO / C_FALCON_ENC_CPR);
 
 /*======================*/
 /* CONTROLLER CONSTANTS */

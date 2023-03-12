@@ -209,7 +209,7 @@ if (md != nullptr)
 		_setOutputs();
 	}
 }
-void X23_Drivetrain::_InitMotor(WPI_TalonFX *Motor, bool Invert, WPI_TalonFX *Master)
+
 void X23_Drivetrain::_InitMotor(WPI_TalonFX *Motor, bool Invert, WPI_TalonFX *Master)
 {
 	if (Motor != NULL)

@@ -50,13 +50,15 @@ class RobotContainer {
                               std::make_tuple<int, int>(C_FX_FR_MASTER, C_FX_FR_SLAVE),
 								              std::make_tuple<int, int>(C_FX_BL_MASTER, C_FX_BL_SLAVE),
                               std::make_tuple<int, int>(C_FX_BR_MASTER, C_FX_BR_SLAVE),
-                              SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_DRIVE_SOL}, C_PIGEON_IMU};
+                              SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::REVPH, C_DRIVE_SOL}, C_PIGEON_IMU};
+
   X23_Intake _intake{C_SPX_INTAKE_LEFT, C_SPX_INTAKE_RIGHT};
+
   X23_Elevator _elevator{ C_FX_ELEVATEMOTOR,
                           C_FX_TILTMOTOR,
-                          SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_CLAW_GRIP},
-                          SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_CLAW_TILT},
-                          SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::CTREPCM, C_SOL_ELEVATOR_BRAKE},
+                          SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::REVPH, C_SOL_CLAW_GRIP},
+                          SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::REVPH, C_SOL_CLAW_TILT},
+                          SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::REVPH, C_SOL_ELEVATOR_BRAKE},
                           C_DI_CH_ELEVATOR_TILT_HOME,
                           C_DI_CH_ELEVATOR_HOME, 
                           C_DI_CH_ELEVATOR_TILT_MAX};
@@ -95,7 +97,7 @@ class RobotContainer {
 
   // List of possible autos and relevant configs.
   std::array<std::string, 10> autoNames {
-    //{
+    {
       "left",
       "leftBalance",
       "leftNoPlatform",
@@ -103,8 +105,8 @@ class RobotContainer {
       "middleNoPlatform",
       "Right",
       "RightBalance",
-      "RightNoPlatform"//,
-    //}
+      "RightNoPlatform",
+    }
   };
 
   /****************

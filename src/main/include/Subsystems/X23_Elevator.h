@@ -4,21 +4,23 @@
 #include "frc/Solenoid.h"
 #include "frc/DigitalInput.h"
 #include "frc/filter/Debouncer.h"
-#include "frc/filter/Debouncer.h"
  
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
-#include "frc2/command/Commands.h"
-#include "networktables/NetworkTableInstance.h"
-#include "networktables/DoubleTopic.h"
 
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <frc/shuffleboard/ShuffleboardLayout.h>
 #include <frc/shuffleboard/ShuffleboardTab.h>
+
+#include "networktables/NetworkTableInstance.h"
 #include <networktables/GenericEntry.h>
+#include "networktables/DoubleTopic.h"
+#include "networktables/BooleanTopic.h"
 
 #include "frc2/command/SubsystemBase.h"
 #include <frc2/command/Command.h>
+#include "frc2/command/Commands.h"
 #include <frc2/command/CommandHelper.h>
+
 #include "FRC3484_Lib/utils/SC_Datatypes.h"
 
 #include <frc/Joystick.h>
@@ -28,7 +30,7 @@ class X23_Elevator : public frc2::SubsystemBase
 public:
 
     X23_Elevator(int ElevateMotor,int TiltMotor, SC::SC_Solenoid ChClawGripper, SC::SC_Solenoid ChClawTilt,
-                SC::SC_Solenoid ChElevateBrake, int TiltHome, int ElevatorHome, int TiltMax);
+                SC::SC_Solenoid ChElevateBrake, int TiltHomeCh, int ElevatorHomeCh, int TiltMaxCh);
      //Emc is Elevator motor Controller,Master and Slave//
 
     ~X23_Elevator();
@@ -67,6 +69,8 @@ public:
 
     bool IsAtHome();
 
+    void InitNetworkTables();
+
 private:
     void _setOutputs();
 
@@ -74,6 +78,7 @@ private:
     bool atHome = 0;
     bool EHomeLS = 0;
     bool THomeLS = 0;
+    bool TMaxTravelLS = false;
 
     bool E_PID_isDisabled = 0;
     bool T_PID_isDisabled = 0;
@@ -116,8 +121,6 @@ double CalcAngle;
 double TiltAngleSP;
 double ElevatorHeightSP;//sp
 
-/*nt::DoubleSubcriber*/ nt::GenericEntry *ntSP, *ntKp, *ntKi, *ntKd, *ntBias, *ntMaxTravel;
-nt::DoublePublisher ntPV,ntCV, ntP, ntI, ntD, ntErr, ntManOut;
 double E_kpTune;
 double E_kiTune;
 double E_kdTune;
@@ -128,8 +131,19 @@ double T_kiTune;
 double T_kdTune;
 double T_BiasTune;
 double T_spTune;
-nt::GenericEntry *E_ntSP, *E_ntKp, *E_ntKi, *E_ntKd, *E_ntBias, *T_ntSP, *T_ntKp, *T_ntKi, *T_ntKd, *T_ntBias;
-nt::DoublePublisher E_ntPV,E_ntCV, E_ntP, E_ntI, E_ntD, E_ntErr, T_ntPV, T_ntCV, T_ntP, T_ntI, T_ntD, T_ntErr, T_ntAnglePV; 
+
+nt::GenericEntry *E_ntSP, *E_ntKp, *E_ntKi, *E_ntKd, *E_ntBias;
+nt::GenericEntry *T_ntSP, *T_ntKp, *T_ntKi, *T_ntKd, *T_ntBias;
+
+// Outputs
+
+nt::GenericEntry *E_ntPV, *E_ntCV, *E_ntP, *E_ntI, *E_ntD, *E_ntErr;
+nt::GenericEntry *T_ntPV, *T_ntCV, *T_ntP, *T_ntI, *T_ntD, *T_ntErr, *T_ntAnglePV;
+nt::GenericEntry *E_ntAtHome, *T_ntAtHome, *E_ntPIDDisabled, *T_ntPIDDisabled, *T_ntAtMax;
+
+//nt::DoublePublisher E_ntPV,E_ntCV, E_ntP, E_ntI, E_ntD, E_ntErr;
+//nt::DoublePublisher T_ntPV, T_ntCV, T_ntP, T_ntI, T_ntD, T_ntErr, T_ntAnglePV;
+//nt::BooleanPublisher E_ntAtHome, T_ntAtHome, E_ntPIDDisabled, T_ntPIDDisabled;
 };
 
 /*===================*/
