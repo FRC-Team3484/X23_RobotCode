@@ -21,6 +21,8 @@
 
 #define C_DISABLED_CHANNEL			-1	// Device or channel is not used.
 
+// Uncomment to build code in PID tuning configuration.
+#define C_BUILD_OPT_ELEV_TUNING
 
 /*==========*/
 /* CAN ID's */
@@ -81,9 +83,10 @@ const double C_FALCON_MOTOR_MAX_RPM		= 6380.0;
 const double C_FALCON_MOTOR_MAX_RPM_ACT = 6000.0; // TODO: Get max achievable RPM of drivetrain motors.
 const double C_FALCON_ENC_CPR			= 2048.0;
 
-const double C_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_GEAR_RATIO);
+const double C_MAX_GEAR_ENC      		= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_GEAR_RATIO);
 
-const double C_DT_SCALE_FACTOR   	= ((600.0 * C_GEAR_RATIO) / C_FALCON_ENC_CPR) * C_DT_RPM_TO_FPS;
+const double C_DT_SCALE_FACTOR_VELO   	= ((600.0 * C_GEAR_RATIO) / C_FALCON_ENC_CPR) * C_DT_RPM_TO_FPS;	// Velocity scaling factor
+const double C_DT_SCALE_FACTOR_POSN   	= (C_GEAR_RATIO / C_FALCON_ENC_CPR) * C_DT_RPM_TO_FPS;				// Position scaling factor
 
 const units::feet_per_second_t C_GEAR_MAX_SPEED 	= 17.0_fps;
 const units::feet_per_second_t C_SHIFT_UP_SPEED     = 5.0_fps;
@@ -109,11 +112,11 @@ const double C_ELE_GEAR_RATIO			= 1.0 / (Stage_1_ratio * Stage_2_ratio * Winch_r
 
 const double C_ELE_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_ELE_GEAR_RATIO);
 
-const double C_ELE_SCALE_FACTOR  	 	= (C_ELE_GEAR_RATIO / C_FALCON_ENC_CPR);
+const double C_ELE_SCALE_FACTOR_VELO 	= ((600.0 * C_ELE_GEAR_RATIO) / C_FALCON_ENC_CPR);		// Velocity scaling factor
+const double C_ELE_SCALE_FACTOR_POSN	= (C_ELE_GEAR_RATIO / C_FALCON_ENC_CPR);				// Position scaling factor
 
-//const double C_ELE_SCALE_FACTOR  	 	= ((600.0 * C_ELE_GEAR_RATIO) / C_FALCON_ENC_CPR);
-  /*=================*/
- /* Tilt Parameters */
+/*=================*/
+/* Tilt Parameters */
 /*=================*/
 #define Actuator_ratio  		(30.0/12.0) // (Actuator driven)/(Actuator driver )
 #define Lead_pitch  			(0.2) // (inches)/(revelutions )
@@ -122,8 +125,8 @@ const double C_TILT_GEAR_RATIO			=  0.08 ; //measured  // not measured 1.0  (Act
 
 const double C_TLIT_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_TILT_GEAR_RATIO);
 
-// const double C_TILT_SCALE_FACTOR  	 	= ((600.0 * C_TILT_GEAR_RATIO) / C_FALCON_ENC_CPR);
-const double C_TILT_SCALE_FACTOR  	 	= (C_TILT_GEAR_RATIO / C_FALCON_ENC_CPR);
+const double C_TILT_SCALE_FACTOR_VELO	= ((600.0 * C_TILT_GEAR_RATIO) / C_FALCON_ENC_CPR);		// Velocity scaling factor
+const double C_TILT_SCALE_FACTOR_POSN  	= (C_TILT_GEAR_RATIO / C_FALCON_ENC_CPR);				// Position scaling factor
 
 /*======================*/
 /* CONTROLLER CONSTANTS */
@@ -138,13 +141,13 @@ const double C_TILT_SCALE_FACTOR  	 	= (C_TILT_GEAR_RATIO / C_FALCON_ENC_CPR);
 //#define GD_SCHEME_BB			/* Custom Button Box Scheme*/
 
 
-
 /**
  * Set The Driver mode
  */
 //#define DRIVE_MODE_TANK
-#define DRIVE_MODE_ARCADE
+//#define DRIVE_MODE_ARCADE
 //#define DRIVE_MODE_CURVE
+#define DRIVE_MODE_MECANUM
 
 #if defined(DRIVE_MODE_TANK)
 	#define C_DRIVER_LEFT_AXIS			XBOX_LS_Y
@@ -155,6 +158,10 @@ const double C_TILT_SCALE_FACTOR  	 	= (C_TILT_GEAR_RATIO / C_FALCON_ENC_CPR);
 #elif defined(DRIVE_MODE_CURVE)
 	#define C_DRIVER_THROTTLE_AXIS		XBOX_LS_Y
 	#define C_DRIVER_STEER_AXIS			XBOX_LS_X
+#elif defined(DRIVE_MODE_MECANUM)
+	#define C_DRIVER_FWD_REV_AXIS		XBOX_LS_Y
+	#define C_DRIVER_LFT_RHT_AXIS		XBOX_LS_X
+	#define C_DRIVER_ROTATE_AXIS		XBOX_RS_X
 #endif
 
 #define C_DRIVER_SHIFT_LOW_BTN        	XBOX_A
@@ -182,10 +189,7 @@ const double C_TILT_SCALE_FACTOR  	 	= (C_TILT_GEAR_RATIO / C_FALCON_ENC_CPR);
 	#define C_GD_ELE_CUBEHI					XBOX_A
 	#define C_GD_ELE_CONEHI					XBOX_B
 	#define C_GD_ELE_FEEDER					XBOX_BACK
-		//joysticks!
-	#define C_GD_DEADBAND					0.05    // 5% Joystick input
-	#define C_GD_L_MAX_DEMAND				0.95
-	#define C_GD_R_MAX_DEMAND				0.95
+	// Joysticks!
 	#define C_GD_J1_ELE_HIGHT				XBOX_LS_Y
 	#define C_GD_J2_ELE_ANGLE				XBOX_RS_Y
 
@@ -208,14 +212,14 @@ const double C_TILT_SCALE_FACTOR  	 	= (C_TILT_GEAR_RATIO / C_FALCON_ENC_CPR);
 	#define C_GD_ELE_CUBEHI					10
 	#define C_GD_ELE_CONEHI					11
 	#define C_GD_ELE_FEEDER					12
-	//joysticks!
-	#define C_GD_DEADBAND					0.05    // 5% Joystick input
-	#define C_GD_L_MAX_DEMAND				0.95
-	#define C_GD_R_MAX_DEMAND				0.95
+	// Joysticks!
 	#define C_GD_J1_ELE_HIGHT				0
 	#define C_GD_J2_ELE_ANGLE				1
 #endif
 
+#define C_GD_DEADBAND					0.05    // 5% Joystick input
+#define C_GD_L_MAX_DEMAND				0.95
+#define C_GD_R_MAX_DEMAND				0.95
 /*==================*/
 /* Debouncer Config */
 /*==================*/

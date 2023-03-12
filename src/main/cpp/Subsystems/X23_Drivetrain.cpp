@@ -285,10 +285,10 @@ MecanumDriveWheelPositions X23_Drivetrain::_GetdtPOS()
 	if (FR != nullptr && BR != nullptr && FL != nullptr && BL != nullptr)
 	{
 		return MecanumDriveWheelPositions{
-			units::make_unit<meter_t>(FL->GetSelectedSensorPosition() * C_DT_SCALE_FACTOR),
-			units::make_unit<meter_t>(FR->GetSelectedSensorPosition() * C_DT_SCALE_FACTOR),
-			units::make_unit<meter_t>(BL->GetSelectedSensorPosition() * C_DT_SCALE_FACTOR),
-			units::make_unit<meter_t>(BR->GetSelectedSensorPosition() * C_DT_SCALE_FACTOR)};
+			units::make_unit<meter_t>(FL->GetSelectedSensorPosition(0) * C_DT_SCALE_FACTOR_POSN),
+			units::make_unit<meter_t>(FR->GetSelectedSensorPosition(0) * C_DT_SCALE_FACTOR_POSN),
+			units::make_unit<meter_t>(BL->GetSelectedSensorPosition(0) * C_DT_SCALE_FACTOR_POSN),
+			units::make_unit<meter_t>(BR->GetSelectedSensorPosition(0) * C_DT_SCALE_FACTOR_POSN)};
 	}
 	else
 	{

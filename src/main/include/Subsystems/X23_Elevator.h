@@ -23,7 +23,7 @@
 
 #include "FRC3484_Lib/utils/SC_Datatypes.h"
 
-#include <frc/Joystick.h>
+#include "Constants.h"
 
 class X23_Elevator : public frc2::SubsystemBase
 {
@@ -73,6 +73,7 @@ public:
 
 private:
     void _setOutputs();
+	bool _arePointersValid();
 
     bool ClawToggleClose = 0;
     bool atHome = 0;
@@ -95,55 +96,57 @@ private:
 
     SC::R_TRIG *rTrigPinch, *rTrigEHome, *rTrigTHome, *rTrigTLimit;
     frc::Debouncer *DebouncePincher, *DebounceTilt;
-//PID Elevator Loop
-double E_CV;
-double E_FooFighters;
-double E_P;
-double E_I_Min;
-double E_I_Max;
-double E_I = 0; 
-double xArrayMotorPOS [10] {0, 1.19, 2.4, 3.63, 4.86, 6.08, 7.29, 8.47, 9.63, 10.08} ;//Actuator stroke position
-double yArrayAnglePOS [10] {0, 14.875, 30, 45.375, 60.75, 76, 91.125, 105.875, 120.375, 126} ;//Tilt
-double yArrayFooFighters [10] {10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
-double xArrayElevate [10] = {0, 5, 10, 15, 20, 25, 30, 35, 40, 42};
-double yArrayElevate [10] = {56.5, 56.5, 57.5, 59.5, 61.5, 64.5, 67.5, 68.5, 68.5, 68.5};
-double E_Error_ZminusOne;
-double E_D;
-double T_CV;
-double T_P;
-double T_I_Min;
-double T_I_Max;
-double T_I;
-double T_Error_ZminusOne;
-double T_D;
-double CalcHeight;
-double CalcAngle;
-double TiltAngleSP;
-double ElevatorHeightSP;//sp
 
-double E_kpTune;
-double E_kiTune;
-double E_kdTune;
-double E_BiasTune;
-double E_spTune;
-double T_kpTune;
-double T_kiTune;
-double T_kdTune;
-double T_BiasTune;
-double T_spTune;
+	//PID Elevator Loop
+	double E_CV;
+	double E_FooFighters;
+	double E_P;
+	double E_I_Min;
+	double E_I_Max;
+	double E_I = 0; 
+	double xArrayMotorPOS [10] {0, 1.19, 2.4, 3.63, 4.86, 6.08, 7.29, 8.47, 9.63, 10.08} ;//Actuator stroke position
+	double yArrayAnglePOS [10] {0, 14.875, 30, 45.375, 60.75, 76, 91.125, 105.875, 120.375, 126} ;//Tilt
+	double yArrayFooFighters [10] {10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
+	double xArrayElevate [10] = {0, 5, 10, 15, 20, 25, 30, 35, 40, 42};
+	double yArrayElevate [10] = {56.5, 56.5, 57.5, 59.5, 61.5, 64.5, 67.5, 68.5, 68.5, 68.5};
+	double E_Error_ZminusOne;
+	double E_D;
+	double T_CV;
+	double T_P;
+	double T_I_Min;
+	double T_I_Max;
+	double T_I;
+	double T_Error_ZminusOne;
+	double T_D;
+	double CalcHeight;
+	double CalcAngle;
+	double TiltAngleSP;
+	double ElevatorHeightSP;//sp
 
-nt::GenericEntry *E_ntSP, *E_ntKp, *E_ntKi, *E_ntKd, *E_ntBias;
-nt::GenericEntry *T_ntSP, *T_ntKp, *T_ntKi, *T_ntKd, *T_ntBias;
+#ifdef C_BUILD_OPT_ELEV_TUNING
+	double E_kpTune;
+	double E_kiTune;
+	double E_kdTune;
+	double E_BiasTune;
+	double E_spTune;
+	double T_kpTune;
+	double T_kiTune;
+	double T_kdTune;
+	double T_BiasTune;
+	double T_spTune;
 
-// Outputs
+	nt::GenericEntry *E_ntSP, *E_ntKp, *E_ntKi, *E_ntKd, *E_ntBias;
+	nt::GenericEntry *T_ntSP, *T_ntKp, *T_ntKi, *T_ntKd, *T_ntBias;
+#endif
+	// Outputs
 
-nt::GenericEntry *E_ntPV, *E_ntCV, *E_ntP, *E_ntI, *E_ntD, *E_ntErr;
-nt::GenericEntry *T_ntPV, *T_ntCV, *T_ntP, *T_ntI, *T_ntD, *T_ntErr, *T_ntAnglePV;
-nt::GenericEntry *E_ntAtHome, *T_ntAtHome, *E_ntPIDDisabled, *T_ntPIDDisabled, *T_ntAtMax;
+	nt::GenericEntry *E_ntPV, *E_ntCV, *E_ntP, *E_ntI, *E_ntD, *E_ntErr;
+	nt::GenericEntry *T_ntPV, *T_ntCV, *T_ntP, *T_ntI, *T_ntD, *T_ntErr, *T_ntAnglePV;
+	nt::GenericEntry *E_ntAtHome, *T_ntAtHome, *E_ntPIDDisabled, *T_ntPIDDisabled, *T_ntAtMax;
 
-//nt::DoublePublisher E_ntPV,E_ntCV, E_ntP, E_ntI, E_ntD, E_ntErr;
-//nt::DoublePublisher T_ntPV, T_ntCV, T_ntP, T_ntI, T_ntD, T_ntErr, T_ntAnglePV;
-//nt::BooleanPublisher E_ntAtHome, T_ntAtHome, E_ntPIDDisabled, T_ntPIDDisabled;
+	//nt::DoublePublisher E_ntPV,E_ntCV, E_ntP, E_ntI, E_ntD, E_ntErr;
+	//nt::DoublePublisher T_ntPV, T_ntCV, T_ntP, T_ntI, T_ntD, T_ntErr, T_ntAnglePV;
+	//nt::BooleanPublisher E_ntAtHome, T_ntAtHome, E_ntPIDDisabled, T_ntPIDDisabled;
 };
 
 /*===================*/
