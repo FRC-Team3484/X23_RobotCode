@@ -5,9 +5,6 @@
 #include "frc2/command/RunCommand.h"
 
 using namespace frc;
-using namespace SC;
-using namespace nt;
-using namespace units::length;
 using namespace ctre::phoenix::motorcontrol;
 using namespace ctre::phoenix::motorcontrol::can;
 

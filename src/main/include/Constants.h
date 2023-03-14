@@ -46,10 +46,10 @@
 /*===================*/
 /* Solenoid Channels */
 /*===================*/
-#define C_DRIVE_SOL					0 // Octocanum Shifter
-#define C_SOL_CLAW_GRIP				1
-#define C_SOL_CLAW_TILT				2
-#define C_SOL_ELEVATOR_BRAKE		3
+#define C_DRIVE_SOL					8 // Octocanum Shifter
+#define C_SOL_CLAW_GRIP				9
+#define C_SOL_CLAW_TILT				10
+#define C_SOL_ELEVATOR_BRAKE		11
 
 /*==============*/
 /* DIO Channels */
@@ -126,7 +126,7 @@ const double C_TILT_GEAR_RATIO			=  0.08 ; //measured  // not measured 1.0  (Act
 const double C_TLIT_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_TILT_GEAR_RATIO);
 
 const double C_TILT_SCALE_FACTOR_VELO	= ((600.0 * C_TILT_GEAR_RATIO) / C_FALCON_ENC_CPR);		// Velocity scaling factor
-const double C_TILT_SCALE_FACTOR_POSN  	= (C_TILT_GEAR_RATIO / C_FALCON_ENC_CPR);				// Position scaling factor
+const double C_TILT_SCALE_FACTOR_POSN  	= -1.0 * (C_TILT_GEAR_RATIO / C_FALCON_ENC_CPR);				// Position scaling factor
 
 /*======================*/
 /* CONTROLLER CONSTANTS */
@@ -260,10 +260,10 @@ const std::tuple<int, int> C_BLANK_IDS = std::make_tuple<int, int>(C_DISABLED_CH
 /*================================*/
 /*Elevator Tilt PID Loop Variables*/
 /*================================*/
-#define T_Kp 0.1
-#define T_Ki 0.1
+#define T_Kp 0.0
+#define T_Ki 0.0
 #define T_dt 0.01
-#define T_Kd 0.1
+#define T_Kd 0.0
 
 #define E_SPgt 0.1
 #define T_SPgt 0.1

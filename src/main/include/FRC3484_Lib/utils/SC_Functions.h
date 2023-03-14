@@ -229,9 +229,9 @@ namespace SC
             }
 
             return known_ys[idx] + (xin - known_xs[idx]) * ((known_ys[idx+1] - known_ys[idx]) / (known_xs[idx+1] - known_xs[idx]));
-        }   
-    }
-
+        } 
+    }  
+   
     template<class T>
     T F_Deadband(T fin, T deadband)
     {

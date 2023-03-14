@@ -70,7 +70,7 @@ void Robot::AutonomousExit()
 }
 void Robot::TeleopInit() 
 {
-	frc2::CommandScheduler::GetInstance().CancelAll();
+	//frc2::CommandScheduler::GetInstance().CancelAll();
 
 	
 	if(GP2_Driver != nullptr)
@@ -116,7 +116,7 @@ void Robot::TeleopPeriodic()
 	/*======================*/
 	/*====Driver Controls===*/
 	/*======================*/
-
+/*
 	if(GP1_Driver->GetLeftBumper())
 	{
 		// Fine control mode; Scales driver input to smaller range for finer control
@@ -139,16 +139,19 @@ void Robot::TeleopPeriodic()
 							SC::F_Deadband(Z_Demand, C_DRIVE_DEADBAND), 
 							true,
 							drivetrain_mode);
-
+*/
 	/*==========================*/
 	/*===Game Device Controls===*/
 	/*==========================*/
-	if(X23._elevator.pidDisabled()){
+	if(X23._elevator.pidDisabled())
+	{
 		X23._elevator.ControlDirectElevate(F_Deadband(GP2_Driver->GetAxis(C_GD_J1_ELE_HIGHT),0.05));
 		X23._elevator.ControlDirectTilt(F_Deadband(GP2_Driver->GetAxis(C_GD_J2_ELE_ANGLE),0.05));
 	}
-
+else
+{
 	X23._elevator.Elevate();
+}
 }
 /**
  * This function is called periodically during test mode.
