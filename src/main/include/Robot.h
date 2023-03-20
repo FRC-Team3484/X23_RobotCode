@@ -10,19 +10,19 @@
 #include "X23_RobotContainer.h"
 
 #include <frc/TimedRobot.h> 
-#include <frc2/command/Command.h>
+//#include <frc2/command/Command.h>
 
-#include <pathplanner/lib/PathPlanner.h>
-#include <pathplanner/lib/auto/MecanumAutoBuilder.h>
+//#include <pathplanner/lib/PathPlanner.h>
+//#include <pathplanner/lib/auto/MecanumAutoBuilder.h>
 #include "FRC3484_Lib/utils/SC_Datatypes.h"
 #include "FRC3484_Lib/components/SC_OperatorInput.h"
 
 #include <frc/XboxController.h> 
 #include <frc/Joystick.h>
-#include <frc2/command/Command.h>
-#include <frc2/command/CommandHelper.h>
+//#include <frc2/command/Command.h>
+//#include <frc2/command/CommandHelper.h>
 #include "ctre/phoenix/sensors/Pigeon2.h"
-#include <memory>
+//#include <memory>
 
 
 class Robot : public frc::TimedRobot {
@@ -53,13 +53,13 @@ class Robot : public frc::TimedRobot {
   double X_Demand, Y_Demand, Z_Demand;
   double drivetrain_mode;
 //#ifdef GD_SCHEME_BB
-  SC::SC_OperatorInput	*GP2_Driver;
+  //SC::SC_OperatorInput	*GP2_Operator;
 //#else
-//  frc::XboxController  *GP2_Driver;
+  frc::XboxController  *GP2_Operator;
 //#endif
-
+  bool auto1Done = false;
   frc::XboxController  *GP1_Driver;// GP = Gamepad
-  SC::SC_OperatorInput	*BB_GameDevice;
+  //SC::SC_OperatorInput	*BB_GameDevice;
 //  frc::GenericHID      *BB_GameDevice;  
 
 };

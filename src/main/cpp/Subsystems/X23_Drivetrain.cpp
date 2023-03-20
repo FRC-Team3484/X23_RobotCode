@@ -30,7 +30,9 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 {
 	md = new SC::SC_MecanumKinematics(Translation2d{-13.8_in,7.5_in},Translation2d{13.8_in,7.5_in},Translation2d{-13.8_in,-7.5_in},Translation2d{13.8_in,-7.5_in});
 	shifter = new Solenoid(ch_shift.CtrlID, ch_shift.CtrlType, ch_shift.Channel);
-	Gyroscope = new Pigeon2(PIGIMON);
++	Gyroscope = new Pigeon2(PIGIMON);
+	//Gyroscope->ConfigMountPose(ctre::phoenix::sensors::AxisDirection::PositiveX, ctre::phoenix::sensors::AxisDirection::PositiveZ);
+	this->dtPose = frc::Pose2d{Translation2d{0_m, 0_m}, Rotation2d{0_deg}};
 	dt_previousAngle = dtPose.Rotation();
 	// this->dtPose(somestuffidk);
 	dt_gyroOffset = dtPose.Rotation() - _GyroAngle();
@@ -136,7 +138,7 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 	{
 		BL = nullptr;
 		BL_Slave = nullptr;
-	}
+	Gyro_Angle = frc::Shuffleboard::GetTab("X23").Add("Gyro", 0.0).WithWidget("Text Entry").GetEntry();
 }
 
 X23_Drivetrain::~X23_Drivetrain()
@@ -170,7 +172,9 @@ void X23_Drivetrain::Drive(double direction_x, double direction_y, double rotati
 		if (Gyroscope != nullptr)
 		{
 			md->DriveCartesian(direction_x, direction_y, rotation_z,
-							   DriverOrient ? units::make_unit<units::degree_t>(Gyroscope->GetYaw()) : 0_deg);
+							   DriverOrient ? units::make_unit<units::degree_t>(Gyroscope->GetYaw() * -1) : 0_deg);
+			
+			Gyro_Angle->SetDouble(Gyroscope->GetYaw() * -1);
 		}
 		else
 		{
@@ -197,6 +201,12 @@ void X23_Drivetrain::DriveAuto(double magnitude, double angle, double heading, b
 
 		_setOutputs();
 	}
+void X23_Drivetrain::ResetGyro()
+{
+	if(Gyroscope != nullptr)
+		Gyroscope->SetYaw(0);
+}
+
 }
 
 void X23_Drivetrain::DriveAuto(frc::ChassisSpeeds Speeds)
@@ -241,6 +251,11 @@ void X23_Drivetrain::SetPose(frc::Pose2d &NewPose)
 	this->dtPose = NewPose;
 }
 
+double X23_Drivetrain::GetDistance()
+{
+	return FL->GetSelectedSensorPosition(0) * C_DT_SCALE_FACTOR_POSN;
+}
+
 void X23_Drivetrain::UpdateOdometry(MecanumDriveWheelPositions& wheelPositions) 
 {
     Rotation2d angle = _GyroAngle() + dt_gyroOffset;
@@ -272,7 +287,7 @@ Rotation2d X23_Drivetrain::_GyroAngle()
 {
 	if (Gyroscope != nullptr)
 	{
-		return Rotation2d{units::make_unit<units::degree_t>(Gyroscope->GetYaw())};
+		return Rotation2d{units::make_unit<units::degree_t>(Gyroscope->GetYaw() * -1)};
 	}
 	else
 	{
@@ -285,10 +300,10 @@ MecanumDriveWheelPositions X23_Drivetrain::_GetdtPOS()
 	if (FR != nullptr && BR != nullptr && FL != nullptr && BL != nullptr)
 	{
 		return MecanumDriveWheelPositions{
-			units::make_unit<meter_t>(FL->GetSelectedSensorPosition(0) * C_DT_SCALE_FACTOR_POSN),
-			units::make_unit<meter_t>(FR->GetSelectedSensorPosition(0) * C_DT_SCALE_FACTOR_POSN),
-			units::make_unit<meter_t>(BL->GetSelectedSensorPosition(0) * C_DT_SCALE_FACTOR_POSN),
-			units::make_unit<meter_t>(BR->GetSelectedSensorPosition(0) * C_DT_SCALE_FACTOR_POSN)};
+			units::make_unit<meter_t>(FL->GetSelectedSensorPosition(0) * C_DT_SCALE_FACTOR_POSN * (12.0/3.3)),
+			units::make_unit<meter_t>(FR->GetSelectedSensorPosition(0) * C_DT_SCALE_FACTOR_POSN * (12.0/3.3)),
+			units::make_unit<meter_t>(BL->GetSelectedSensorPosition(0) * C_DT_SCALE_FACTOR_POSN * (12.0/3.3)),
+			units::make_unit<meter_t>(BR->GetSelectedSensorPosition(0) * C_DT_SCALE_FACTOR_POSN * (12.0/3.3))};
 	}
 	else
 	{
@@ -398,18 +413,22 @@ void X23_Drivetrain::_setOutputs()
 		if (FR != nullptr)
 		{
 			FR->Set(ControlMode::PercentOutput, md->GetWheelOutput(FRONT_RIGHT));
+			FR->Feed();
 		}
 		if (FL != nullptr)
 		{
 			FL->Set(ControlMode::PercentOutput, md->GetWheelOutput(FRONT_LEFT));
+			FL->Feed();
 		}
 		if (BR != nullptr)
 		{
 			BR->Set(ControlMode::PercentOutput, md->GetWheelOutput(REAR_RIGHT));
+			BR->Feed();
 		}
 		if (BL != nullptr)
 		{
 			BL->Set(ControlMode::PercentOutput, md->GetWheelOutput(REAR_LEFT));
+			BL->Feed();
 		}
 	}
 }

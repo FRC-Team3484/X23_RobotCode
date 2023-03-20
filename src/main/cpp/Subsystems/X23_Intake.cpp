@@ -36,48 +36,45 @@ X23_Intake::~X23_Intake()
 	if(this->_dly_re_intake_on != NULL) { delete this->_dly_re_intake_on; }
 }
 
-void X23_Intake::Collect(bool Run, bool ButtonA, bool ButtonB, bool ButtonC, bool ButtonD)
+void X23_Intake::Collect(bool ButtonA, bool ButtonB, bool ButtonC, bool ButtonD)
 {
 	if(Motor_Intake_Left != nullptr && Motor_Intake_Right != nullptr)
 	{
-		if(Run != false) 
+		if(ButtonA != false) 
 		{
-			if(ButtonA != false) 
-			{
-				//Suck In Cubes $
-				Motor_Intake_Right->Set(ControlMode::PercentOutput, 1.0);
-				Motor_Intake_Left->Set(ControlMode::PercentOutput, -1.0);
-			}
-			else if(ButtonB != false)
-			{
-				//Knock Cone One Way
-				Motor_Intake_Right->Set(ControlMode::PercentOutput, -1.0);
-				Motor_Intake_Left->Set(ControlMode::PercentOutput, -1.0);
-			}
-			else if(ButtonC != false)
-			{
-				//Knock Cone Other Way
-				Motor_Intake_Right->Set(ControlMode::PercentOutput, 1.0);
-				Motor_Intake_Left->Set(ControlMode::PercentOutput, 1.0);
-			}
-			else if(ButtonD != false)
-			{
-				//Sphit Out Cubes
-				Motor_Intake_Right->Set(ControlMode::PercentOutput, -1.0);
-				Motor_Intake_Left->Set(ControlMode::PercentOutput, 1.0);
-			}
-			else
-			{
-				Motor_Intake_Right->Set(ControlMode::PercentOutput, 0.0);
-				Motor_Intake_Left->Set(ControlMode::PercentOutput, 0.0);	
-			}
+			//Suck In Cubes $
+			Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
+			Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
+		}
+		else if(ButtonB != false)
+		{
+			//Knock Cone One Way
+			Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
+			Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
+		}
+		else if(ButtonC != false)
+		{
+			//Knock Cone Other Way
+			Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
+			Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
+		}
+		else if(ButtonD != false)
+		{
+			//Sphit Out Cubes
+			Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
+			Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
 		}
 		else
 		{
-			Motor_Intake_Right->Set(ControlMode::PercentOutput, 0.0);
-			Motor_Intake_Left->Set(ControlMode::PercentOutput, 0.0);	
+			Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
+			Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);	
 		}
 	}
+	//else
+	//{
+	//	Motor_Intake_Right->Set(ControlMode::PercentOutput, 0.0);
+	//	Motor_Intake_Left->Set(ControlMode::PercentOutput, 0.0);	
+	//}
 }
 
 /* Commands */

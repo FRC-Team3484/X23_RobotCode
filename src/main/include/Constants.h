@@ -46,10 +46,10 @@
 /*===================*/
 /* Solenoid Channels */
 /*===================*/
-#define C_DRIVE_SOL					8 // Octocanum Shifter
-#define C_SOL_CLAW_GRIP				9
-#define C_SOL_CLAW_TILT				10
-#define C_SOL_ELEVATOR_BRAKE		11
+#define C_DRIVE_SOL					9 // Octocanum Shifter
+#define C_SOL_CLAW_GRIP				10
+#define C_SOL_CLAW_TILT				11
+#define C_SOL_ELEVATOR_BRAKE		8
 
 /*==============*/
 /* DIO Channels */
@@ -76,6 +76,7 @@
 #define C_X23_DT_WHEEL_DIAM			6.0 // in
 
 #define C_DT_RPM_TO_FPS				(units::constants::pi * C_X23_DT_WHEEL_DIAM) / (60.0 * 12.0)
+#define C_DT_REV_TO_FT				(units::constants::pi * C_X23_DT_WHEEL_DIAM) / (12.0)
 
 const double C_GEAR_RATIO			= 1.0/((62.0/12.0)*(34.0/18.0));
 
@@ -86,7 +87,7 @@ const double C_FALCON_ENC_CPR			= 2048.0;
 const double C_MAX_GEAR_ENC      		= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_GEAR_RATIO);
 
 const double C_DT_SCALE_FACTOR_VELO   	= ((600.0 * C_GEAR_RATIO) / C_FALCON_ENC_CPR) * C_DT_RPM_TO_FPS;	// Velocity scaling factor
-const double C_DT_SCALE_FACTOR_POSN   	= (C_GEAR_RATIO / C_FALCON_ENC_CPR) * C_DT_RPM_TO_FPS;				// Position scaling factor
+const double C_DT_SCALE_FACTOR_POSN   	= (C_GEAR_RATIO / C_FALCON_ENC_CPR) * C_DT_REV_TO_FT;				// Position scaling factor
 
 const units::feet_per_second_t C_GEAR_MAX_SPEED 	= 17.0_fps;
 const units::feet_per_second_t C_SHIFT_UP_SPEED     = 5.0_fps;
@@ -176,11 +177,11 @@ const double C_TILT_SCALE_FACTOR_POSN  	= -1.0 * (C_TILT_GEAR_RATIO / C_FALCON_E
 /* Game Device Input */
 /*===================*/
 #ifdef GD_SCHEME_XBOX
-#define C_GD_COLLECT_CUBE_OR_CONECENTER		XBOX_A
-	#define C_GD_COLLECT_EJECT				XBOX_B
+	#define C_GD_COLLECT_CUBE_OR_CONECENTER		XBOX_A
+	#define C_GD_COLLECT_EJECT				XBOX_Y
 	#define C_GD_CLAW_GRAB					XBOX_RB
 	#define C_GD_COLLECT_CONE_LEFT			XBOX_X
-	#define C_GD_COLLECT_CONE_RIGHT			XBOX_Y
+	#define C_GD_COLLECT_CONE_RIGHT			XBOX_B
 	#define C_GD_CLAW_TILT					XBOX_LB
 	#define C_GD_ELE_CUBEMID				XBOX_Y
 	#define C_GD_ELE_CONEMID				XBOX_X

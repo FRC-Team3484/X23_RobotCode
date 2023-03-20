@@ -81,7 +81,7 @@ class RobotContainer {
     {"ElevatorHome", _elevator.HomePOS().Unwrap()},
     {"DropPiece", _elevator.ToggleClawOpen().Unwrap()}
   };
-
+  /*
   // Auto Builder
   pathplanner::MecanumAutoBuilder autoBuilder 
   {
@@ -94,7 +94,7 @@ class RobotContainer {
     {&_drivetrain}, 
     false
   };
-
+  */
   // List of possible autos and relevant configs.
   std::array<std::string, 10> autoNames {
     {
@@ -112,9 +112,9 @@ class RobotContainer {
   /****************
    * Auto Chooser *
    ****************/
-  frc2::CommandPtr noAutoCommand = frc2::PrintCommand("NO AUTO\n").ToPtr();
-  std::vector<frc2::CommandPtr> autoCommands;
-  frc2::Command* currentAuto = noAutoCommand.get();
+  //frc2::CommandPtr noAutoCommand = frc2::PrintCommand("NO AUTO\n").ToPtr();
+  //std::vector<frc2::CommandPtr> autoCommands;
+  //frc2::Command* currentAuto = noAutoCommand.get();
 
-  frc::SendableChooser<frc2::Command*> autonomousChooser;
+  //frc::SendableChooser<frc2::Command*> autonomousChooser;
 };

@@ -42,27 +42,27 @@ RobotContainer::RobotContainer() {
  // autoCommands.emplace_back(autonomousChooser.AddOption(noAutoCommand));
   // Default value and send to ShuffleBoard
   */
-  autonomousChooser.SetDefaultOption("no_auto", noAutoCommand.get());
+  //autonomousChooser.SetDefaultOption("no_auto", noAutoCommand.get());
 
-  frc::Shuffleboard::GetTab("X23").Add("Auto Chooser", autonomousChooser).WithWidget("ComboBox Chooser");
+  //frc::Shuffleboard::GetTab("X23").Add("Auto Chooser", autonomousChooser).WithWidget("ComboBox Chooser");
 }
 
 void RobotContainer::setAutoDefaults() {
   // By default leave the drivetrain stopped so the robot doesnt move if
   // something goes wrong. No other defaults are given so the manuiulator and
   // claw retain thier state during auto.
-  _drivetrain.SetDefaultCommand(
-      frc2::RunCommand([this]() { _drivetrain.StopMotors(); }));
+  //_drivetrain.SetDefaultCommand(
+  //    frc2::RunCommand([this]() { _drivetrain.StopMotors(); }));
 }
 
 void RobotContainer::startAutoCommand() {
   // Get command from chooser to scheduel  
-  currentAuto = autonomousChooser.GetSelected();
-  currentAuto->Schedule();
+  //currentAuto = autonomousChooser.GetSelected();
+  //currentAuto->Schedule();
 
 }
 
 void RobotContainer::endAutoCommand() {
   // Cancel selected auto
-  currentAuto->Cancel();
+  //currentAuto->Cancel();
 }
