@@ -30,7 +30,7 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 {
 	md = new SC::SC_MecanumKinematics(Translation2d{-13.8_in,7.5_in},Translation2d{13.8_in,7.5_in},Translation2d{-13.8_in,-7.5_in},Translation2d{13.8_in,-7.5_in});
 	shifter = new Solenoid(ch_shift.CtrlID, ch_shift.CtrlType, ch_shift.Channel);
-+	Gyroscope = new Pigeon2(PIGIMON);
+	Gyroscope = new Pigeon2(PIGIMON);
 	//Gyroscope->ConfigMountPose(ctre::phoenix::sensors::AxisDirection::PositiveX, ctre::phoenix::sensors::AxisDirection::PositiveZ);
 	this->dtPose = frc::Pose2d{Translation2d{0_m, 0_m}, Rotation2d{0_deg}};
 	dt_previousAngle = dtPose.Rotation();
@@ -45,7 +45,6 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
     Previous_WheelPOS.rearLeft   = units::make_unit<units::inch_t>(0);
     Previous_WheelPOS.rearRight  = units::make_unit<units::inch_t>(0);
     Gyroscope->SetYaw(0);
-    Previous_Angle = _GyroAngle();
 
 
 	// Initialize front right wheel
@@ -140,7 +139,7 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 		BL_Slave = nullptr;
 	Gyro_Angle = frc::Shuffleboard::GetTab("X23").Add("Gyro", 0.0).WithWidget("Text Entry").GetEntry();
 }
-
+}
 X23_Drivetrain::~X23_Drivetrain()
 {
 	if (md != nullptr) { delete md; md = nullptr; }
@@ -161,8 +160,9 @@ void X23_Drivetrain::Drive(double direction_x, double direction_y, double rotati
 {
 	// octocanum shifter
 	if (shifter != nullptr)
+	{
 		shifter->Set(shift);
-
+	}
 	if (md != nullptr)
 	{
 		if (shift)
@@ -201,17 +201,17 @@ void X23_Drivetrain::DriveAuto(double magnitude, double angle, double heading, b
 
 		_setOutputs();
 	}
+}
+
 void X23_Drivetrain::ResetGyro()
 {
 	if(Gyroscope != nullptr)
 		Gyroscope->SetYaw(0);
 }
 
-}
-
 void X23_Drivetrain::DriveAuto(frc::ChassisSpeeds Speeds)
 {
-if (md != nullptr)
+	if (md != nullptr)
 	{
 		md->DriveCartesian( Speeds.vx.to<double>(), Speeds.vy.to<double>(), Speeds.omega.to<double>(),
 		0_deg);
@@ -268,11 +268,8 @@ void X23_Drivetrain::UpdateOdometry(MecanumDriveWheelPositions& wheelPositions)
   };
 
   Twist2d twist = this->md->ToTwist2d(wheelDeltas);
-  twist.dtheta = (angle - Previous_Angle).Radians();
 
   Pose2d newPose = dtPose.Exp(twist);
-
-  Previous_Angle = angle;
   Previous_WheelPOS = wheelPositions;
   dtPose = {newPose.Translation(), angle};
 }

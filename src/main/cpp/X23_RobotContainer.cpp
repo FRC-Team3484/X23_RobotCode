@@ -10,22 +10,12 @@
 // #include <frc/trajectory/TrajectoryUtil.h>
 
 #include <frc2/command/RunCommand.h>
-#include <pathplanner/lib/auto/MecanumAutoBuilder.h>
-#include <pathplanner/lib/PathPlanner.h>
-
-// #include "Subsystems/X23_Drivetrain.h"
 
 #include "frc2/command/CommandScheduler.h"
-
-#include "pathplanner/lib/PathConstraints.h"
-#include "pathplanner/lib/PathPlannerTrajectory.h"
-#include "pathplanner/lib/PathPoint.h"
 
 #include "frc/smartdashboard/SmartDashboard.h"
 
 #include <fmt/format.h>
-
-using namespace pathplanner;
 
 RobotContainer::RobotContainer() {
   // Setup Auto Routines

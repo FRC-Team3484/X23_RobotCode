@@ -7,22 +7,20 @@
 #include "FRC3484_Lib/utils/SC_Functions.h"
 #include "Subsystems/X23_Intake.h"
 #include "frc/PneumaticsModuleType.h"
-//#include <pathplanner/lib/auto/MecanumAutoBuilder.h>
-//#include <pathplanner/lib/PathPlanner.h>
-//#include "frc2/command/Commands.h"
-//#include "frc2/command/CommandScheduler.h"
+
+#include "frc2/command/Commands.h"
+#include "frc2/command/CommandScheduler.h"
 
 using namespace frc;
-//using namespace frc2;
+using namespace frc2;
 using namespace SC;
 using namespace ctre;
-//using namespace pathplanner;
 
 void Robot::RobotInit() 
 {
 	GP1_Driver = new XboxController(/*USB Port*/ C_DRIVER_USB);
-  	//GP2_Operator = new SC::SC_OperatorInput(C_OPERATOR_USB);
-  	GP2_Operator = new XboxController(C_OPERATOR_USB);
+  	GP2_Operator = new SC::SC_OperatorInput(C_OPERATOR_USB);
+  	//GP2_Operator = new XboxController(C_OPERATOR_USB);
 
 	Throttle_Range_Normal(-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND);
 	Throttle_Range_Fine(-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE);
@@ -62,28 +60,22 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic() 
 {
-	X23._elevator.Elevate(0,0, false, true);
+	//MESS WITH CONE LOL
 	if(!auto1Done)
 	{
-		while(X23._drivetrain.GetDistance() < 15.0) 
-		//if(true)
+		while(X23._drivetrain.GetDistance() < 15.0)
 		{
 			  
 			X23._drivetrain.Drive(0, 0.25, 0, false, true);
-			//Wait(0.02_s);
 		}
-		//else
-		{
-			auto1Done = true;
-			X23._drivetrain.Drive(0,0, 0, false, true);
-		}
+		
+		auto1Done = true;
+		X23._drivetrain.Drive(0,0, 0, false, true);
 	}
 
 	while(X23._drivetrain.GetDistance() > 6.0) 
-	//if(true)
 	{
 		X23._drivetrain.Drive(0, -0.25, 0, false, true);
-		//Wait(0.02_s);
 	}
 	
 	X23._drivetrain.Drive(0,0, 0, false, true);
@@ -98,7 +90,6 @@ void Robot::TeleopInit()
 {
 	//frc2::CommandScheduler::GetInstance().CancelAll();
 
-	
 	if(GP2_Operator != nullptr)
 	{
 		//intake controls on the button box
@@ -169,19 +160,10 @@ void Robot::TeleopPeriodic()
 							SC::F_Deadband(Z_Demand, C_DRIVE_DEADBAND), 
 							true,
 							drivetrain_mode);
-*/
 	/*==========================*/
 	/*===Game Device Controls===*/
 	/*==========================*/
-		X23._elevator.Elevate(F_Deadband(GP2_Operator->GetRawAxis(C_GD_J1_ELE_HIGHT),0.05),
-								F_Deadband(GP2_Operator->GetRawAxis(C_GD_J2_ELE_ANGLE),0.05),
-								GP2_Operator->GetRawButton(C_GD_CLAW_GRAB),
-								GP2_Operator->GetRawButton(C_GD_CLAW_TILT));
-
-		X23._intake.Collect(GP2_Operator->GetRawButton(C_GD_COLLECT_CUBE_OR_CONECENTER),
-							GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_RIGHT),
-							GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_LEFT),
-							GP2_Operator->GetRawButton(C_GD_COLLECT_EJECT));
+	X23._elevator.Elevate();
 }
 /**
  * This function is called periodically during test mode.
