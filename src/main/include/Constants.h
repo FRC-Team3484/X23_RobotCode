@@ -98,7 +98,7 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 /*===================*/
 #define C_INTAKE_DRIVE_SPEED		1.0 // *100%
 #define C_INTAKE_CW_SPEED			C_INTAKE_DRIVE_SPEED
-#define C_INTAKE_CCW_SPEED			-1 * C_INTAKE_DRIVE_SPEED
+#define C_INTAKE_CCW_SPEED			-1.0 * C_INTAKE_DRIVE_SPEED
 
   /*=====================*/
  /* Elevator Parameters */
