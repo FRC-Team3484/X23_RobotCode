@@ -1,30 +1,25 @@
 #pragma once
 #include <tuple>
-#include <memory>
 #include <map>
 #include <unordered_map>
 #include <array>
 #include <iostream>
 #include "FRC3484_Lib/utils/SC_Functions.h"
-#include <units/acceleration.h>
-#include <units/velocity.h>
+// #include <units/acceleration.h>
+// #include <units/velocity.h>
 
 #include <frc/smartdashboard/SendableChooser.h>
-#include <frc/DriverStation.h>
-#include <frc/geometry/Pose2d.h>
-#include <frc/geometry/Translation2d.h>
+// #include <frc/DriverStation.h>
+// #include <frc/geometry/Pose2d.h>
+// #include <frc/geometry/Translation2d.h>
 #include <frc2/command/PrintCommand.h>
 
 #include <frc2/command/FunctionalCommand.h>
 #include <frc2/command/WaitCommand.h>
-#include <frc2/command/button/CommandXboxController.h>
-#include <frc2/command/button/CommandPS4Controller.h>
+// #include <frc2/command/button/CommandXboxController.h>
+// #include <frc2/command/button/CommandPS4Controller.h>
 
-#include <pathplanner/lib/auto/MecanumAutoBuilder.h>
-#include <pathplanner/lib/PathPlanner.h>
-
-#include <ctre/phoenix/motorcontrol/can/WPI_TalonFX.h>
-#include "constants.h"
+#include "Constants.h"
 #include "Subsystems/X23_Drivetrain.h"
 #include "Subsystems/X23_Intake.h"
 #include "Subsystems/X23_Elevator.h"
@@ -37,7 +32,8 @@
  * scheduler calls).  Instead, the structure of the robot (including subsystems,
  * commands, and trigger mappings) should be declared here.
  */
-class RobotContainer {
+class RobotContainer 
+{
  public:
   RobotContainer();
 
@@ -46,6 +42,7 @@ class RobotContainer {
 
   void startAutoCommand();
   void endAutoCommand();
+
   X23_Drivetrain _drivetrain{ std::make_tuple<int, int>(C_FX_FL_MASTER, C_FX_FL_SLAVE),
                               std::make_tuple<int, int>(C_FX_FR_MASTER, C_FX_FR_SLAVE),
 								              std::make_tuple<int, int>(C_FX_BL_MASTER, C_FX_BL_SLAVE),
@@ -69,31 +66,6 @@ class RobotContainer {
    * Subsystems *
    **************/
 
-
-
-  /****************
-   * Path Planner *
-   ****************/
-
-  std::unordered_map<std::string, std::shared_ptr<frc2::Command>> FunEvents {
-
-    {"HybridZone", _elevator.HybridZone().Unwrap()},
-    {"ElevatorHome", _elevator.HomePOS().Unwrap()},
-    {"DropPiece", _elevator.ToggleClawOpen().Unwrap()}
-  };
-
-  // Auto Builder
-  pathplanner::MecanumAutoBuilder autoBuilder 
-  {
-    [this]() { return _drivetrain.GetPose(); }, // Function to supply current robot pose
-    [this](auto initPose) { _drivetrain.SetPose(initPose); }, // Function used to reset odometry at the beginning of auto
-    pathplanner::PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-    pathplanner::PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
-    [this](auto speeds) { _drivetrain.DriveAuto(speeds); }, // Output function that accepts field relative ChassisSpeeds
-    FunEvents, 
-    {&_drivetrain}, 
-    false
-  };
 
   // List of possible autos and relevant configs.
   std::array<std::string, 10> autoNames {

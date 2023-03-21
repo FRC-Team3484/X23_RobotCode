@@ -16,6 +16,13 @@
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
 #include "ctre/phoenix/sensors/Pigeon2.h"
 
+#include <frc/shuffleboard/Shuffleboard.h>
+#include <frc/shuffleboard/ShuffleboardLayout.h>
+#include <frc/shuffleboard/ShuffleboardTab.h>
+
+#include "networktables/NetworkTableInstance.h"
+#include <networktables/GenericEntry.h>
+
 class X23_Drivetrain : public frc2::SubsystemBase
 {
 public:
@@ -47,6 +54,10 @@ public:
      *          of the drivetrain.
      */
     void Ramp();
+
+    double GetDistance();
+
+    void ResetGyro();
 
     void SetPose(frc::Pose2d &NewPose);
 
@@ -94,7 +105,7 @@ private:
     ctre::phoenix::motorcontrol::can::WPI_TalonFX *BL, *BL_Slave;
 
     frc::MecanumDriveWheelPositions Previous_WheelPOS;
-    frc::Rotation2d                 Previous_Angle;
+    nt::GenericEntry *Gyro_Angle;
 };
 
 #endif // DRIVETRAIN_H

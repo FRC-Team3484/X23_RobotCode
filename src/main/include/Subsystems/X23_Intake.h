@@ -20,7 +20,7 @@ public:
 	X23_Intake(int IntakeLeft, int IntakeRight);
 	~X23_Intake();
 
-	void Collect(bool Run, bool ButtonA, bool ButtonB, bool ButtonC, bool ButtonD);
+	void Collect( bool ButtonA, bool ButtonB, bool ButtonC, bool ButtonD);
 
 	/*-------------------*/
 	/* Command functions */
