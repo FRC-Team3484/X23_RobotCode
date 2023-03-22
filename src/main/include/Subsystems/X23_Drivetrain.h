@@ -91,6 +91,8 @@ private:
 
     frc::Pose2d dtPose;
 
+    double GyroArray [3];
+
     ctre::phoenix::sensors::Pigeon2 *Gyroscope;
 
     frc::MecanumDriveWheelPositions dt_previousWheelPositions;

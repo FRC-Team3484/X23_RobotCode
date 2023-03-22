@@ -14,6 +14,7 @@ X23_Elevator::X23_Elevator(int ElevateMotor, int TiltMotor, SC::SC_Solenoid ChCl
 							SC::SC_Solenoid ChElevateBrake, int TiltHomeCh, int ElevatorHomeCh, int TiltMaxCh)
 {
 	// set elevate motors
+	SetDefaultCommand(std::move(HomePOS()));
     if(ElevateMotor != C_DISABLED_CHANNEL) 
     {
         ElevateFalcon = new WPI_TalonFX (ElevateMotor); 
@@ -120,7 +121,7 @@ bool X23_Elevator::pidDisabled()
     return E_PID_isDisabled && T_PID_isDisabled;
 }    
 
-void X23_Elevator::Elevate()
+void X23_Elevator::Periodic()
 {
 	if (_arePointersValid())
 	{
@@ -202,12 +203,11 @@ void X23_Elevator::Elevate()
 		
 				//Define Locals
 				CalcAngle = (F_XYCurve<double>(ArrayActuatorPOS , AngleArray, TiltPV, 10));
-
+				
 				//second XY curve stuff for max height
 				CalcHeight = fmin(F_XYCurve<double>(AngleArray, ElevateHeightArray, CalcAngle , 10 ), ElevatorHeightSP);
 				Tilt_Error = TiltAngleSP - CalcAngle;
 				Elevator_Error = CalcHeight - ElevatePV; 
-
 				// if (abs(Elevator_Error) < 0.25) 
 				// {
 				// 	Elevator_Error = 0;
@@ -247,7 +247,7 @@ void X23_Elevator::Elevate()
 						this->E_P = Elevator_Error * E_kpTune;
 						this->E_I = F_Limit(E_I_Max, E_I_Min, E_I+(E_kiTune * Elevator_Error *E_dt));
 						this->E_D = E_kdTune * (Elevator_Error - E_Error_ZminusOne)/E_dt;
-					// assign E_Error_ZminusOne
+						E_Error_ZminusOne = Elevator_Error;
 					}
 					else
 					{
@@ -261,7 +261,7 @@ void X23_Elevator::Elevate()
 						this->T_P = Tilt_Error * T_kpTune;
 						this->T_I = F_Limit(T_I_Max, T_I_Min, T_I+(T_kiTune * Tilt_Error *T_dt));
 						this->T_D = T_kdTune * (Tilt_Error - T_Error_ZminusOne)/T_dt;
-					// assign T_Error_ZminusOne
+						T_Error_ZminusOne = Tilt_Error;
 					}
 					else
 					{

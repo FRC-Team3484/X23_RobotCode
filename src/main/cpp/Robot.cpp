@@ -37,7 +37,7 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic() 
 {
-	//frc2::CommandScheduler::GetInstance().Run();
+	frc2::CommandScheduler::GetInstance().Run();
 }
 
 /**
@@ -160,10 +160,6 @@ void Robot::TeleopPeriodic()
 							SC::F_Deadband(Z_Demand, C_DRIVE_DEADBAND), 
 							true,
 							drivetrain_mode);
-	/*==========================*/
-	/*===Game Device Controls===*/
-	/*==========================*/
-	X23._elevator.Elevate();
 }
 /**
  * This function is called periodically during test mode.
