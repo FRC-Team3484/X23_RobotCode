@@ -19,22 +19,18 @@
 
 RobotContainer::RobotContainer() {
   // Setup Auto Routines
- /* for (auto autoConfig : autoNames) {
-    fmt::print("{}\n", std::string(autoConfig));
-    // Build Commands
-    autoCommands.emplace_back(
-        autoBuilder.fullAuto(pathplanner::PathPlanner::loadPathGroup(
-            autoConfig, 1_mps, 10_mps_sq, false)));
+  for (auto autoConfig : autoNames) {
+    //fmt::print("{}\n", std::string(autoConfig));
 
     // Add to chooser
     autonomousChooser.AddOption(autoConfig, autoCommands.back().get());
   }
- // autoCommands.emplace_back(autonomousChooser.AddOption(noAutoCommand));
+  autoCommands.emplace_back(autonomousChooser.AddOption(noAutoCommand));
   // Default value and send to ShuffleBoard
-  */
-  //autonomousChooser.SetDefaultOption("no_auto", noAutoCommand.get());
+  
+    autonomousChooser.SetDefaultOption("NO AUTO", noAutoCommand.get());
 
-  //frc::Shuffleboard::GetTab("X23").Add("Auto Chooser", autonomousChooser).WithWidget("ComboBox Chooser");
+    frc::Shuffleboard::GetTab("X23").Add("Auto Chooser", autonomousChooser).WithWidget("ComboBox Chooser");
 }
 
 void RobotContainer::setAutoDefaults() {
@@ -54,5 +50,5 @@ void RobotContainer::startAutoCommand() {
 
 void RobotContainer::endAutoCommand() {
   // Cancel selected auto
-  //currentAuto->Cancel();
+  currentAuto->Cancel();
 }

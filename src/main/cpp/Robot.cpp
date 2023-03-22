@@ -61,25 +61,29 @@ void Robot::AutonomousInit()
 void Robot::AutonomousPeriodic() 
 {
 	//MESS WITH CONE LOL
-	if(!auto1Done)
-	{
+	while(X23._drivetrain.GetDistance() < 15.0)
+	{			  
+		X23._drivetrain.Drive(0, 0, 0, false, false);
+	}
+	auto1Done = true;
+
+	if(!auto1Done){
 		while(X23._drivetrain.GetDistance() < 15.0)
 		{
 			  
 			X23._drivetrain.Drive(0, 0.25, 0, false, true);
 		}
-		
 		auto1Done = true;
 		X23._drivetrain.Drive(0,0, 0, false, true);
-	}
-
-	while(X23._drivetrain.GetDistance() > 6.0) 
-	{
+	if(!auto2Done){
+		while(X23._drivetrain.GetDistance() > 6.0) 
+		{
 		X23._drivetrain.Drive(0, -0.25, 0, false, true);
+		}
+		auto2Done = true;
 	}
-	
 	X23._drivetrain.Drive(0,0, 0, false, true);
-
+	}
 }
 
 void Robot::AutonomousExit()
