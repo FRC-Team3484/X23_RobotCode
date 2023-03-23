@@ -137,8 +137,8 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 	{
 		BL = nullptr;
 		BL_Slave = nullptr;
+	}
 	Gyro_Angle = frc::Shuffleboard::GetTab("X23").Add("Gyro", 0.0).WithWidget("Text Entry").GetEntry();
-}
 }
 X23_Drivetrain::~X23_Drivetrain()
 {

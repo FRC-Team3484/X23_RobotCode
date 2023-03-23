@@ -37,7 +37,7 @@ public:
 
     ~X23_Elevator();
 
-    void Elevate();
+    void Periodic() override;
 
     bool pidDisabled();
 
