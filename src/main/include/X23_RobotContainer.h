@@ -42,6 +42,7 @@ class RobotContainer
 
   void startAutoCommand();
   void endAutoCommand();
+  frc::SendableChooser<frc2::Command*> autonomousChooser;
 
   X23_Drivetrain _drivetrain{ std::make_tuple<int, int>(C_FX_FL_MASTER, C_FX_FL_SLAVE),
                               std::make_tuple<int, int>(C_FX_FR_MASTER, C_FX_FR_SLAVE),
@@ -71,17 +72,46 @@ class RobotContainer
   std::array<std::string, 10> autoNames {
     {
       "NO AUTO",
-      "mobility",
-      "balance", 
+      "Mobility",
+      "Balance", 
     }
   };
 
   /****************
    * Auto Chooser *
    ****************/
-  frc2::CommandPtr noAutoCommand = frc2::PrintCommand("NO AUTO\n").ToPtr();
-  std::vector<frc2::CommandPtr> autoCommands;
-  frc2::Command* currentAuto = noAutoCommand.get();
+  frc2::CommandPtr NoAutoCommand = frc2::PrintCommand("NO AUTO\n").ToPtr();
+  frc2::CommandPtr MobilityAutoCommand = frc2::FunctionalCommand(
+					  			// Startup
+				  				[this] {}, 
+						  		// Execute
+							  	[this] { _drivetrain.Drive(0, 0.25, 0, false, true); },
+							  	// Interrupted Function
+							  	[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
+							  	// End Condition
+							  	[this] {return _drivetrain.GetDistance() < 15.0;},
+							  	{&_drivetrain}
+							  	).ToPtr();
+  frc2::CommandPtr BalanceAutoCommand = frc2::FunctionalCommand(
+					  			// Startup
+				  				[this] {}, 
+						  		// Execute
+							  	[this] { _drivetrain.Drive(0, 0.25, 0, false, true); },
+							  	// Interrupted Function
+							  	[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
+							  	// End Condition
+							  	[this] {return _drivetrain.GetDistance() < 15.0;},
+							  	{&_drivetrain}
+							  	).AndThen(frc::FunctionalCommand(
+                  // Startup
+				  				[this] {},
+                  // Execute
+							  	[this] { _drivetrain.Drive(0, -0.25, 0, false, true); },
+                  // Interrupted Function
+							  	[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
+                  // End Condition
+							  	[this] {return _drivetrain.GetDistance() > 6.0;})).ToPtr();
+  //std::vector<frc2::CommandPtr> autoCommands;
+  frc2::Command* currentAuto = NoAutoCommand.get();
 
-  frc::SendableChooser<frc2::Command*> autonomousChooser;
 };

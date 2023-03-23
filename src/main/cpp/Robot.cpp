@@ -60,13 +60,9 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic() 
 {
-	//MESS WITH CONE LOL
-	while(X23._drivetrain.GetDistance() < 15.0)
-	{			  
-		X23._drivetrain.Drive(0, 0, 0, false, false);
-	}
-	auto1Done = true;
-
+	//NOT MOVING LOL (add cone stuff here)
+	
+	/*//MOVING LMAO
 	if(!auto1Done){
 		while(X23._drivetrain.GetDistance() < 15.0)
 		{
@@ -75,6 +71,8 @@ void Robot::AutonomousPeriodic()
 		}
 		auto1Done = true;
 		X23._drivetrain.Drive(0,0, 0, false, true);
+	}
+	//BAALLAANNCCIINNGG WOOOOOOOOOO(more auto ballance code here later maybe)
 	if(!auto2Done){
 		while(X23._drivetrain.GetDistance() > 6.0) 
 		{
@@ -82,8 +80,8 @@ void Robot::AutonomousPeriodic()
 		}
 		auto2Done = true;
 	}
-	X23._drivetrain.Drive(0,0, 0, false, true);
-	}
+	X23._drivetrain.Drive(0,0, 0, false, true);*/
+	
 }
 
 void Robot::AutonomousExit()

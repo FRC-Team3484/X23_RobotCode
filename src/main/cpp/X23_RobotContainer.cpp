@@ -12,23 +12,47 @@
 #include <frc2/command/RunCommand.h>
 
 #include "frc2/command/CommandScheduler.h"
-
+#include "frc2/command/FunctionalCommand.h"
 #include "frc/smartdashboard/SmartDashboard.h"
 
 #include <fmt/format.h>
 
 RobotContainer::RobotContainer() {
   // Setup Auto Routines
-  for (auto autoConfig : autoNames) {
+  //for (auto autoConfig : autoNames) {
     //fmt::print("{}\n", std::string(autoConfig));
 
     // Add to chooser
-    autonomousChooser.AddOption(autoConfig, autoCommands.back().get());
-  }
-  autoCommands.emplace_back(autonomousChooser.AddOption(noAutoCommand));
+    //autonomousChooser.AddOption(autoConfig, NoAutoCommand.get());
+    //autonomousChooser.AddOption(autoConfig, MobilityAutoCommand.get());
+    //autonomousChooser.AddOption(autoConfig, BalanceAutoCommand.get());
+  //}
+
+  autonomousChooser.AddOption("Mobility Only",
+                              frc2::FunctionalCommand(
+								// Startup
+								[this] {}, 
+								// Execute
+								[this] { _drivetrain.Drive(0, 0.25, 0, false, true); },
+								// Interrupted Function
+								[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
+								// End Condition
+								[this] {return _drivetrain.GetDistance() < 15.0;},
+								{&_drivetrain}
+								).ToPtr()
+                              );
+	// //BAALLAANNCCIINNGG WOOOOOOOOOO(more auto ballance code here later maybe)
+	// if(!auto2Done){
+	// 	while(X23._drivetrain.GetDistance() > 6.0) 
+	// 	{
+	// 	X23._drivetrain.Drive(0, -0.25, 0, false, true);
+	// 	}
+	// 	auto2Done = true;
+	// }
+	//X23._drivetrain.Drive(0,0, 0, false, true);});
   // Default value and send to ShuffleBoard
   
-    autonomousChooser.SetDefaultOption("NO AUTO", noAutoCommand.get());
+    autonomousChooser.SetDefaultOption("NO AUTO", NoAutoCommand.get());
 
     frc::Shuffleboard::GetTab("X23").Add("Auto Chooser", autonomousChooser).WithWidget("ComboBox Chooser");
 }
