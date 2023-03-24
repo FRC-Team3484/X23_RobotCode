@@ -81,10 +81,12 @@ class RobotContainer
    * Auto Chooser *
    ****************/
   frc2::CommandPtr NoAutoCommand = frc2::PrintCommand("NO AUTO\n").ToPtr();
+
   frc2::CommandPtr MobilityAutoCommand = frc2::FunctionalCommand(
 					  			// Startup
 				  				[this] {}, 
 						  		// Execute
+                  [this] { _intake.Collect_Eject(); },
 							  	[this] { _drivetrain.Drive(0, 0.25, 0, false, true); },
 							  	// Interrupted Function
 							  	[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
@@ -92,8 +94,20 @@ class RobotContainer
 							  	[this] {return _drivetrain.GetDistance() < 15.0;},
 							  	{&_drivetrain}
 							  	).ToPtr();
-  frc2::CommandPtr BalanceAutoCommand = frc2::FunctionalCommand(
+
+  frc2::CommandPtr BalanceAutoCommand = frc2::cmd::Sequence(frc2::FunctionalCommand(
 					  			// Startup
+				  				[this] {}, 
+						  		// Execute
+                  [this] { _intake.Collect_Eject(); },
+                  // Interrupted function
+                  [this](bool interrupted) { _intake.StopIntake(); },
+                  //End Condtition
+                  [this] {_intake.StopIntake() > frc2.Command.WaitCommand();},
+                  {&_intake}
+                  ).ToPtr(),
+                  frc2::FunctionalCommand(
+                  // Startup
 				  				[this] {}, 
 						  		// Execute
 							  	[this] { _drivetrain.Drive(0, 0.25, 0, false, true); },
@@ -102,7 +116,8 @@ class RobotContainer
 							  	// End Condition
 							  	[this] {return _drivetrain.GetDistance() < 15.0;},
 							  	{&_drivetrain}
-							  	).AndThen(frc::FunctionalCommand(
+							  	).ToPtr(),
+                  frc2::FunctionalCommand(
                   // Startup
 				  				[this] {},
                   // Execute
@@ -110,7 +125,10 @@ class RobotContainer
                   // Interrupted Function
 							  	[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
                   // End Condition
-							  	[this] {return _drivetrain.GetDistance() > 6.0;})).ToPtr();
+							  	[this] {return _drivetrain.GetDistance() > 6.0;},
+                  {&_drivetrain}
+                  ).ToPtr());
+
   //std::vector<frc2::CommandPtr> autoCommands;
   frc2::Command* currentAuto = NoAutoCommand.get();
 
