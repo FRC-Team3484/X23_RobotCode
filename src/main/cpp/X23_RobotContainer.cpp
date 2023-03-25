@@ -28,19 +28,8 @@ RobotContainer::RobotContainer() {
     //autonomousChooser.AddOption(autoConfig, BalanceAutoCommand.get());
   //}
 
-  autonomousChooser.AddOption("Mobility Only",
-                              frc2::FunctionalCommand(
-								// Startup
-								[this] {}, 
-								// Execute
-								[this] { _drivetrain.Drive(0, 0.25, 0, false, true); },
-								// Interrupted Function
-								[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
-								// End Condition
-								[this] {return _drivetrain.GetDistance() < 15.0;},
-								{&_drivetrain}
-								).ToPtr()
-                              );
+  autonomousChooser.AddOption("Mobility Only", MobilityAutoCommand.get());
+  autonomousChooser.AddOption("Mobility And Balance", BalanceAutoCommand.get());
 	// //BAALLAANNCCIINNGG WOOOOOOOOOO(more auto ballance code here later maybe)
 	// if(!auto2Done){
 	// 	while(X23._drivetrain.GetDistance() > 6.0) 

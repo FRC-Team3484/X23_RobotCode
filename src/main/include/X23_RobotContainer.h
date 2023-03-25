@@ -82,34 +82,46 @@ class RobotContainer
    ****************/
   frc2::CommandPtr NoAutoCommand = frc2::PrintCommand("NO AUTO\n").ToPtr();
 
-  frc2::CommandPtr MobilityAutoCommand = frc2::FunctionalCommand(
-					  			// Startup
+  frc2::CommandPtr MobilityAutoCommand = frc2::cmd::Sequence(frc2::FunctionalCommand(
+					  			// OnInit
 				  				[this] {}, 
-						  		// Execute
+						  		// OnExecute
                   [this] { _intake.Collect_Eject(); },
+                   // OnEnd
+                  [this](bool interrupted) { _intake.StopIntake(); },
+                  // IsFinished
+                  [this] { return true;},
+                  {&_intake}
+                  ).ToPtr(),
+                  frc2::WaitCommand(2.0_s).ToPtr(),
+                  frc2::FunctionalCommand(
+                  //startup
+                  [this] {},
+                  //execute
 							  	[this] { _drivetrain.Drive(0, 0.25, 0, false, true); },
 							  	// Interrupted Function
 							  	[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
 							  	// End Condition
 							  	[this] {return _drivetrain.GetDistance() < 15.0;},
 							  	{&_drivetrain}
-							  	).ToPtr();
+							  	).ToPtr());
 
   frc2::CommandPtr BalanceAutoCommand = frc2::cmd::Sequence(frc2::FunctionalCommand(
-					  			// Startup
+					  			// OnInit
 				  				[this] {}, 
-						  		// Execute
+						  		// OnExecute
                   [this] { _intake.Collect_Eject(); },
-                  // Interrupted function
+                   // OnEnd
                   [this](bool interrupted) { _intake.StopIntake(); },
-                  //End Condtition
-                  [this] {_intake.StopIntake() > frc2.Command.WaitCommand();},
+                  // IsFinished
+                  [this] { return true;},
                   {&_intake}
                   ).ToPtr(),
+                  frc2::WaitCommand(2.0_s).ToPtr(),
                   frc2::FunctionalCommand(
-                  // Startup
-				  				[this] {}, 
-						  		// Execute
+                  //startup
+                  [this] {},
+                  //execute
 							  	[this] { _drivetrain.Drive(0, 0.25, 0, false, true); },
 							  	// Interrupted Function
 							  	[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
