@@ -35,7 +35,6 @@
 #define C_FX_BL_SLAVE			   	C_DISABLED_CHANNEL
 #define C_FX_BR_MASTER				4
 #define C_FX_BR_SLAVE			   	C_DISABLED_CHANNEL
-#define C_SPX_INTAKE_LEFT          	10
 #define C_SPX_INTAKE_RIGHT          11
 #define C_FX_ELEVATEMOTOR          	12
 #define C_FX_TILTMOTOR              13
@@ -114,7 +113,7 @@ const double C_ELE_GEAR_RATIO			= 1.0 / (Stage_1_ratio * Stage_2_ratio * Winch_r
 const double C_ELE_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_ELE_GEAR_RATIO);
 
 const double C_ELE_SCALE_FACTOR_VELO 	= ((600.0 * C_ELE_GEAR_RATIO) / C_FALCON_ENC_CPR);		// Velocity scaling factor
-const double C_ELE_SCALE_FACTOR_POSN	= (C_ELE_GEAR_RATIO / C_FALCON_ENC_CPR);				// Position scaling factor
+const double C_ELE_SCALE_FACTOR_POSN	= (C_ELE_GEAR_RATIO / C_FALCON_ENC_CPR) * 12.0;				// Position scaling factor
 
 /*=================*/
 /* Tilt Parameters */
@@ -261,11 +260,11 @@ const std::tuple<int, int> C_BLANK_IDS = std::make_tuple<int, int>(C_DISABLED_CH
 /*================================*/
 /*Elevator Tilt PID Loop Variables*/
 /*================================*/
-#define T_Kp 0.0
-#define T_Ki 0.0
+#define T_Kp 5.0
+#define T_Ki 1.1
 #define T_dt 0.01
-#define T_Kd 0.0
-
+#define T_Kd 0.01
+#define T_Bias 5.85
 #define E_SPgt 0.1
 #define T_SPgt 0.1
 /*================================*/

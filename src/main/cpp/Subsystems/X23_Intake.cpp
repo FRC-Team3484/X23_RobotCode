@@ -9,15 +9,11 @@ using namespace ctre::phoenix::motorcontrol;
 using namespace ctre::phoenix::motorcontrol::can;
 
 
-X23_Intake::X23_Intake(int IntakeLeft, int IntakeRight)
+X23_Intake::X23_Intake(int Intake)
 {
-	Motor_Intake_Right = new VictorSPX(IntakeRight);
-	Motor_Intake_Right->SetNeutralMode(NeutralMode::Brake);
-	Motor_Intake_Right->SetInverted(false);
-
-	Motor_Intake_Left = new VictorSPX(IntakeLeft);
-	Motor_Intake_Left->SetNeutralMode(NeutralMode::Brake);
-	Motor_Intake_Left->SetInverted(false);
+	Motor_Intake = new VictorSPX(Intake);
+	Motor_Intake->SetNeutralMode(NeutralMode::Brake);
+	Motor_Intake->SetInverted(false);
 
 	this->_dbnc_rf_intake = new Debouncer(C_INTAKE_BTN_DBNC_TIME, Debouncer::kBoth); // Prevent accidental deployment or release of intake
 
@@ -30,44 +26,28 @@ X23_Intake::X23_Intake(int IntakeLeft, int IntakeRight)
 
 X23_Intake::~X23_Intake()
 {
-	if(Motor_Intake_Right != NULL) { delete Motor_Intake_Right; }
-	if(Motor_Intake_Left != NULL) { delete Motor_Intake_Left;  }
+	if(Motor_Intake != NULL) { delete Motor_Intake; }
 	if(this->_dbnc_rf_intake != NULL) { delete this->_dbnc_rf_intake; }
 	if(this->_dly_re_intake_on != NULL) { delete this->_dly_re_intake_on; }
 }
 
 void X23_Intake::Collect(bool ButtonA, bool ButtonB, bool ButtonC, bool ButtonD)
 {
-	if(Motor_Intake_Left != nullptr && Motor_Intake_Right != nullptr)
+	if(Motor_Intake)
 	{
 		if(ButtonA) 
 		{
 			//Suck In Cubes $
-			Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
-			Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
-		}
-		else if(ButtonB)
-		{
-			//Knock Cone One Way
-			Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
-			Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
-		}
-		else if(ButtonC)
-		{
-			//Knock Cone Other Way
-			Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
-			Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
+			Motor_Intake->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
 		}
 		else if(ButtonD)
 		{
 			//Sphit Out Cubes
-			Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
-			Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
+			Motor_Intake->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
 		}
 		else
 		{
-			Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
-			Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);	
+			Motor_Intake->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
 		}
 	}
 	//else
@@ -78,37 +58,23 @@ void X23_Intake::Collect(bool ButtonA, bool ButtonB, bool ButtonC, bool ButtonD)
 }
 
 /* Commands */
-frc2::CommandPtr X23_Intake::Collect_ConeLeft()
-{
-	return frc2::cmd::RunOnce([this]{
-	Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
-	Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);});
-}
-frc2::CommandPtr X23_Intake::Collect_ConeRight()
-{
-	return frc2::cmd::RunOnce([this]{
-	Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
-	Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);});
-}
-frc2::CommandPtr X23_Intake::Collect_Cube_Or_ConeCenter()
+frc2::CommandPtr X23_Intake::Collect()
 {
 	return frc2::cmd::RunOnce([this]{
 	//Suck The Cubical Object!
-	Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
-	Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);});
+	Motor_Intake->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);
+	});
 }
 frc2::CommandPtr X23_Intake::Collect_Eject()
 {
 	return frc2::cmd::RunOnce([this]{
 	//Eject Cubes
-	Motor_Intake_Right->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
-	Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);});
+	Motor_Intake->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);});
 }
 
 frc2::CommandPtr X23_Intake::StopIntake()
 {
 	return frc2::cmd::RunOnce([this]{
 	//Stop
-	Motor_Intake_Right->Set(ControlMode::PercentOutput, 0.0);
-	Motor_Intake_Left->Set(ControlMode::PercentOutput, 0.0);});
+	Motor_Intake->Set(ControlMode::PercentOutput, 0.0);});
 }

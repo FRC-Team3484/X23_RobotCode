@@ -93,13 +93,12 @@ void Robot::TeleopInit()
 	if(GP2_Operator != nullptr)
 	{
 		//intake controls on the button box
-		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_LEFT).OnTrue(X23._intake.Collect_ConeLeft());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_LEFT).OnTrue(X23._intake.Collect_Eject());
 		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_LEFT).OnFalse(X23._intake.StopIntake());
 
-		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_RIGHT).OnTrue(X23._intake.Collect_ConeRight());
 		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_RIGHT).OnFalse(X23._intake.StopIntake());
 
-		GP2_Operator->GetRawButton(C_GD_COLLECT_CUBE_OR_CONECENTER).OnTrue(X23._intake.Collect_Cube_Or_ConeCenter());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CUBE_OR_CONECENTER).OnTrue(X23._intake.Collect());
 		GP2_Operator->GetRawButton(C_GD_COLLECT_CUBE_OR_CONECENTER).OnFalse(X23._intake.StopIntake());
 
 		GP2_Operator->GetRawButton(C_GD_COLLECT_EJECT).OnTrue(X23._intake.Collect_Eject());
@@ -160,6 +159,9 @@ void Robot::TeleopPeriodic()
 							SC::F_Deadband(Z_Demand, C_DRIVE_DEADBAND), 
 							true,
 							drivetrain_mode);
+
+	//X23._elevator.ControlDirectElevate(SC::F_Deadband(GP2_Operator->GetAxis(C_GD_J1_ELE_HIGHT), C_GD_DEADBAND));
+	//X23._elevator.ControlDirectTilt(SC::F_Deadband(GP2_Operator->GetAxis(C_GD_J2_ELE_ANGLE), C_GD_DEADBAND));
 }
 /**
  * This function is called periodically during test mode.
