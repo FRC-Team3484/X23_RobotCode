@@ -53,5 +53,7 @@ class Robot : public frc::TimedRobot {
 //  frc::XboxController  *GP2_Operator;
 //#endif
   bool auto1Done = false;
+  bool auto2Done = false;
+  bool auto3Done = false;
   frc::XboxController  *GP1_Driver;// GP = Gamepad
 };
