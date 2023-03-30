@@ -107,12 +107,12 @@ private:
 	//PID Elevator Loop
 	double E_CV;
 	double E_FooFighters;
-	SC_PIDConstants E_PIDc;
 	double ElevatePV;
 	double TiltPV;
-	SC_PIDConstants T_PIDc;
-	SC_PIDStatus E_PIDs;
-	SC_PIDStatus T_PIDs;
+	SC::SC_PIDConstants E_PIDc;
+	SC::SC_PIDConstants T_PIDc;
+	SC::SC_PIDStatus_2 E_PIDs;
+	SC::SC_PIDStatus_2 T_PIDs;
 	double T_FooFighters;
 	double E_P;
 	double E_I_Min;
