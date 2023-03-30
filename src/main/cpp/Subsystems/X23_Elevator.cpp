@@ -5,6 +5,7 @@
 #include "tuple"
 #include "cmath"
 #include "frc/RobotState.h"
+#include "frc2/command/FunctionalCommand.h"
 
 
 using namespace SC;
@@ -74,6 +75,18 @@ X23_Elevator::X23_Elevator(int ElevateMotor, int TiltMotor, SC::SC_Solenoid ChCl
 
     E_CV = 0;
     E_FooFighters = 0;
+	E_PIDc.Kd = E_Kd;
+	T_PIDc.Kd = T_Kd;
+	E_PIDc.Kp = E_Kp;
+	T_PIDc.Kp = T_Kp;
+	E_PIDc.Ki = E_Ki;
+	T_PIDc.Ki = T_Ki;
+	E_PIDs.Kp = 0;
+	T_PIDs.Kp = 0;
+	E_PIDs.Ki = 0;
+	T_PIDs.Ki = 0;
+	E_PIDs.Kd = 0;
+	T_PIDs.Kd = 0;
     E_P = 0;
     E_I_Min = -100;
     E_I_Max = 100;
@@ -81,6 +94,8 @@ X23_Elevator::X23_Elevator(int ElevateMotor, int TiltMotor, SC::SC_Solenoid ChCl
     E_Error_ZminusOne = 0;
     E_D = 0;
 
+ElevatePV = 0;
+TiltPV = 0;
     T_CV = 0;
     T_P = 0;
     T_I_Min = -100;
@@ -129,7 +144,7 @@ void X23_Elevator::Periodic()
 	{
 		if (_arePointersValid())
 		{
-			double Elevator_Error = 0, Tilt_Error = 0, ElevatePV = 0, TiltPV = 0;
+			double Elevator_Error = 0, Tilt_Error = 0;
 
 	#ifdef C_BUILD_OPT_ELEV_TUNING
 	//E_PID_isDisabled = false;
@@ -186,113 +201,113 @@ void X23_Elevator::Periodic()
 
 						T_PID_isDisabled = ((abs(Tilt_Error) < 1.0) && (TiltAngleSP != 0)) || (THomeLS && (TiltAngleSP == 0));
 						E_PID_isDisabled = ((abs(Elevator_Error) < 1.0) && (ElevatorHeightSP != 0)) || (EHomeLS && (ElevatorHeightSP == 0));
-//											|| (E_PID_isDisabled && (ElevatorHeightSP == 0));
+// //											|| (E_PID_isDisabled && (ElevatorHeightSP == 0));
 
-	#ifndef C_BUILD_OPT_ELEV_TUNING					
-						if(!E_PID_isDisabled)
-						{
-							// Elevator Motor PID
-							this->E_FooFighters = (F_XYCurve<double>(ElevateHeightArray, yArrayFooFighters, CalcAngle, 10));
-							this->E_P = Elevator_Error * E_kp;
-							this->E_I = F_Limit(E_I_Max, E_I_Min, E_I+(E_ki * Elevator_Error *E_dt));
-							this->E_D = E_kd * (Elevator_Error - E_Error_ZminusOne)/E_dt;
-							E_Error_ZminusOne = Elevator_Error;
-						}
-						else
-						{
-							E_Error_ZminusOne = 0;
-							E_FooFighters = E_D = E_I = E_P = 0;
-						}
+// 	#ifndef C_BUILD_OPT_ELEV_TUNING					
+// 						if(!E_PID_isDisabled)
+// 						{
+// 							// Elevator Motor PID
+// 							this->E_FooFighters = (F_XYCurve<double>(ElevateHeightArray, yArrayFooFighters, CalcAngle, 10));
+// 							this->E_P = Elevator_Error * E_kp;
+// 							this->E_I = F_Limit(E_I_Max, E_I_Min, E_I+(E_ki * Elevator_Error *E_dt));
+// 							this->E_D = E_kd * (Elevator_Error - E_Error_ZminusOne)/E_dt;
+// 							E_Error_ZminusOne = Elevator_Error;
+// 						}
+// 						else
+// 						{
+// 							E_Error_ZminusOne = 0;
+// 							E_FooFighters = E_D = E_I = E_P = 0;
+// 						}
 
 
-						if(!T_PID_isDisabled )
-						{
-							// Tilt Motor PID
-							this->T_FooFighters = std::copysign(CalcAngle, TiltAngleSP) * T_Bias;
-							this->T_P = Tilt_Error * T_kp;
-							this->T_I = F_Limit(T_I_Max, T_I_Min, T_I+(T_ki * Tilt_Error *T_dt));
-							this->T_D = T_kd * (Tilt_Error - T_Error_ZminusOne)/T_dt;
-							T_Error_ZminusOne = Tilt_Error;
-						}
-						else
-						{
-							T_Error_ZminusOne = 0;
-							T_D = T_I = T_P = T_FooFighters = 0;  
-						}
+// 						if(!T_PID_isDisabled )
+// 						{
+// 							// Tilt Motor PID
+// 							this->T_FooFighters = std::copysign(CalcAngle, TiltAngleSP) * T_Bias;
+// 							this->T_P = Tilt_Error * T_kp;
+// 							this->T_I = F_Limit(T_I_Max, T_I_Min, T_I+(T_ki * Tilt_Error *T_dt));
+// 							this->T_D = T_kd * (Tilt_Error - T_Error_ZminusOne)/T_dt;
+// 							T_Error_ZminusOne = Tilt_Error;
+// 						}
+// 						else
+// 						{
+// 							T_Error_ZminusOne = 0;
+// 							T_D = T_I = T_P = T_FooFighters = 0;  
+// 						}
 
-						E_CV = std::clamp<double>(E_P + E_I + E_D + E_FooFighters, -100, 100);
-						T_CV = std::clamp<double>(T_P + T_I + T_D + T_FooFighters, -100, 100);
-	#else					
-						if(!E_PID_isDisabled)
-						{
-							// Elevator Motor PID
-							this->E_FooFighters = std::copysign(E_BiasTune, Elevator_Error);//(F_XYCurve<double>(ElevateHeightArray, yArrayFooFighters, CalcAngle, 10));
-							this->E_P = Elevator_Error * E_kpTune;
+// 						E_CV = std::clamp<double>(E_P + E_I + E_D + E_FooFighters, -100, 100);
+// 						T_CV = std::clamp<double>(T_P + T_I + T_D + T_FooFighters, -100, 100);
+// 	#else					
+// 						if(!E_PID_isDisabled)
+// 						{
+// 							// Elevator Motor PID
+// 							this->E_FooFighters = std::copysign(E_BiasTune, Elevator_Error);//(F_XYCurve<double>(ElevateHeightArray, yArrayFooFighters, CalcAngle, 10));
+// 							this->E_P = Elevator_Error * E_kpTune;
 							
-							this->E_I = F_Limit(E_I_Min, E_I_Max, E_I+(E_kiTune * Elevator_Error *E_dt));
-							this->E_D = E_kdTune * (Elevator_Error - E_Error_ZminusOne)/E_dt;
-							E_Error_ZminusOne = Elevator_Error;
-						}
-						else
-						{
-							E_Error_ZminusOne = 0;
-							E_FooFighters = E_D = E_I = E_P = 0;
-						}
+// 							this->E_I = F_Limit(E_I_Min, E_I_Max, E_I+(E_kiTune * Elevator_Error *E_dt));
+// 							this->E_D = E_kdTune * (Elevator_Error - E_Error_ZminusOne)/E_dt;
+// 							E_Error_ZminusOne = Elevator_Error;
+// 						}
+// 						else
+// 						{
+// 							E_Error_ZminusOne = 0;
+// 							E_FooFighters = E_D = E_I = E_P = 0;
+// 						}
 
 
-						if(!T_PID_isDisabled )
-						{
-							// Tilt Motor PID
-							this->T_FooFighters = std::copysign(T_BiasTune, Tilt_Error);
-							this->T_P = Tilt_Error * T_kpTune;
-							this->T_I = F_Limit(T_I_Min, T_I_Max, T_I+(T_kiTune * Tilt_Error *T_dt));
-							this->T_D = T_kdTune * (Tilt_Error - T_Error_ZminusOne)/T_dt;
-							T_Error_ZminusOne = Tilt_Error;
-						}
-						else
-						{
-							T_Error_ZminusOne = 0;
-							T_D = T_I = T_P = T_FooFighters = 0;  
-						}
+// 						if(!T_PID_isDisabled )
+// 						{
+// 							// Tilt Motor PID
+// 							this->T_FooFighters = std::copysign(T_BiasTune, Tilt_Error);
+// 							this->T_P = Tilt_Error * T_kpTune;
+// 							this->T_I = F_Limit(T_I_Min, T_I_Max, T_I+(T_kiTune * Tilt_Error *T_dt));
+// 							this->T_D = T_kdTune * (Tilt_Error - T_Error_ZminusOne)/T_dt;
+// 							T_Error_ZminusOne = Tilt_Error;
+// 						}
+// 						else
+// 						{
+// 							T_Error_ZminusOne = 0;
+// 							T_D = T_I = T_P = T_FooFighters = 0;  
+// 						}
 
 						E_CV = std::clamp<double>(E_P + E_I + E_D + E_FooFighters, -100, 100);
 						T_CV = std::clamp<double>(T_P + T_I + T_D + T_FooFighters, -100, 100);
-	#endif
-					}
+	//#endif
+					//}
 
 					ElevateFalcon->Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,(E_CV/100.0));
 					TiltFalcon->Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,(T_CV/100.0) * -1);
 
-			//fmt::print("{}\n", Tilt_Error);
-			E_ntPV->SetDouble(ElevatePV);
-			E_ntCV->SetDouble(E_CV);
-			E_ntP->SetDouble(E_P);
-			E_ntI->SetDouble(E_I);
-			E_ntD->SetDouble(E_D);
-			E_ntErr->SetDouble(Elevator_Error);
-			E_ntHeightLim->SetDouble(CalcHeight);
-			E_ntFooFighters->SetDouble(E_FooFighters);
-
-			T_ntPV->SetDouble(TiltPV);
-			T_ntAnglePV->SetDouble(CalcAngle);
-			T_ntCV->SetDouble(T_CV);
-			T_ntP->SetDouble(T_P);
-			T_ntI->SetDouble(T_I);
-			T_ntD->SetDouble(T_D);
-			T_ntErr->SetDouble(Tilt_Error);
-
-			E_ntAtHome->SetBoolean(EHomeLS);
-			T_ntAtHome->SetBoolean(THomeLS);
-			T_ntAtMax->SetBoolean(TiltLimit->Get());
-
-			E_ntPIDDisabled->SetBoolean(E_PID_isDisabled);
-			T_ntPIDDisabled->SetBoolean(T_PID_isDisabled);
-		}
-	}
-	else
-	{
-		E_P = E_I = E_D = E_CV = 0;
-	}
+//			//fmt::print("{}\n", Tilt_Error);
+//			E_ntPV->SetDouble(ElevatePV);
+//			E_ntCV->SetDouble(E_CV);
+//			E_ntP->SetDouble(E_P);
+//			E_ntI->SetDouble(E_I);
+//			E_ntD->SetDouble(E_D);
+//			E_ntErr->SetDouble(Elevator_Error);
+//			E_ntHeightLim->SetDouble(CalcHeight);
+//			E_ntFooFighters->SetDouble(E_FooFighters);
+//
+//			T_ntPV->SetDouble(TiltPV);
+//			T_ntAnglePV->SetDouble(CalcAngle);
+//			T_ntCV->SetDouble(T_CV);
+//			T_ntP->SetDouble(T_P);
+//			T_ntI->SetDouble(T_I);
+//			T_ntD->SetDouble(T_D);
+//			T_ntErr->SetDouble(Tilt_Error);
+//
+//			E_ntAtHome->SetBoolean(EHomeLS);
+//			T_ntAtHome->SetBoolean(THomeLS);
+//			T_ntAtMax->SetBoolean(TiltLimit->Get());
+//
+//			E_ntPIDDisabled->SetBoolean(E_PID_isDisabled);
+//			T_ntPIDDisabled->SetBoolean(T_PID_isDisabled);
+//		}
+//	}
+//	else
+//	{
+//		E_P = E_I = E_D = E_CV = 0;
+	}}}
 }
 
 void X23_Elevator::CalcPID(double SP, double PV, SC_PIDConstants PIDc, SC_PIDStatus_2& PIDs)
@@ -450,12 +465,22 @@ void X23_Elevator::ControlDirectTilt(double RawTiltFalcon)
 
 frc2::CommandPtr X23_Elevator::HybridZone()
 {
-	return frc2::cmd::RunOnce([this]{
-								ElevatorHeightSP = 14.5;
-								TiltAngleSP = 40;
-								E_PID_isDisabled = false;
-								T_PID_isDisabled = false;
-								});
+	return frc2::FunctionalCommand(
+	[this]() { E_PID_isDisabled = false, T_PID_isDisabled = false; }, //begin
+	[this]() {
+		CalcPID(14.5, ElevatePV, E_PIDc, E_PIDs);
+		CalcPID(40.0, TiltPV, T_PIDc, E_PIDs);
+	},
+	[this](bool interrupted) 
+	{ 
+		E_PIDs.CV = 0.0; 
+		T_PIDs.CV = 0.0;
+		E_PID_isDisabled = true; 
+		T_PID_isDisabled = true;
+	},
+	[this] {return E_PID_isDisabled && T_PID_isDisabled;},
+	{}
+	).ToPtr();
 }
 frc2::CommandPtr X23_Elevator::ConeOne()
 {
