@@ -50,7 +50,7 @@ class RobotContainer
                               std::make_tuple<int, int>(C_FX_BR_MASTER, C_FX_BR_SLAVE),
                               SC::SC_Solenoid{C_PCM, frc::PneumaticsModuleType::REVPH, C_DRIVE_SOL}, C_PIGEON_IMU};
 
-  X23_Intake _intake{C_SPX_INTAKE_LEFT, C_SPX_INTAKE_RIGHT};
+  X23_Intake _intake{C_SPX_INTAKE};
 
   X23_Elevator _elevator{ C_FX_ELEVATEMOTOR,
                           C_FX_TILTMOTOR,
@@ -86,7 +86,7 @@ class RobotContainer
 					  			// OnInit
 				  				[this] {}, 
 						  		// OnExecute
-                  [this] { _intake.Collect_Eject(); },
+                  [this] { _intake.Eject_Cone(); },
                    // OnEnd
                   [this](bool interrupted) { _intake.StopIntake(); },
                   // IsFinished
@@ -110,7 +110,7 @@ class RobotContainer
 					  			// OnInit
 				  				[this] {}, 
 						  		// OnExecute
-                  [this] { _intake.Collect_Eject(); },
+                  [this] { _intake.Eject_Cone(); },
                    // OnEnd
                   [this](bool interrupted) { _intake.StopIntake(); },
                   // IsFinished

@@ -95,23 +95,23 @@ void Robot::TeleopInit()
 	if(GP2_Operator != nullptr)
 	{
 		//intake controls on the button box
-		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_LEFT).OnTrue(X23._intake.Collect_ConeLeft());
-		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_LEFT).OnFalse(X23._intake.StopIntake());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE).OnTrue(X23._intake.Collect_Cone());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE).OnFalse(X23._intake.StopIntake());
 
-		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_RIGHT).OnTrue(X23._intake.Collect_ConeRight());
-		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_RIGHT).OnFalse(X23._intake.StopIntake());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CUBE).OnTrue(X23._intake.Collect_Cube());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CUBE).OnFalse(X23._intake.StopIntake());
 
-		GP2_Operator->GetRawButton(C_GD_COLLECT_CUBE_OR_CONECENTER).OnTrue(X23._intake.Collect_Cube_Or_ConeCenter());
-		GP2_Operator->GetRawButton(C_GD_COLLECT_CUBE_OR_CONECENTER).OnFalse(X23._intake.StopIntake());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CUBE_EJECT).OnTrue(X23._intake.Eject_Cube());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CUBE_EJECT).OnFalse(X23._intake.StopIntake());
 
-		GP2_Operator->GetRawButton(C_GD_COLLECT_EJECT).OnTrue(X23._intake.Collect_Eject());
-		GP2_Operator->GetRawButton(C_GD_COLLECT_EJECT).OnFalse(X23._intake.StopIntake());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_EJECT).OnTrue(X23._intake.Eject_Cone());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_EJECT).OnFalse(X23._intake.StopIntake());
 
 		//claw controls on the button box
-		GP2_Operator->GetRawButton(C_GD_CLAW_GRAB).OnTrue(X23._elevator.ToggleClawOpen());
-		GP2_Operator->GetRawButton(C_GD_CLAW_GRAB).OnFalse(X23._elevator.ToggleClawShut());
-		GP2_Operator->GetRawButton(C_GD_CLAW_TILT).OnTrue(X23._elevator.ClawTilt());
-		GP2_Operator->GetRawButton(C_GD_CLAW_TILT).OnFalse(X23._elevator.StopTilt());
+		//GP2_Operator->GetRawButton(C_GD_FREE).OnTrue(X23._elevator.ToggleClawOpen());
+		//GP2_Operator->GetRawButton(C_GD_FREE).OnFalse(X23._elevator.ToggleClawShut());
+		//GP2_Operator->GetRawButton(C_GD_FREE2).OnTrue(X23._elevator.ClawTilt());
+		//GP2_Operator->GetRawButton(C_GD_FREE2).OnFalse(X23._elevator.StopTilt());
 
 		//elevator controls on the button box
 		GP2_Operator->GetRawButton(C_GD_ELE_CUBEMID).OnTrue(X23._elevator.CubeOne());

@@ -373,7 +373,8 @@ void X23_Elevator::InitNetworkTables()
 */
 }
 
-frc2::CommandPtr X23_Elevator::ToggleClawOpen()
+/*frc2::CommandPtr X23_Elevator::ToggleClawOpen()
+DON'T have a tilting or clawing claw anymore
 {
     return frc2::cmd::RunOnce([this]{
     if(this->PincherSolenoid != NULL) 
@@ -399,7 +400,7 @@ frc2::CommandPtr X23_Elevator::StopTilt(){
         if(this->TiltSolenoid != NULL) 
             {this->TiltSolenoid->Set(false); }});
 }
-
+*/
 frc2::CommandPtr X23_Elevator::StopMotors()
 {
     return frc2::cmd::RunOnce([this]{
