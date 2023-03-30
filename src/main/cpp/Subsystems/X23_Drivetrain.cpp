@@ -31,6 +31,8 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 	md = new SC::SC_MecanumKinematics(Translation2d{-13.8_in,7.5_in},Translation2d{13.8_in,7.5_in},Translation2d{-13.8_in,-7.5_in},Translation2d{13.8_in,-7.5_in});
 	shifter = new Solenoid(ch_shift.CtrlID, ch_shift.CtrlType, ch_shift.Channel);
 	Gyroscope = new Pigeon2(PIGIMON);
+	Gyroscope->ConfigEnableCompass(false);
+	//Gyroscope->
 	//Gyroscope->ConfigMountPose(ctre::phoenix::sensors::AxisDirection::PositiveX, ctre::phoenix::sensors::AxisDirection::PositiveZ);
 	this->dtPose = frc::Pose2d{Translation2d{0_m, 0_m}, Rotation2d{0_deg}};
 	dt_previousAngle = dtPose.Rotation();

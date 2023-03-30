@@ -152,7 +152,7 @@ void X23_Elevator::Periodic()
 			ElevateBrake->Set(E_PID_isDisabled);
 			atHome = EHomeLS && THomeLS;
 
-			ElevatePV = (ElevateFalcon->GetSelectedSensorPosition(0) * C_ELE_SCALE_FACTOR_POSN + 6.0);
+			ElevatePV = (ElevateFalcon->GetSelectedSensorPosition(0) * C_ELE_SCALE_FACTOR_POSN);
 			TiltPV = (TiltFalcon->GetSelectedSensorPosition(0) * C_TILT_SCALE_FACTOR_POSN);
 
 			/* stops PID */ 
@@ -226,8 +226,9 @@ void X23_Elevator::Periodic()
 						if(!E_PID_isDisabled)
 						{
 							// Elevator Motor PID
-							this->E_FooFighters = std::copysign(ElevatePV, CalcHeight) * E_BiasTune;//(F_XYCurve<double>(ElevateHeightArray, yArrayFooFighters, CalcAngle, 10));
+							this->E_FooFighters = std::copysign(E_BiasTune, Elevator_Error);//(F_XYCurve<double>(ElevateHeightArray, yArrayFooFighters, CalcAngle, 10));
 							this->E_P = Elevator_Error * E_kpTune;
+							
 							this->E_I = F_Limit(E_I_Min, E_I_Max, E_I+(E_kiTune * Elevator_Error *E_dt));
 							this->E_D = E_kdTune * (Elevator_Error - E_Error_ZminusOne)/E_dt;
 							E_Error_ZminusOne = Elevator_Error;
@@ -242,7 +243,7 @@ void X23_Elevator::Periodic()
 						if(!T_PID_isDisabled )
 						{
 							// Tilt Motor PID
-							this->T_FooFighters = std::copysign(CalcAngle, TiltAngleSP) * T_BiasTune;
+							this->T_FooFighters = std::copysign(T_BiasTune, Tilt_Error);
 							this->T_P = Tilt_Error * T_kpTune;
 							this->T_I = F_Limit(T_I_Min, T_I_Max, T_I+(T_kiTune * Tilt_Error *T_dt));
 							this->T_D = T_kdTune * (Tilt_Error - T_Error_ZminusOne)/T_dt;
@@ -270,6 +271,7 @@ void X23_Elevator::Periodic()
 			E_ntD->SetDouble(E_D);
 			E_ntErr->SetDouble(Elevator_Error);
 			E_ntHeightLim->SetDouble(CalcHeight);
+			E_ntFooFighters->SetDouble(E_FooFighters);
 
 			T_ntPV->SetDouble(TiltPV);
 			T_ntAnglePV->SetDouble(CalcAngle);
@@ -287,6 +289,23 @@ void X23_Elevator::Periodic()
 			T_ntPIDDisabled->SetBoolean(T_PID_isDisabled);
 		}
 	}
+	else
+	{
+		E_P = E_I = E_D = E_CV = 0;
+	}
+}
+
+void X23_Elevator::CalcPID(double SP, double PV, SC_PIDConstants PIDc, SC_PIDStatus_2& PIDs)
+{
+	double PIDError = SP - PV;
+
+	// Elevator Motor PID
+	double FooFighters = std::copysign(PIDc.Kf, PIDError);//(F_XYCurve<double>(ElevateHeightArray, yArrayFooFighters, CalcAngle, 10));
+	PIDs.P = PIDError * PIDc.Kp; 
+	PIDs.I = F_Limit<double>(-100.0, 100.0, PIDs.I + (PIDc.Ki * PIDError *E_dt));
+	PIDs.D = PIDc.Kd * (PIDError - PIDs.E)/E_dt;
+	PIDs.E = PIDError;
+	PIDs.CV = std::clamp<double>(PIDs.P + PIDs.I + PIDs.D + FooFighters, -100, 100);
 }
 
 void X23_Elevator::InitNetworkTables()
@@ -314,6 +333,7 @@ void X23_Elevator::InitNetworkTables()
     E_ntD = frc::Shuffleboard::GetTab("PID").Add("E_D", 0.0).WithWidget("Text Entry").GetEntry();
     E_ntErr = frc::Shuffleboard::GetTab("PID").Add("E_Err", 0.0).WithWidget("Text Entry").GetEntry();
     E_ntHeightLim = frc::Shuffleboard::GetTab("PID").Add("E_HeightLim", 0.0).WithWidget("Text Entry").GetEntry();
+	E_ntFooFighters = frc::Shuffleboard::GetTab("PID").Add("E_FooFighters", 0.0).WithWidget("Text Entry").GetEntry();
 
     T_ntPV = frc::Shuffleboard::GetTab("PID").Add("T_PV", 0.0).WithWidget("Text Entry").GetEntry();
     T_ntAnglePV = frc::Shuffleboard::GetTab("PID").Add("T_AnglePV", 0.0).WithWidget("Text Entry").GetEntry();
@@ -329,6 +349,7 @@ void X23_Elevator::InitNetworkTables()
     E_ntPIDDisabled = frc::Shuffleboard::GetTab("X23").Add("Elev_PID_IsDisabled", false).WithWidget("Boolean Box").GetEntry();
     T_ntPIDDisabled = frc::Shuffleboard::GetTab("X23").Add("Tilt_PID_IsDisabled", false).WithWidget("Boolean Box").GetEntry();
 }
+
 
 frc2::CommandPtr X23_Elevator::ToggleClawOpen()
 {

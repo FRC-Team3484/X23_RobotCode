@@ -73,11 +73,12 @@ public:
 
     void InitNetworkTables();
 
+	void CalcPID(double ElevatorHeightSP, double ElevatePV, SC::SC_PIDConstants PIDc, SC::SC_PIDStatus_2& PIDs);
 private:
     void _setOutputs();
 	bool _arePointersValid();
 
-	double GetElevatorHeightLimit(double tiltAngle);
+	double GetElevatorHeightLimit(double tiltAngle, double ElevatePV);
 	double GetTiltAngle(double TiltInches);
 
     bool ClawToggleClose = 0;
@@ -150,7 +151,7 @@ private:
 #endif
 	// Outputs
 
-	nt::GenericEntry *E_ntPV, *E_ntCV, *E_ntP, *E_ntI, *E_ntD, *E_ntErr, *E_ntHeightLim;
+	nt::GenericEntry *E_ntPV, *E_ntCV, *E_ntP, *E_ntI, *E_ntD, *E_ntErr, *E_ntHeightLim, *E_ntFooFighters;
 	nt::GenericEntry *T_ntPV, *T_ntCV, *T_ntP, *T_ntI, *T_ntD, *T_ntErr, *T_ntAnglePV;
 	nt::GenericEntry *E_ntAtHome, *T_ntAtHome, *E_ntPIDDisabled, *T_ntPIDDisabled, *T_ntAtMax;
 

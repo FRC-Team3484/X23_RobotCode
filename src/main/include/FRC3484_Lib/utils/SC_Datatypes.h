@@ -45,6 +45,14 @@ namespace SC
 		double CV;
 	} SC_PIDStatus;
 
+	typedef struct {
+		double P;
+		double I;
+		double D;
+		double E;
+		double CV;
+	} SC_PIDStatus_2;
+
 	template<class T>
 	struct SC_Range 
 	{ 
