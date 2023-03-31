@@ -55,7 +55,7 @@ void Robot::DisabledPeriodic() {}
  */
 void Robot::AutonomousInit() 
 { 
-	//X23.startAutoCommand();
+	X23._drivetrain.ResetPose();
 }
 
 void Robot::AutonomousPeriodic() 
@@ -73,9 +73,9 @@ void Robot::AutonomousPeriodic()
 		X23._drivetrain.Drive(0,0, 0, false, true);
 	}
 
-	while(X23._drivetrain.GetDistance() > 6.0) 
+	while(X23._drivetrain.GetDistance() > 4.0) 
 	{
-		X23._drivetrain.Drive(0, -0.25, 0, false, true);
+		X23._drivetrain.Drive(0, -0.35, 0, false, true);
 	}
 	
 	X23._drivetrain.Drive(0,0, 0, false, true);
@@ -140,7 +140,7 @@ void Robot::TeleopPeriodic()
 	if(GP1_Driver->GetLeftBumper())
 	{
 		// Fine control mode; Scales driver input to smaller range for finer control
-		Y_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, GP1_Driver->GetLeftY());
+		Y_Demand = F_Scale(-.5, 1.0, Throttle_Range_Fine, GP1_Driver->GetLeftY());
 		X_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, GP1_Driver->GetLeftX());
 		Z_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, GP1_Driver->GetRightX());
 	}

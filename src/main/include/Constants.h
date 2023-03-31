@@ -61,9 +61,9 @@
  /*==========*/
 /* Settings */
 /*==========*/
-#define C_DRIVE_DEADBAND			0.05    // 5% Joystick input
+#define C_DRIVE_DEADBAND			0.15    // 5% Joystick input
 #define C_DRIVE_MAX_DEMAND			0.95    // Joystick input scale range (+/-) for normal movements
-#define C_DRIVE_MAX_DEMAND_FINE		0.5     // Joystick input scale range (+/-) for fine movements
+#define C_DRIVE_MAX_DEMAND_FINE		0.2     // Joystick input scale range (+/-) for fine movements
 #define C_DT_WHEEL_TAU				20_ms   // Filter time for encoder feedback
 #define C_THROTTLE_SCALE_COEFF		1.5     // Scaling Coefficient for throttle input
 

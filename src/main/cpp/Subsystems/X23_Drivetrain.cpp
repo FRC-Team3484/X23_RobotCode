@@ -12,7 +12,6 @@
 #include "wpimath/MathShared.h"
 
 #include "units/angle.h"
-
 using namespace SC;
 using namespace frc;
 using namespace units::length;
@@ -280,6 +279,13 @@ void X23_Drivetrain::UpdateOdometry(MecanumDriveWheelPositions& wheelPositions)
 frc::Pose2d X23_Drivetrain::GetPose()
 {
 	return dtPose;
+}
+void X23_Drivetrain::ResetPose()
+{
+	FL->SetSelectedSensorPosition(0);
+	FR->SetSelectedSensorPosition(0);
+	BL->SetSelectedSensorPosition(0);
+	BR->SetSelectedSensorPosition(0);
 }
 
 Rotation2d X23_Drivetrain::_GyroAngle()
