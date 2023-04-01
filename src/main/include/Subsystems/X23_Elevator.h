@@ -71,6 +71,8 @@ public:
 
     bool IsAtHome();
 
+	bool IsAtPOS();
+
     void InitNetworkTables();
 
 	void CalcPID(double ElevatorHeightSP, double ElevatePV, SC::SC_PIDConstants PIDc, SC::SC_PIDStatus_2& PIDs);

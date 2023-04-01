@@ -102,7 +102,7 @@ class RobotContainer
 							  	// Interrupted Function
 							  	[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
 							  	// End Condition
-							  	[this] {return _drivetrain.GetDistance() < 15.0;},
+							  	[this] {return _drivetrain.GetDistance() < 13.5;},
 							  	{&_drivetrain}
 							  	).ToPtr());
 
@@ -126,7 +126,7 @@ class RobotContainer
 							  	// Interrupted Function
 							  	[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
 							  	// End Condition
-							  	[this] {return _drivetrain.GetDistance() < 15.0;},
+							  	[this] {return _drivetrain.GetDistance() < 13.5;},
 							  	{&_drivetrain}
 							  	).ToPtr(),
                   frc2::FunctionalCommand(
@@ -140,7 +140,65 @@ class RobotContainer
 							  	[this] {return _drivetrain.GetDistance() > 6.0;},
                   {&_drivetrain}
                   ).ToPtr());
-
+frc2::CommandPtr LVL3BalanceAutoCommand = frc2::cmd::Sequence(
+                  frc2::FunctionalCommand(
+                  // OnInit
+				  				[this] {}, 
+						  		// OnExecute
+                  [this] { _elevator.ConeTwo();},
+                   // OnEnd
+                  [this](bool interrupted) { _elevator.StopMotors();},
+                  // IsFinished
+                  [this] { return _elevator.pidDisabled();},
+                  {&_elevator}
+                  ).ToPtr(),
+                  frc2::WaitCommand(1.0_s).ToPtr(),
+                  frc2::FunctionalCommand(
+					  			// OnInit
+				  				[this] {}, 
+						  		// OnExecute
+                  [this] { _intake.Eject_Cone(); },
+                   // OnEnd
+                  [this](bool interrupted) { _intake.StopIntake(); },
+                  // IsFinished
+                  [this] { return true;},
+                  {&_intake}
+                  ).ToPtr(),
+                  frc2::WaitCommand(2.0_s).ToPtr(),
+                  frc2::FunctionalCommand(
+                  // OnInit
+				  				[this] {}, 
+						  		// OnExecute
+                  [this] { _elevator.HomePOS();},
+                   // OnEnd
+                  [this](bool interrupted) { _elevator.StopMotors();},
+                  // IsFinished
+                  [this] { return _elevator.pidDisabled();},
+                  {&_elevator}
+                  ).ToPtr(),
+                  frc2::WaitCommand(1.0_s).ToPtr(),
+                  frc2::FunctionalCommand(
+                  //startup
+                  [this] {},
+                  //execute
+							  	[this] { _drivetrain.Drive(0, 0.25, 0, false, true); },
+							  	// Interrupted Function
+							  	[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
+							  	// End Condition
+							  	[this] {return _drivetrain.GetDistance() < 13.5;},
+							  	{&_drivetrain}
+							  	).ToPtr(),
+                  frc2::FunctionalCommand(
+                  // Startup
+				  				[this] {},
+                  // Execute
+							  	[this] { _drivetrain.Drive(0, -0.25, 0, false, true); },
+                  // Interrupted Function
+							  	[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
+                  // End Condition
+							  	[this] {return _drivetrain.GetDistance() > 6.0;},
+                  {&_drivetrain}
+                  ).ToPtr());
   //std::vector<frc2::CommandPtr> autoCommands;
   frc2::Command* currentAuto = NoAutoCommand.get();
 
