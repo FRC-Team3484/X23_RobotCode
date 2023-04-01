@@ -87,8 +87,7 @@ private:
     bool THomeLS = 0;
     bool TMaxTravelLS = false;
 
-    bool E_PID_isDisabled = 0;
-    bool T_PID_isDisabled = 0;
+    bool E_PID_isDisabled, T_PID_isDisabled;
 // Declare Tilt 
     ctre::phoenix::motorcontrol::can::WPI_TalonFX *TiltFalcon, *ElevateFalcon;  
 // Declare Pincher Solenoids

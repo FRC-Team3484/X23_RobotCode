@@ -35,7 +35,8 @@
 #define C_FX_BL_SLAVE			   	C_DISABLED_CHANNEL
 #define C_FX_BR_MASTER				4
 #define C_FX_BR_SLAVE			   	C_DISABLED_CHANNEL
-#define C_SPX_INTAKE_RIGHT          11
+//#define C_SPX_INTAKE_LEFT          	10
+#define C_SPX_INTAKE	            11
 #define C_FX_ELEVATEMOTOR          	12
 #define C_FX_TILTMOTOR              13
 #define C_PIGEON_IMU			   	20
@@ -98,7 +99,7 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 /*===================*/
 #define C_INTAKE_DRIVE_SPEED		1.0 // *100%
 #define C_INTAKE_CW_SPEED			C_INTAKE_DRIVE_SPEED
-#define C_INTAKE_CCW_SPEED			-1 * C_INTAKE_DRIVE_SPEED
+#define C_INTAKE_CCW_SPEED			-1.0 * C_INTAKE_DRIVE_SPEED
 
   /*=====================*/
  /* Elevator Parameters */
@@ -176,12 +177,12 @@ const double C_TILT_SCALE_FACTOR_POSN  	= -1.0 * (C_TILT_GEAR_RATIO / C_FALCON_E
 /* Game Device Input */
 /*===================*/
 #ifdef GD_SCHEME_XBOX
-	#define C_GD_COLLECT_CUBE_OR_CONECENTER		XBOX_A
-	#define C_GD_COLLECT_EJECT				XBOX_Y
-	#define C_GD_CLAW_GRAB					XBOX_RB
-	#define C_GD_COLLECT_CONE_LEFT			XBOX_X
-	#define C_GD_COLLECT_CONE_RIGHT			XBOX_B
-	#define C_GD_CLAW_TILT					XBOX_LB
+	#define C_GD_COLLECT_CONE_EJECT			XBOX_A
+	#define C_GD_COLLECT_CUBE_EJECT			XBOX_Y
+	#define C_GD_FREE						XBOX_RB
+	#define C_GD_COLLECT_CONE				XBOX_X
+	#define C_GD_COLLECT_CUBE				XBOX_B
+	#define C_GD_FREE2						XBOX_LB
 	#define C_GD_ELE_CUBEMID				XBOX_Y
 	#define C_GD_ELE_CONEMID				XBOX_X
 	#define C_GD_ELE_UNIVERSAL				XBOX_RB
@@ -199,12 +200,12 @@ const double C_TILT_SCALE_FACTOR_POSN  	= -1.0 * (C_TILT_GEAR_RATIO / C_FALCON_E
 #elif defined(GD_SCHEME_DS4)
 	#define C_GD_INTAKE					DS4_CROSS
 #elif defined(GD_SCHEME_BB)
-	#define C_GD_COLLECT_CUBE_OR_CONECENTER	0
-	#define C_GD_COLLECT_EJECT				1
-	#define C_GD_CLAW_GRAB					2
-	#define C_GD_COLLECT_CONE_LEFT			3
-	#define C_GD_COLLECT_CONE_RIGHT			4
-	#define C_GD_CLAW_TILT					5
+	#define C_GD_COLLECT_CUBE				0
+	#define C_GD_COLLECT_CONE				1
+	#define C_GD_COLLECT_CUBE_EJECT			2
+	#define C_GD_COLLECT_CONE_EJECT			3
+	#define C_GD_FREE						4
+	#define C_GD_FREE2						5
 	#define C_GD_ELE_CUBEMID				6
 	#define C_GD_ELE_CONEMID				7
 	#define C_GD_ELE_UNIVERSAL				8

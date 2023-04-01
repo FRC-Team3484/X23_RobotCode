@@ -308,7 +308,8 @@ void X23_Elevator::InitNetworkTables()
 }
 
 
-frc2::CommandPtr X23_Elevator::ToggleClawOpen()
+/*frc2::CommandPtr X23_Elevator::ToggleClawOpen()
+DON'T have a tilting or clawing claw anymore
 {
     return frc2::cmd::RunOnce([this]{
     if(this->PincherSolenoid != NULL) 
@@ -334,7 +335,7 @@ frc2::CommandPtr X23_Elevator::StopTilt(){
         if(this->TiltSolenoid != NULL) 
             {this->TiltSolenoid->Set(false); }});
 }
-
+*/
 frc2::CommandPtr X23_Elevator::StopMotors()
 {
     return frc2::cmd::RunOnce([this]{
@@ -433,62 +434,122 @@ frc2::CommandPtr X23_Elevator::HybridZone()
 }
 frc2::CommandPtr X23_Elevator::ConeOne()
 {
-	return frc2::cmd::RunOnce([this]{
-								ElevatorHeightSP = 47.5;
-								TiltAngleSP = 34;
-								E_PID_isDisabled = false;
-								T_PID_isDisabled = false;
-								});	
+	return frc2::FunctionalCommand(
+	[this]() { E_PID_isDisabled = false, T_PID_isDisabled = false; }, //begin
+	[this]() {
+		CalcPID(47.5, ElevatePV, E_PIDc, E_PIDs);
+		CalcPID(34, TiltPV, T_PIDc, E_PIDs);
+	},
+	[this](bool interrupted) 
+	{ 
+		E_PIDs.CV = 0.0; 
+		T_PIDs.CV = 0.0;
+		E_PID_isDisabled = true; 
+		T_PID_isDisabled = true;
+	},
+	[this] {return E_PID_isDisabled && T_PID_isDisabled;},
+	{}
+	).ToPtr();
 }
 
 frc2::CommandPtr X23_Elevator::ConeTwo()
 {
-	return frc2::cmd::RunOnce([this]{
-								ElevatorHeightSP = 68.5;
-								TiltAngleSP = 40;
-								E_PID_isDisabled = false;
-								T_PID_isDisabled = false;
-								});
+	return frc2::FunctionalCommand(
+	[this]() { E_PID_isDisabled = false, T_PID_isDisabled = false; }, //begin
+	[this]() {
+		CalcPID(68.5, ElevatePV, E_PIDc, E_PIDs);
+		CalcPID(40, TiltPV, T_PIDc, E_PIDs);
+	},
+	[this](bool interrupted) 
+	{ 
+		E_PIDs.CV = 0.0; 
+		T_PIDs.CV = 0.0;
+		E_PID_isDisabled = true; 
+		T_PID_isDisabled = true;
+	},
+	[this] {return E_PID_isDisabled && T_PID_isDisabled;},
+	{}
+	).ToPtr();
 }
 
 frc2::CommandPtr X23_Elevator::CubeOne()
 {
-	return frc2::cmd::RunOnce([this]{
-								ElevatorHeightSP = 41.5;
-								TiltAngleSP = 40;
-								E_PID_isDisabled = false;
-								T_PID_isDisabled = false;
-								});
+	return frc2::FunctionalCommand(
+	[this]() { E_PID_isDisabled = false, T_PID_isDisabled = false; }, //begin
+	[this]() {
+		CalcPID(41.5, ElevatePV, E_PIDc, E_PIDs);
+		CalcPID(40, TiltPV, T_PIDc, E_PIDs);
+	},
+	[this](bool interrupted) 
+	{ 
+		E_PIDs.CV = 0.0; 
+		T_PIDs.CV = 0.0;
+		E_PID_isDisabled = true; 
+		T_PID_isDisabled = true;
+	},
+	[this] {return E_PID_isDisabled && T_PID_isDisabled;},
+	{}
+	).ToPtr();
 }
 
 frc2::CommandPtr X23_Elevator::CubeTwo()
 {
-	return frc2::cmd::RunOnce([this]{
-								ElevatorHeightSP = 68.5;
-								TiltAngleSP = 42;
-								E_PID_isDisabled = false;
-								T_PID_isDisabled = false;
-								});
+	return frc2::FunctionalCommand(
+	[this]() { E_PID_isDisabled = false, T_PID_isDisabled = false; }, //begin
+	[this]() {
+		CalcPID(68.5, ElevatePV, E_PIDc, E_PIDs);
+		CalcPID(42, TiltPV, T_PIDc, E_PIDs);
+	},
+	[this](bool interrupted) 
+	{ 
+		E_PIDs.CV = 0.0; 
+		T_PIDs.CV = 0.0;
+		E_PID_isDisabled = true; 
+		T_PID_isDisabled = true;
+	},
+	[this] {return E_PID_isDisabled && T_PID_isDisabled;},
+	{}
+	).ToPtr();
 }
 
 frc2::CommandPtr X23_Elevator::Substation()
 {
-	return frc2::cmd::RunOnce([this]{
-								ElevatorHeightSP = 15;
-								TiltAngleSP = 38;
-								E_PID_isDisabled = false;
-								T_PID_isDisabled = false;
-								});
+	return frc2::FunctionalCommand(
+	[this]() { E_PID_isDisabled = false, T_PID_isDisabled = false; }, //begin
+	[this]() {
+		CalcPID(15, ElevatePV, E_PIDc, E_PIDs);
+		CalcPID(38, TiltPV, T_PIDc, E_PIDs);
+	},
+	[this](bool interrupted) 
+	{ 
+		E_PIDs.CV = 0.0; 
+		T_PIDs.CV = 0.0;
+		E_PID_isDisabled = true; 
+		T_PID_isDisabled = true;
+	},
+	[this] {return E_PID_isDisabled && T_PID_isDisabled;},
+	{}
+	).ToPtr();
 }
 
 frc2::CommandPtr X23_Elevator::HomePOS()
 {
-	return frc2::cmd::RunOnce([this]{
-								ElevatorHeightSP = 0;
-								TiltAngleSP = 0;
-								E_PID_isDisabled = false;
-								T_PID_isDisabled = false;
-							});
+	return frc2::FunctionalCommand(
+	[this]() { E_PID_isDisabled = false, T_PID_isDisabled = false; }, //begin
+	[this]() {
+		CalcPID(0, ElevatePV, E_PIDc, E_PIDs);
+		CalcPID(0, TiltPV, T_PIDc, E_PIDs);
+	},
+	[this](bool interrupted) 
+	{ 
+		E_PIDs.CV = 0.0; 
+		T_PIDs.CV = 0.0;
+		E_PID_isDisabled = true; 
+		T_PID_isDisabled = true;
+	},
+	[this] {return E_PID_isDisabled && T_PID_isDisabled;},
+	{}
+	).ToPtr();
 }
 
 bool X23_Elevator::IsAtHome()

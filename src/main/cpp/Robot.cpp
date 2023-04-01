@@ -56,19 +56,20 @@ void Robot::DisabledPeriodic() {}
 void Robot::AutonomousInit() 
 { 
 	X23._drivetrain.ResetPose();
+	X23.startAutoCommand();
 }
 
 void Robot::AutonomousPeriodic() 
 {
-	//MESS WITH CONE LOL
-	if(!auto1Done)
-	{
+	//NOT MOVING LOL (add cone stuff here)
+	
+	/*//MOVING LMAO
+	if(!auto1Done){
 		while(X23._drivetrain.GetDistance() < 15.0)
 		{
 			  
 			X23._drivetrain.Drive(0, 0.25, 0, false, true);
 		}
-		
 		auto1Done = true;
 		X23._drivetrain.Drive(0,0, 0, false, true);
 	}
@@ -77,14 +78,12 @@ void Robot::AutonomousPeriodic()
 	{
 		X23._drivetrain.Drive(0, -0.35, 0, false, true);
 	}
-	
-	X23._drivetrain.Drive(0,0, 0, false, true);
-
+	*/
 }
 
 void Robot::AutonomousExit()
 {
-	//X23.endAutoCommand();
+	X23.endAutoCommand();
 }
 void Robot::TeleopInit() 
 {
@@ -93,22 +92,23 @@ void Robot::TeleopInit()
 	if(GP2_Operator != nullptr)
 	{
 		//intake controls on the button box
-		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_LEFT).OnTrue(X23._intake.Collect_Eject());
-		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_LEFT).OnFalse(X23._intake.StopIntake());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE).OnTrue(X23._intake.Collect_Cone());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE).OnFalse(X23._intake.StopIntake());
 
-		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_RIGHT).OnFalse(X23._intake.StopIntake());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CUBE).OnTrue(X23._intake.Collect_Cube());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CUBE).OnFalse(X23._intake.StopIntake());
 
-		GP2_Operator->GetRawButton(C_GD_COLLECT_CUBE_OR_CONECENTER).OnTrue(X23._intake.Collect());
-		GP2_Operator->GetRawButton(C_GD_COLLECT_CUBE_OR_CONECENTER).OnFalse(X23._intake.StopIntake());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CUBE_EJECT).OnTrue(X23._intake.Eject_Cube());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CUBE_EJECT).OnFalse(X23._intake.StopIntake());
 
-		GP2_Operator->GetRawButton(C_GD_COLLECT_EJECT).OnTrue(X23._intake.Collect_Eject());
-		GP2_Operator->GetRawButton(C_GD_COLLECT_EJECT).OnFalse(X23._intake.StopIntake());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_EJECT).OnTrue(X23._intake.Eject_Cone());
+		GP2_Operator->GetRawButton(C_GD_COLLECT_CONE_EJECT).OnFalse(X23._intake.StopIntake());
 
 		//claw controls on the button box
-		GP2_Operator->GetRawButton(C_GD_CLAW_GRAB).OnTrue(X23._elevator.ToggleClawOpen());
-		GP2_Operator->GetRawButton(C_GD_CLAW_GRAB).OnFalse(X23._elevator.ToggleClawShut());
-		GP2_Operator->GetRawButton(C_GD_CLAW_TILT).OnTrue(X23._elevator.ClawTilt());
-		GP2_Operator->GetRawButton(C_GD_CLAW_TILT).OnFalse(X23._elevator.StopTilt());
+		//GP2_Operator->GetRawButton(C_GD_FREE).OnTrue(X23._elevator.ToggleClawOpen());
+		//GP2_Operator->GetRawButton(C_GD_FREE).OnFalse(X23._elevator.ToggleClawShut());
+		//GP2_Operator->GetRawButton(C_GD_FREE2).OnTrue(X23._elevator.ClawTilt());
+		//GP2_Operator->GetRawButton(C_GD_FREE2).OnFalse(X23._elevator.StopTilt());
 
 		//elevator controls on the button box
 		GP2_Operator->GetRawButton(C_GD_ELE_CUBEMID).OnTrue(X23._elevator.CubeOne());
