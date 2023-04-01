@@ -66,7 +66,7 @@ void X23_Intake::Collect(bool ButtonA, bool ButtonB, bool ButtonC, bool ButtonD)
 		}
 		else
 		{
-			Motor_Intake->Set(ControlMode::PercentOutput, C_INTAKE_CW_SPEED);
+			Motor_Intake->Set(ControlMode::PercentOutput, 0);
 			//Motor_Intake_Left->Set(ControlMode::PercentOutput, C_INTAKE_CCW_SPEED);	
 		}
 	}
