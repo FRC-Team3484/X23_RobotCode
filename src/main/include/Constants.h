@@ -107,7 +107,7 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 #define Stage_1_ratio  		(58.0/12.0) // (Stage 1 driven)/( Stage 1 driver )
 #define Stage_2_ratio  		(50.0/26.0) // (Stage 2 driven)/( Stage 2 driver )
 #define Winch_ratio  		(15.0/12.0) // (Winch sprocket)/( Gear Out sprocket )
-#define Winch_Diameter  	(1*units::constants::pi) // (Stage 1 driven)/( Stage 1 driver )
+#define Winch_Diameter  	(1.5*units::constants::pi) // (Stage 1 driven)/( Stage 1 driver )
 
 const double C_ELE_GEAR_RATIO			= 1.0 / (Stage_1_ratio * Stage_2_ratio * Winch_ratio * Winch_Diameter);
 
