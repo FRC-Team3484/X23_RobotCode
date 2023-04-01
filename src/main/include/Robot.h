@@ -14,7 +14,8 @@
 #include "FRC3484_Lib/utils/SC_Datatypes.h"
 #include "FRC3484_Lib/components/SC_OperatorInput.h"
 
-#include <frc/XboxController.h> 
+#include <frc/XboxController.h>
+#include <frc/PS4Controller.h> 
 #include <frc/Joystick.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
@@ -48,12 +49,13 @@ class Robot : public frc::TimedRobot {
   double X_Demand, Y_Demand, Z_Demand;
   double drivetrain_mode;
 //#ifdef GD_SCHEME_BB
-  SC::SC_OperatorInput	*GP2_Operator;
+  SC::SC_OperatorInput	*GP3_Operator;
 //#else
-//  frc::XboxController  *GP2_Operator;
+//  frc::XboxController  *GP3_Operator;
 //#endif
   bool auto1Done = false;
   bool auto2Done = false;
   bool auto3Done = false;
   frc::XboxController  *GP1_Driver;// GP = Gamepad
+  frc::PS4Controller   *GP2_Driver;// GP = Gamepad
 };

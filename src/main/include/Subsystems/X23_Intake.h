@@ -10,6 +10,7 @@
 #include "frc/Solenoid.h"
 #include "frc/DigitalInput.h"
 #include "frc/filter/Debouncer.h"
+#include "frc/AnalogInput.h"
 
 #include "frc2/command/SubsystemBase.h"
 

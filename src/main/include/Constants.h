@@ -137,9 +137,9 @@ const double C_TILT_SCALE_FACTOR_POSN  	= -1.0 * (C_TILT_GEAR_RATIO / C_FALCON_E
 
 // Game Device control input scheme 
 //#define GD_SCHEME_JOYSTICK	/* Logitech Extreme-3D Pro Joystick Scheme */
-#define GD_SCHEME_XBOX			/* Xbox Controller Scheme */
+//#define GD_SCHEME_XBOX			/* Xbox Controller Scheme */
 //#define GD_SCHEME_DS4 		/* DualShock 4 Controller Scheme */
-//#define GD_SCHEME_BB			/* Custom Button Box Scheme*/
+#define GD_SCHEME_BB			/* Custom Button Box Scheme*/
 
 
 /**
@@ -198,7 +198,22 @@ const double C_TILT_SCALE_FACTOR_POSN  	= -1.0 * (C_TILT_GEAR_RATIO / C_FALCON_E
 	#define C_GD_INTAKE					LE3D_BTN_5
 	
 #elif defined(GD_SCHEME_DS4)
-	#define C_GD_INTAKE					DS4_CROSS
+	#define C_GD_COLLECT_CONE_EJECT			DS4_CROSS
+	#define C_GD_COLLECT_CUBE_EJECT			DS4_CIRCLE
+	#define C_GD_FREE						DS4_R1
+	#define C_GD_COLLECT_CONE				DS4_SQUARE
+	#define C_GD_COLLECT_CUBE				DS4_TRIANGLE
+	#define C_GD_FREE2						DS4_L1
+	#define C_GD_ELE_CUBEMID				DS4_TRIANGLE
+	#define C_GD_ELE_CONEMID				DS4_SQUARE
+	#define C_GD_ELE_UNIVERSAL				DS4_R1
+	#define C_GD_ELE_HOME					DS4_L1
+	#define C_GD_ELE_CUBEHI					DS4_CROSS
+	#define C_GD_ELE_CONEHI					DS4_CIRCLE
+	#define C_GD_ELE_FEEDER					DS4_OPTIONS
+	// Joysticks!
+	#define C_GD_J1_ELE_HIGHT				 DS4_LS_Y
+	#define C_GD_J2_ELE_ANGLE				 DS4_RS_Y
 #elif defined(GD_SCHEME_BB)
 	#define C_GD_COLLECT_CUBE				0
 	#define C_GD_COLLECT_CONE				1
