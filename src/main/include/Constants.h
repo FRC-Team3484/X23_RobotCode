@@ -57,12 +57,13 @@
 #define C_DI_CH_ELEVATOR_TILT_HOME	1
 #define C_DI_CH_ELEVATOR_HOME		2
 #define C_DI_CH_ELEVATOR_TILT_MAX	0
+#define C_DI_CH_GAME_DEVICE_PRESENT_SENSOR	4
 
 
  /*==========*/
 /* Settings */
 /*==========*/
-#define C_DRIVE_DEADBAND			0.15    // 5% Joystick input
+#define C_DRIVE_DEADBAND			0.05    // 5% Joystick input
 #define C_DRIVE_MAX_DEMAND			0.95    // Joystick input scale range (+/-) for normal movements
 #define C_DRIVE_MAX_DEMAND_FINE		0.2     // Joystick input scale range (+/-) for fine movements
 #define C_DT_WHEEL_TAU				20_ms   // Filter time for encoder feedback
@@ -84,7 +85,8 @@ const double C_FALCON_MOTOR_MAX_RPM		= 6380.0;
 const double C_FALCON_MOTOR_MAX_RPM_ACT = 6000.0; // TODO: Get max achievable RPM of drivetrain motors.
 const double C_FALCON_ENC_CPR			= 2048.0;
 
-const double C_MAX_GEAR_ENC      		= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_GEAR_RATIO);
+const double C_MAX_GEAR_ENC      	
+	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_GEAR_RATIO);
 
 const double C_DT_SCALE_FACTOR_VELO   	= ((600.0 * C_GEAR_RATIO) / C_FALCON_ENC_CPR) * C_DT_RPM_TO_FPS;	// Velocity scaling factor
 const double C_DT_SCALE_FACTOR_POSN   	= (C_GEAR_RATIO / C_FALCON_ENC_CPR) * C_DT_REV_TO_FT;				// Position scaling factor
@@ -106,10 +108,10 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 /*=====================*/
 #define Stage_1_ratio  		(58.0/12.0) // (Stage 1 driven)/( Stage 1 driver )
 #define Stage_2_ratio  		(50.0/26.0) // (Stage 2 driven)/( Stage 2 driver )
-#define Winch_ratio  		(15.0/12.0) // (Winch sprocket)/( Gear Out sprocket )
+#define Sprocket_ratio  	(12.0/15.0) // (Winch sprocket)/( Gear Out sprocket )
 #define Winch_Diameter  	(1.5*units::constants::pi) // (Stage 1 driven)/( Stage 1 driver )
 
-const double C_ELE_GEAR_RATIO			= 1.0 / (Stage_1_ratio * Stage_2_ratio * Winch_ratio * Winch_Diameter);
+const double C_ELE_GEAR_RATIO			= 1.0 / (Stage_1_ratio * Stage_2_ratio * Sprocket_ratio * Winch_Diameter);
 
 const double C_ELE_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_ELE_GEAR_RATIO);
 
@@ -151,8 +153,8 @@ const double C_TILT_SCALE_FACTOR_POSN  	= -1.0 * (C_TILT_GEAR_RATIO / C_FALCON_E
 #define DRIVE_MODE_MECANUM
 
 #if defined(DRIVE_MODE_TANK)
-	#define C_DRIVER_LEFT_AXIS			XBOX_LS_Y
-	#define C_DRIVER_RIGHT_AXIS			XBOX_RS_Y
+	#define C_DRIVER_LEFT_AXIS			DS4_LS_Y
+	#define C_DRIVER_RIGHT_AXIS			DS4_RS_Y
 #elif defined(DRIVE_MODE_ARCADE)
 	#define C_DRIVER_THROTTLE_AXIS		XBOX_LS_Y 
 	#define C_DRIVER_STEER_AXIS			XBOX_RS_X //XBOX_LS_X (arcade)
@@ -160,9 +162,9 @@ const double C_TILT_SCALE_FACTOR_POSN  	= -1.0 * (C_TILT_GEAR_RATIO / C_FALCON_E
 	#define C_DRIVER_THROTTLE_AXIS		XBOX_LS_Y
 	#define C_DRIVER_STEER_AXIS			XBOX_LS_X
 #elif defined(DRIVE_MODE_MECANUM)
-	#define C_DRIVER_FWD_REV_AXIS		XBOX_LS_Y
-	#define C_DRIVER_LFT_RHT_AXIS		XBOX_LS_X
-	#define C_DRIVER_ROTATE_AXIS		XBOX_RS_X
+	#define C_DRIVER_FWD_REV_AXIS		DS4_LS_Y
+	#define C_DRIVER_LFT_RHT_AXIS		DS4_LS_X
+	#define C_DRIVER_ROTATE_AXIS		DS4_RS_X
 #endif
 
 #define C_DRIVER_SHIFT_LOW_BTN        	XBOX_A
@@ -215,19 +217,19 @@ const double C_TILT_SCALE_FACTOR_POSN  	= -1.0 * (C_TILT_GEAR_RATIO / C_FALCON_E
 	#define C_GD_J1_ELE_HIGHT				 DS4_LS_Y
 	#define C_GD_J2_ELE_ANGLE				 DS4_RS_Y
 #elif defined(GD_SCHEME_BB)
-	#define C_GD_COLLECT_CUBE				0
-	#define C_GD_COLLECT_CONE				1
-	#define C_GD_COLLECT_CUBE_EJECT			2
-	#define C_GD_COLLECT_CONE_EJECT			3
-	#define C_GD_FREE						4
-	#define C_GD_FREE2						5
-	#define C_GD_ELE_CUBEMID				6
-	#define C_GD_ELE_CONEMID				7
-	#define C_GD_ELE_UNIVERSAL				8
-	#define C_GD_ELE_HOME					9
-	#define C_GD_ELE_CUBEHI					10
-	#define C_GD_ELE_CONEHI					11
-	#define C_GD_ELE_FEEDER					12
+	#define C_GD_COLLECT_CUBE				1
+	#define C_GD_COLLECT_CONE				2
+	#define C_GD_COLLECT_CUBE_EJECT			3
+	#define C_GD_COLLECT_CONE_EJECT			4
+	#define C_GD_FREE						5
+	#define C_GD_FREE2						6
+	#define C_GD_ELE_CUBEMID				7
+	#define C_GD_ELE_CONEMID				8
+	#define C_GD_ELE_UNIVERSAL				9
+	#define C_GD_ELE_HOME					10
+	#define C_GD_ELE_CUBEHI					11
+	#define C_GD_ELE_CONEHI					12
+	#define C_GD_ELE_FEEDER					13
 	// Joysticks!
 	#define C_GD_J1_ELE_HIGHT				0
 	#define C_GD_J2_ELE_ANGLE				1
@@ -269,17 +271,17 @@ const std::tuple<int, int> C_BLANK_IDS = std::make_tuple<int, int>(C_DISABLED_CH
 /*===========================*/
 /*Elevator PID Loop Variables*/
 /*===========================*/
-#define E_Kp 1.1
-#define E_Ki 0.9
+#define E_Kp 4
+#define E_Ki 3.25
 #define E_dt 0.01
-#define E_Kd 3.0
+#define E_Kd 2.25
 /*================================*/
 /*Elevator Tilt PID Loop Variables*/
 /*================================*/
 #define T_Kp 5.0
 #define T_Ki 1.1
 #define T_dt 0.01
-#define T_Kd 0.01
+#define T_Kd 0.00
 #define T_Bias 5.85
 #define E_SPgt 0.1
 #define T_SPgt 0.1

@@ -7,7 +7,7 @@
 #include "FRC3484_Lib/utils/SC_Functions.h"
 #include "Subsystems/X23_Intake.h"
 #include "frc/PneumaticsModuleType.h"
-
+#include "FRC3484_Lib/components/SC_Limelight.h"
 #include "frc2/command/Commands.h"
 #include "frc2/command/CommandScheduler.h"
 
@@ -18,14 +18,14 @@ using namespace ctre;
 
 void Robot::RobotInit() 
 {
-	GP1_Driver = new XboxController(/*USB Port*/ C_DRIVER_USB);
-	GP2_Driver = new PS4Controller(/*USB Port*/ C_DRIVER_USB);
+	//GP1_Driver = new XboxController(/*USB Port*/ C_DRIVER_USB);
+	GP1_Driver = new PS4Controller(/*USB Port*/ C_DRIVER_USB);
   	GP3_Operator = new SC::SC_OperatorInput(C_OPERATOR_USB);
   	//GP3_Operator = new XboxController(C_OPERATOR_USB);
-
+	//SC::SC_Limelight::SetLEDMode(OFF);
 	Throttle_Range_Normal(-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND);
 	Throttle_Range_Fine(-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE);
-
+	
 	X23._elevator.InitNetworkTables();
 }
 /**
@@ -38,7 +38,7 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic() 
 {
-	frc2::CommandScheduler::GetInstance().Run();
+	//frc2::CommandScheduler::GetInstance().Run();
 }
 
 /**
@@ -113,14 +113,22 @@ void Robot::TeleopInit()
 
 		//elevator controls on the button box
 		GP3_Operator->GetRawButton(C_GD_ELE_CUBEMID).OnTrue(X23._elevator.CubeOne());
+		//GP3_Operator->GetRawButton(C_GD_ELE_CUBEMID).OnFalse(X23._elevator.StopMotors());
 		GP3_Operator->GetRawButton(C_GD_ELE_CUBEHI).OnTrue(X23._elevator.CubeTwo());
+		//GP3_Operator->GetRawButton(C_GD_ELE_CUBEHI).OnFalse(X23._elevator.StopMotors());
 
 		GP3_Operator->GetRawButton(C_GD_ELE_CONEMID).OnTrue(X23._elevator.ConeOne());
+		//GP3_Operator->GetRawButton(C_GD_ELE_CONEMID).OnFalse(X23._elevator.StopMotors());
 		GP3_Operator->GetRawButton(C_GD_ELE_CONEHI).OnTrue(X23._elevator.ConeTwo());
+		//GP3_Operator->GetRawButton(C_GD_ELE_CONEHI).OnFalse(X23._elevator.StopMotors());
 
 		GP3_Operator->GetRawButton(C_GD_ELE_UNIVERSAL).OnTrue(X23._elevator.HybridZone());
+		//GP3_Operator->GetRawButton(C_GD_ELE_UNIVERSAL).OnFalse(X23._elevator.StopMotors());
 		GP3_Operator->GetRawButton(C_GD_ELE_HOME).OnTrue(X23._elevator.HomePOS());
+		//GP3_Operator->GetRawButton(C_GD_ELE_HOME).OnFalse(X23._elevator.StopMotors());
 		GP3_Operator->GetRawButton(C_GD_ELE_FEEDER).OnTrue(X23._elevator.Substation());
+		//GP3_Operator->GetRawButton(C_GD_ELE_FEEDER).OnFalse(X23._elevator.StopMotors());
+		GP3_Operator->GetRawButton(7).OnTrue(X23._elevator.StopMotors());
 	}
 }
 
@@ -138,54 +146,35 @@ void Robot::TeleopPeriodic()
 		X23._drivetrain.ResetGyro();
 	}*/
 	
-	if(GP2_Driver->GetRawButtonPressed(DS4_SHARE))
+	if(GP1_Driver->GetRawButtonPressed(DS4_SHARE))
 	{
 		X23._drivetrain.ResetGyro();
 	}
 	
-	if(GP1_Driver->GetLeftBumper())
+	if(GP1_Driver->GetL1Button())
 	{
 		// Fine control mode; Scales driver input to smaller range for finer control
-		Y_Demand = F_Scale(-.5, 1.0, Throttle_Range_Fine, GP1_Driver->GetLeftY());
-		X_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, GP1_Driver->GetLeftX());
-		Z_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, GP1_Driver->GetRightX());
+		Y_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, GP1_Driver->GetRawAxis(DS4_LS_X));
+		X_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, GP1_Driver->GetRawAxis(DS4_LS_Y));
+		Z_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, GP1_Driver->GetRawAxis(DS4_RS_X));
 	}
 	else
 	{
 		// Normal control mode
-		Y_Demand = F_Limit(Throttle_Range_Normal, GP1_Driver->GetLeftY());
-		X_Demand = F_Limit(Throttle_Range_Normal, GP1_Driver->GetLeftX());
-		Z_Demand = F_Limit(Throttle_Range_Normal, GP1_Driver->GetRightX());
-	}
-	if(GP2_Driver->GetL1Button())
-	{
-		// Fine control mode; Scales driver input to smaller range for finer control
-		Y_Demand = F_Scale(-.5, 1.0, Throttle_Range_Fine, GP2_Driver->GetLeftY());
-		X_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, GP2_Driver->GetLeftX());
-		Z_Demand = F_Scale(-1.0, 1.0, Throttle_Range_Fine, GP2_Driver->GetRightX());
-	}
-	else
-	{
-		// Normal control mode
-		Y_Demand = F_Limit(Throttle_Range_Normal, GP2_Driver->GetLeftY());
-		X_Demand = F_Limit(Throttle_Range_Normal, GP2_Driver->GetLeftX());
-		Z_Demand = F_Limit(Throttle_Range_Normal, GP2_Driver->GetRightX());
+		Y_Demand = F_Limit(Throttle_Range_Normal, GP1_Driver->GetRawAxis(DS4_LS_X));
+		X_Demand = F_Limit(Throttle_Range_Normal, GP1_Driver->GetRawAxis(DS4_LS_Y));
+		Z_Demand = F_Limit(Throttle_Range_Normal, GP1_Driver->GetRawAxis(DS4_R2));
 	}
 
-	drivetrain_mode = GP1_Driver->GetRawButton(XBOX_RB);
+	drivetrain_mode = GP1_Driver->GetRawButton(DS4_R1);
 
 	X23._drivetrain.Drive(SC::F_Deadband(X_Demand, C_DRIVE_DEADBAND),
 							SC::F_Deadband(Y_Demand, C_DRIVE_DEADBAND), 
 							SC::F_Deadband(Z_Demand, C_DRIVE_DEADBAND), 
 							true,
 							drivetrain_mode);
-	drivetrain_mode = GP2_Driver->GetRawButton(DS4_R1);
 
-	X23._drivetrain.Drive(SC::F_Deadband(X_Demand, C_DRIVE_DEADBAND),
-							SC::F_Deadband(Y_Demand, C_DRIVE_DEADBAND), 
-							SC::F_Deadband(Z_Demand, C_DRIVE_DEADBAND), 
-							true,
-							drivetrain_mode);
+	X23._drivetrain.Periodic();
 
 	//X23._elevator.ControlDirectElevate(SC::F_Deadband(GP3_Operator->GetAxis(C_GD_J1_ELE_HIGHT), C_GD_DEADBAND));
 	//X23._elevator.ControlDirectTilt(SC::F_Deadband(GP3_Operator->GetAxis(C_GD_J2_ELE_ANGLE), C_GD_DEADBAND));

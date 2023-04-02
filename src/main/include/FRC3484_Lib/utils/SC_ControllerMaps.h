@@ -53,6 +53,8 @@
 #define DS4_R3			12
 #define DS4_PS			13 // PlayStation button
 #define DS4_TOUCH		14 // Touchpad button
+
+
 /*=========================*/
 /* ButtonBox Controller Map*/
 /*=========================*/
@@ -68,6 +70,7 @@
 #define BTN_6         6
 #define BTN_7         7
 #define BTN_8         8
+
 /*==================================*/
 /* Logitech Extreme-3D Joystick Map */
 /*==================================*/
