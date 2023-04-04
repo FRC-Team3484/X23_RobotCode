@@ -22,7 +22,7 @@
 #define C_DISABLED_CHANNEL			-1	// Device or channel is not used.
 
 // Uncomment to build code in PID tuning configuration.
-#define C_BUILD_OPT_ELEV_TUNING
+//#define C_BUILD_OPT_ELEV_TUNING
 
 /*==========*/
 /* CAN ID's */
@@ -35,8 +35,7 @@
 #define C_FX_BL_SLAVE			   	C_DISABLED_CHANNEL
 #define C_FX_BR_MASTER				4
 #define C_FX_BR_SLAVE			   	C_DISABLED_CHANNEL
-//#define C_SPX_INTAKE_LEFT          	10
-#define C_SPX_INTAKE	            11
+#define C_SPX_INTAKE                11
 #define C_FX_ELEVATEMOTOR          	12
 #define C_FX_TILTMOTOR              13
 #define C_PIGEON_IMU			   	20
@@ -63,8 +62,9 @@
 /* Settings */
 /*==========*/
 #define C_DRIVE_DEADBAND			0.05    // 5% Joystick input
-#define C_DRIVE_MAX_DEMAND			0.95    // Joystick input scale range (+/-) for normal movements
-#define C_DRIVE_MAX_DEMAND_FINE		0.5     // Joystick input scale range (+/-) for fine movements
+#define C_DRIVE_MAX_DEMAND_HIGH		0.95    // Joystick input scale range (+/-) for normal movements
+#define C_DRIVE_MAX_DEMAND_MID		0.75    // Joystick input scale range (+/-) for normal movements
+#define C_DRIVE_MAX_DEMAND_FINE		0.2     // Joystick input scale range (+/-) for fine movements
 #define C_DT_WHEEL_TAU				20_ms   // Filter time for encoder feedback
 #define C_THROTTLE_SCALE_COEFF		1.5     // Scaling Coefficient for throttle input
 
@@ -99,22 +99,22 @@ const units::feet_per_second_t C_SHIFT_DOWN_SPEED 	= 3.5_fps;
 /*===================*/
 #define C_INTAKE_DRIVE_SPEED		1.0 // *100%
 #define C_INTAKE_CW_SPEED			C_INTAKE_DRIVE_SPEED
-#define C_INTAKE_CCW_SPEED			-1.0 * C_INTAKE_DRIVE_SPEED
+#define C_INTAKE_CCW_SPEED			-1 * C_INTAKE_DRIVE_SPEED
 
   /*=====================*/
  /* Elevator Parameters */
 /*=====================*/
 #define Stage_1_ratio  		(58.0/12.0) // (Stage 1 driven)/( Stage 1 driver )
 #define Stage_2_ratio  		(50.0/26.0) // (Stage 2 driven)/( Stage 2 driver )
-#define Winch_ratio  		(15.0/12.0) // (Winch sprocket)/( Gear Out sprocket )
-#define Winch_Diameter  	(1*units::constants::pi) // (Stage 1 driven)/( Stage 1 driver )
+#define Sprocket_ratio  	(12.0/15.0) // (Winch sprocket)/( Gear Out sprocket )
+#define Winch_Diameter  	(1.5*units::constants::pi) // (Stage 1 driven)/( Stage 1 driver )
 
-const double C_ELE_GEAR_RATIO			= 1.0 / (Stage_1_ratio * Stage_2_ratio * Winch_ratio * Winch_Diameter);
+const double C_ELE_GEAR_RATIO			= Winch_Diameter / (Stage_1_ratio * Stage_2_ratio * Sprocket_ratio);
 
 const double C_ELE_MAX_GEAR_ENC      	= (C_FALCON_MOTOR_MAX_RPM / 600.0) * (C_FALCON_ENC_CPR / C_ELE_GEAR_RATIO);
 
 const double C_ELE_SCALE_FACTOR_VELO 	= ((600.0 * C_ELE_GEAR_RATIO) / C_FALCON_ENC_CPR);		// Velocity scaling factor
-const double C_ELE_SCALE_FACTOR_POSN	= (C_ELE_GEAR_RATIO / C_FALCON_ENC_CPR);				// Position scaling factor
+const double C_ELE_SCALE_FACTOR_POSN	= (C_ELE_GEAR_RATIO / C_FALCON_ENC_CPR) / 0.913;				// Position scaling factor
 
 /*=================*/
 /* Tilt Parameters */
@@ -136,10 +136,17 @@ const double C_TILT_SCALE_FACTOR_POSN  	= -1.0 * (C_TILT_GEAR_RATIO / C_FALCON_E
 #define C_OPERATOR_USB               1
 
 // Game Device control input scheme 
-//#define GD_SCHEME_JOYSTICK	/* Logitech Extreme-3D Pro Joystick Scheme */
-#define GD_SCHEME_XBOX			/* Xbox Controller Scheme */
-//#define GD_SCHEME_DS4 		/* DualShock 4 Controller Scheme */
-//#define GD_SCHEME_BB			/* Custom Button Box Scheme*/
+//#define DRV_SCHEME_XBOX       /* Xbox Controller Scheme */
+#define DRV_SCHEME_DS4      /* DualShock 4 Controller Scheme */
+
+
+// Game Device control input scheme
+//#define GD_SCHEME_JOYSTICK    /* Logitech Extreme-3D Pro Joystick Scheme */
+//#define GD_SCHEME_XBOX        /* Xbox Controller Scheme */
+//#define GD_SCHEME_DS4         /* DualShock 4 Controller Scheme */
+#define GD_SCHEME_BB            /* Custom Button Box Scheme*/
+
+
 
 
 /**
@@ -148,41 +155,86 @@ const double C_TILT_SCALE_FACTOR_POSN  	= -1.0 * (C_TILT_GEAR_RATIO / C_FALCON_E
 //#define DRIVE_MODE_TANK
 //#define DRIVE_MODE_ARCADE
 //#define DRIVE_MODE_CURVE
-#define DRIVE_MODE_MECANUM
+//#define DRIVE_MODE_MECANUM
+#define DRIVE_MODE_OCTOCANUM
+
 
 #if defined(DRIVE_MODE_TANK)
-	#define C_DRIVER_LEFT_AXIS			XBOX_LS_Y
-	#define C_DRIVER_RIGHT_AXIS			XBOX_RS_Y
+    #ifdef DRV_SCHEME_XBOX
+        #define C_DRIVER_LEFT_AXIS          XBOX_LS_Y
+        #define C_DRIVER_RIGHT_AXIS         XBOX_RS_Y
+    #elif defined(DRV_SCHEME_DS4)
+        #define C_DRIVER_LEFT_AXIS          DS4_LS_Y
+        #define C_DRIVER_RIGHT_AXIS         DS4_RS_Y
+    #endif
 #elif defined(DRIVE_MODE_ARCADE)
-	#define C_DRIVER_THROTTLE_AXIS		XBOX_LS_Y 
-	#define C_DRIVER_STEER_AXIS			XBOX_RS_X //XBOX_LS_X (arcade)
+    #ifdef DRV_SCHEME_XBOX
+        #define C_DRIVER_THROTTLE_AXIS      XBOX_LS_Y
+        #define C_DRIVER_STEER_AXIS         XBOX_RS_X //XBOX_LS_X (arcade)
+    #elif defined(DRV_SCHEME_DS4)
+        #define C_DRIVER_THROTTLE_AXIS      DS4_LS_Y
+        #define C_DRIVER_STEER_AXIS         DS4_RS_X
+    #endif
 #elif defined(DRIVE_MODE_CURVE)
-	#define C_DRIVER_THROTTLE_AXIS		XBOX_LS_Y
-	#define C_DRIVER_STEER_AXIS			XBOX_LS_X
+    #ifdef DRV_SCHEME_XBOX
+        #define C_DRIVER_THROTTLE_AXIS      XBOX_LS_Y
+        #define C_DRIVER_STEER_AXIS         XBOX_LS_X
+    #elif defined(DRV_SCHEME_DS4)
+        #define C_DRIVER_THROTTLE_AXIS      DS4_LS_Y
+        #define C_DRIVER_STEER_AXIS         DS4_LS_X
+    #endif
 #elif defined(DRIVE_MODE_MECANUM)
-	#define C_DRIVER_FWD_REV_AXIS		XBOX_LS_Y
-	#define C_DRIVER_LFT_RHT_AXIS		XBOX_LS_X
-	#define C_DRIVER_ROTATE_AXIS		XBOX_RS_X
+    #ifdef DRV_SCHEME_XBOX
+        #define C_DRIVER_FWD_REV_AXIS       XBOX_LS_Y
+        #define C_DRIVER_LFT_RHT_AXIS       XBOX_LS_X
+        #define C_DRIVER_ROTATE_AXIS        XBOX_RS_X
+        #define C_DRIVER_GYRO_RESET         XBOX_BACK
+    #elif defined(DRV_SCHEME_DS4)
+        #define C_DRIVER_FWD_REV_AXIS       DS4_LS_Y
+        #define C_DRIVER_LFT_RHT_AXIS       DS4_LS_X
+        #define C_DRIVER_ROTATE_AXIS        DS4_RS_X
+        #define C_DRIVER_GYRO_RESET         DS4_SHARE
+    #endif
+#elif defined(DRIVE_MODE_OCTOCANUM)
+    #ifdef DRV_SCHEME_XBOX
+        #define C_DRIVER_FWD_REV_AXIS       XBOX_LS_Y
+        #define C_DRIVER_LFT_RHT_AXIS       XBOX_LS_X
+        #define C_DRIVER_ROTATE_AXIS        XBOX_RS_X
+        #define C_DRIVER_OCTO_SHIFT_BTN     XBOX_LB
+        #define C_DRIVER_GYRO_RESET_BTN     XBOX_BACK
+    #elif defined(DRV_SCHEME_DS4)
+        #define C_DRIVER_FWD_REV_AXIS       DS4_LS_Y
+        #define C_DRIVER_LFT_RHT_AXIS       DS4_LS_X
+        #define C_DRIVER_ROTATE_AXIS        DS4_RS_X
+        #define C_DRIVER_OCTO_SHIFT_BTN     DS4_L1
+        #define C_DRIVER_GYRO_RESET_BTN     DS4_SHARE
+    #endif
 #endif
 
-#define C_DRIVER_SHIFT_LOW_BTN        	XBOX_A
-#define C_DRIVER_EBRAKE					XBOX_LB
 
+// Fine Adjustment mode
+// --------------------
+//      When pressed, driver input is scaled to a smaller motor output range.
 #define DRIVER_FINE_ADJ_MODE
 #ifdef DRIVER_FINE_ADJ_MODE
-#define C_DRIVE_ADJ_BTN               	XBOX_RB
+    #ifdef DRV_SCHEME_XBOX
+        #define C_DRIVER_FINE_ADJ_BTN           XBOX_RB
+    #elif defined(DRV_SCHEME_DS4)
+        #define C_DRIVER_FINE_ADJ_BTN           DS4_L1
+        #define C_DRIVER_FAST_ADJ_BTN           DS4_L3
+    #endif
 #endif
 
 /*===================*/
 /* Game Device Input */
 /*===================*/
 #ifdef GD_SCHEME_XBOX
-	#define C_GD_COLLECT_CONE_EJECT			XBOX_A
-	#define C_GD_COLLECT_CUBE_EJECT			XBOX_Y
-	#define C_GD_FREE						XBOX_RB
-	#define C_GD_COLLECT_CONE				XBOX_X
-	#define C_GD_COLLECT_CUBE				XBOX_B
-	#define C_GD_FREE2						XBOX_LB
+	#define C_GD_COLLECT_CUBE		XBOX_A
+	#define C_GD_COLLECT_CONE				XBOX_Y
+	#define C_GD_CUBE_EJECT					XBOX_RB
+	#define C_GD_CONE_EJECT			XBOX_X
+	#define C_GD_FREE			XBOX_B
+	#define C_GD_FREE2					XBOX_LB
 	#define C_GD_ELE_CUBEMID				XBOX_Y
 	#define C_GD_ELE_CONEMID				XBOX_X
 	#define C_GD_ELE_UNIVERSAL				XBOX_RB
@@ -198,27 +250,42 @@ const double C_TILT_SCALE_FACTOR_POSN  	= -1.0 * (C_TILT_GEAR_RATIO / C_FALCON_E
 	#define C_GD_INTAKE					LE3D_BTN_5
 	
 #elif defined(GD_SCHEME_DS4)
-	#define C_GD_INTAKE					DS4_CROSS
+		#define C_GD_COLLECT_CUBE		DS4_CROSS
+	#define C_GD_COLLECT_CONE				DS4_TRIANGLE
+	#define C_GD_CUBE_EJECT					DS4_R1
+	#define C_GD_CONE_EJECT			DS4_SQUARE
+	#define C_GD_FREE			DS4_CIRCLE
+	#define C_GD_FREE2					DS4_L1
+	#define C_GD_ELE_CUBEMID				DS4_TRIANGLE
+	#define C_GD_ELE_CONEMID				DS4_SQUARE
+	#define C_GD_ELE_UNIVERSAL				DS4_R1
+	#define C_GD_ELE_HOME					DS4_L1
+	#define C_GD_ELE_CUBEHI					DS4_CROSS
+	#define C_GD_ELE_CONEHI					DS4_CIRCLE
+	#define C_GD_ELE_FEEDER					DS4_CIRCLE
+	// Joysticks!
+	#define C_GD_J1_ELE_HIGHT				DS4_LS_Y
+	#define C_GD_J2_ELE_ANGLE				DS4_RS_Y
 #elif defined(GD_SCHEME_BB)
-	#define C_GD_COLLECT_CUBE				0
-	#define C_GD_COLLECT_CONE				1
-	#define C_GD_COLLECT_CUBE_EJECT			2
-	#define C_GD_COLLECT_CONE_EJECT			3
-	#define C_GD_FREE						4
-	#define C_GD_FREE2						5
-	#define C_GD_ELE_CUBEMID				6
-	#define C_GD_ELE_CONEMID				7
-	#define C_GD_ELE_UNIVERSAL				8
-	#define C_GD_ELE_HOME					9
-	#define C_GD_ELE_CUBEHI					10
-	#define C_GD_ELE_CONEHI					11
-	#define C_GD_ELE_FEEDER					12
+	#define C_GD_COLLECT_CUBE				1
+	#define C_GD_COLLECT_CONE				3
+	#define C_GD_CUBE_EJECT					2
+	#define C_GD_CONE_EJECT					4
+	#define C_GD_ELE_FEEDER					13
+	#define C_GD_ELE_CONEHI					12
+	#define C_GD_ELE_CUBEMID				9
+	#define C_GD_ELE_CONEMID				11
+	#define C_GD_ELE_CubeHybrid				8
+	#define C_GD_ELE_HOME					6
+	#define C_GD_ELE_CUBEHI					7
+	#define C_GD_PICKUP						5
+	#define C_GD_ELE_ConeHybrid				10
 	// Joysticks!
 	#define C_GD_J1_ELE_HIGHT				0
 	#define C_GD_J2_ELE_ANGLE				1
 #endif
 
-#define C_GD_DEADBAND					0.05    // 5% Joystick input
+#define C_GD_DEADBAND					0.025    // 5% Joystick input
 #define C_GD_L_MAX_DEMAND				0.95
 #define C_GD_R_MAX_DEMAND				0.95
 /*==================*/
@@ -230,7 +297,7 @@ const double C_TILT_SCALE_FACTOR_POSN  	= -1.0 * (C_TILT_GEAR_RATIO / C_FALCON_E
 
 // Game device inputs
 #define C_INTAKE_BTN_DBNC_TIME		0.100_s	// Intake deploy controller input debounce time
-#define C_Pincher_BTN_DBNC_TIME     0.100_s // Pincher Debounce Time
+#define C_Pincher_BTN_DBNC_TIME     0.050_s // Pincher Debounce Time
 
 // Auto-functions
 #define C_AUTOSHIFT_DBNC_TIME		0.250_s	// Auto-shift debounce time
@@ -254,18 +321,19 @@ const std::tuple<int, int> C_BLANK_IDS = std::make_tuple<int, int>(C_DISABLED_CH
 /*===========================*/
 /*Elevator PID Loop Variables*/
 /*===========================*/
-#define E_Kp 1.1
-#define E_Ki 0.9
+#define E_Kp 2.35
+#define E_Ki 1.75
 #define E_dt 0.01
-#define E_Kd 3.0
+#define E_Kd .5
+#define E_Bias 9.0
 /*================================*/
 /*Elevator Tilt PID Loop Variables*/
 /*================================*/
-#define T_Kp 0.0
-#define T_Ki 0.0
+#define T_Kp 5.0
+#define T_Ki 1.1
 #define T_dt 0.01
-#define T_Kd 0.0
-
+#define T_Kd 0.00
+#define T_Bias 2.55
 #define E_SPgt 0.1
 #define T_SPgt 0.1
 /*================================*/

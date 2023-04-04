@@ -50,18 +50,14 @@ public:
 		Eject
 			Left mandible:	CCW
 			Right mandible:	CW
-	*/
-
-	/* Run the intake for left-oriented cones */
+	/*Run the intake for center-oriented cones*/
 	frc2::CommandPtr Collect_Cone();
 
-	/* Run the intake for right-oriented cones */
 	frc2::CommandPtr Collect_Cube();
 
-	/*Run the intake for center-oriented cones*/
+	/*Run the ejection procedure*/
 	frc2::CommandPtr Eject_Cone();
 
-	/*Run the ejection procedure*/
 	frc2::CommandPtr Eject_Cube();
 
 	/* Stop the intake motors */
@@ -70,7 +66,6 @@ public:
 private:
 
 	ctre::phoenix::motorcontrol::can::VictorSPX *Motor_Intake;
-	//ctre::phoenix::motorcontrol::can::VictorSPX *Motor_Intake_Left;
 
 	// Debouncers
 	frc::Debouncer *_dbnc_rf_intake;        // Debounce driver's `Intake` command on both the rising edge (R) and falling edge (F)

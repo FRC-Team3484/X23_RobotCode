@@ -15,6 +15,7 @@
 #include "FRC3484_Lib/components/SC_OperatorInput.h"
 
 #include <frc/XboxController.h> 
+#include <frc/PS4Controller.h> 
 #include <frc/Joystick.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
@@ -42,8 +43,9 @@ class Robot : public frc::TimedRobot {
   // X23_Elevator *_elevator = nullptr; 
   RobotContainer X23;
 
-  SC::SC_Range<double> Throttle_Range_Normal = {-C_DRIVE_MAX_DEMAND, C_DRIVE_MAX_DEMAND};
+  SC::SC_Range<double> Throttle_Range_Normal = {-C_DRIVE_MAX_DEMAND_MID, C_DRIVE_MAX_DEMAND_MID};
   SC::SC_Range<double> Throttle_Range_Fine = {-C_DRIVE_MAX_DEMAND_FINE, C_DRIVE_MAX_DEMAND_FINE};
+  SC::SC_Range<double> Throttle_Range_High = {-C_DRIVE_MAX_DEMAND_HIGH, C_DRIVE_MAX_DEMAND_HIGH};
 
   double X_Demand, Y_Demand, Z_Demand;
   double drivetrain_mode;
@@ -53,7 +55,5 @@ class Robot : public frc::TimedRobot {
 //  frc::XboxController  *GP2_Operator;
 //#endif
   bool auto1Done = false;
-  bool auto2Done = false;
-  bool auto3Done = false;
-  frc::XboxController  *GP1_Driver;// GP = Gamepad
+  frc::PS4Controller  *GP1_Driver;// GP = Gamepad
 };

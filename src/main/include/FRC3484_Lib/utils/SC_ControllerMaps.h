@@ -33,10 +33,10 @@
 // Analog Axes
 #define DS4_LS_X	0
 #define DS4_LS_Y	1
-#define DS4_RS_X	2
+#define DS4_RS_X	4
 #define DS4_RS_Y	5
-#define DS4_L2		3
-#define DS4_R2		4
+#define DS4_L2		2
+#define DS4_R2		3
 
 // Buttons
 #define DS4_CROSS		2

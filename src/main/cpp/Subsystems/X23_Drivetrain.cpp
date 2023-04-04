@@ -136,7 +136,7 @@ X23_Drivetrain::X23_Drivetrain(std::tuple<int, int> chFR,
 	else
 	{
 		BL = nullptr;
-		BL_Slave = nullptr;
+		BL_Slave = nullptr; 
 	}
 	Gyro_Angle = frc::Shuffleboard::GetTab("X23").Add("Gyro", 0.0).WithWidget("Text Entry").GetEntry();
 }
@@ -154,6 +154,14 @@ X23_Drivetrain::~X23_Drivetrain()
 	if (FL_Slave != nullptr) { delete FL_Slave; FL_Slave = nullptr; }
 	if (BR_Slave != nullptr) { delete BR_Slave; BR_Slave = nullptr; }
 	if (BL_Slave != nullptr) { delete BL_Slave; BL_Slave = nullptr; }
+}
+
+void X23_Drivetrain::ResetPose()
+{
+	FL->SetSelectedSensorPosition(0);
+	FR->SetSelectedSensorPosition(0);
+	BL->SetSelectedSensorPosition(0);
+	BR->SetSelectedSensorPosition(0);
 }
 
 void X23_Drivetrain::Drive(double direction_x, double direction_y, double rotation_z, bool DriverOrient, bool shift)
@@ -226,7 +234,7 @@ void X23_Drivetrain::_InitMotor(WPI_TalonFX *Motor, bool Invert, WPI_TalonFX *Ma
 	{
 		Motor->SetInverted(Invert);
 		Motor->SetNeutralMode(NeutralMode::Brake);
-		Motor->ConfigOpenloopRamp(0);
+		Motor->ConfigOpenloopRamp(0.5);
 		Motor->ConfigClosedloopRamp(0);
 		Motor->ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
 		Motor->SetSelectedSensorPosition(0);

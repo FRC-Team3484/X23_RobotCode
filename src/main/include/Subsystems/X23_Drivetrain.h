@@ -66,6 +66,7 @@ public:
     void ToWheelSpeeds (frc::ChassisSpeeds& speeds);
 
     frc::Pose2d GetPose();
+    
     void ResetPose();
     
     void StopMotors();

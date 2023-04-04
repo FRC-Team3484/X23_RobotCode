@@ -49,7 +49,9 @@ public:
 
     frc2::CommandPtr StopTilt();
 
-    frc2::CommandPtr HybridZone();
+    frc2::CommandPtr HybridZoneCone();
+
+    frc2::CommandPtr HybridZoneCube();
 
     frc2::CommandPtr ConeOne();
 
@@ -62,6 +64,8 @@ public:
     frc2::CommandPtr Substation();
 
     frc2::CommandPtr HomePOS();
+
+	frc2::CommandPtr PickupPOS();
 
     frc2::CommandPtr StopMotors();
 
@@ -86,7 +90,8 @@ private:
     bool THomeLS = 0;
     bool TMaxTravelLS = false;
 
-    bool E_PID_isDisabled, T_PID_isDisabled;
+    bool E_PID_isDisabled = 0;
+    bool T_PID_isDisabled = 0;
 // Declare Tilt 
     ctre::phoenix::motorcontrol::can::WPI_TalonFX *TiltFalcon, *ElevateFalcon;  
 // Declare Pincher Solenoids
@@ -100,11 +105,12 @@ private:
 	bool TiltClawSolenoidState;
 
     SC::R_TRIG *rTrigPinch, *rTrigEHome, *rTrigTHome, *rTrigTLimit;
-    frc::Debouncer *DebouncePincher, *DebounceTilt;
+    frc::Debouncer *DebounceTrigger, *DebounceTilt;
 
 	//PID Elevator Loop
 	double E_CV;
 	double E_FooFighters;
+	double T_FooFighters;
 	double E_P;
 	double E_I_Min;
 	double E_I_Max;
@@ -113,10 +119,10 @@ private:
 	double yArrayAnglePOS [10] {0, 14.875, 30, 45.375, 60.75, 76, 91.125, 105.875, 120.375, 126} ;//Tilt
 	double yArrayFooFighters [10] {10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
 	double AngleArray [10] = {0, 5, 10, 15, 20, 25, 30, 35, 40, 42};//angle
-	//double ElevateHeightArray [10] = {56.5, 56.5, 57.5, 59.5, 61.5, 64.5, 67.5, 68.5, 68.5, 68.5};
+	double ElevateHeightArray [10] = {56.5, 56.5, 57.5, 59.5, 61.5, 64.5, 67.5, 68.5, 68.5, 68.5};
 	//double ElevateHeightArray [10] = {15.5, 15.5, 16.5, 18.5, 20.5, 23.5, 24.5, 27.5, 27.5, 27.5};
-	//double ElevateHeightArray [10] = {36.0, 36.0, 37.5, 39.5, 41.5, 44.5, 47.5, 48.5, 48.5, 48.5};
-	double ElevateHeightArray [10] = {36.0, 36.0, 37.5, 39.5, 61.5, 64.5, 67.5, 68.5, 68.5, 68.5};
+	//double ElevateHeightArray [10] = {110.0, 36.0, 37.5, 39.5, 41.5, 44.5, 47.5, 48.5, 48.5, 48.5};
+	//double ElevateHeightArray [10] = {36.0, 36.0, 37.5, 39.5, 61.5, 64.5, 67.5, 68.5, 68.5, 68.5};
 	double E_Error_ZminusOne;
 	double E_D;
 	double T_CV;
@@ -144,11 +150,11 @@ private:
 	double T_spTune;
 
 	nt::GenericEntry *E_ntSP, *E_ntKp, *E_ntKi, *E_ntKd, *E_ntBias;
-	nt::GenericEntry *T_ntSP, *T_ntKp, *T_ntKi, *T_ntKd, *T_ntBias;
+	nt::GenericEntry *T_ntSP, *T_ntKp, *T_ntKi, *T_ntKd, *T_ntBias, *T_ntAngleSP;
 #endif
 	// Outputs
 
-	nt::GenericEntry *E_ntPV, *E_ntCV, *E_ntP, *E_ntI, *E_ntD, *E_ntErr;
+	nt::GenericEntry *E_ntPV, *E_ntCV, *E_ntP, *E_ntI, *E_ntD, *E_ntErr, *E_ntHeightLim;
 	nt::GenericEntry *T_ntPV, *T_ntCV, *T_ntP, *T_ntI, *T_ntD, *T_ntErr, *T_ntAnglePV;
 	nt::GenericEntry *E_ntAtHome, *T_ntAtHome, *E_ntPIDDisabled, *T_ntPIDDisabled, *T_ntAtMax;
 
