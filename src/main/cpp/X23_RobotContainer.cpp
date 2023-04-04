@@ -30,7 +30,16 @@ RobotContainer::RobotContainer() {
 
   autonomousChooser.AddOption("Mobility Only", MobilityAutoCommand.get());
   autonomousChooser.AddOption("Mobility And Balance", BalanceAutoCommand.get());
-  autonomousChooser.AddOption("Mobility, Balance, And LVL3 Cone", LVL3BalanceAutoCommand.get());
+  autonomousChooser.AddOption("Mobility, Balance, And High Cone", ConeHIGHBalanceAutoCommand.get());
+  autonomousChooser.AddOption("Mobility, Balance, And High Cube", CubeHIGHBalanceAutoCommand.get());
+  autonomousChooser.AddOption("Mobility, Balance, And Mid Cone", ConeMIDBalanceAutoCommand.get());
+  autonomousChooser.AddOption("Mobility, Balance, And Mid Cube", CubeMIDBalanceAutoCommand.get());
+  autonomousChooser.AddOption("Mobility, Balance, And Hybrid", HybridBalanceAutoCommand.get());
+  autonomousChooser.AddOption("Mobility And High Cone", ConeHIGHAutoCommand.get());
+  autonomousChooser.AddOption("Mobility And High Cube", CubeHIGHAutoCommand.get());
+  autonomousChooser.AddOption("Mobility And Mid Cone", ConeMIDAutoCommand.get());
+  autonomousChooser.AddOption("Mobility And Mid Cube", CubeMIDAutoCommand.get());
+  autonomousChooser.AddOption("Mobility And Hybrid", HybridAutoCommand.get());
 	// //BAALLAANNCCIINNGG WOOOOOOOOOO(more auto ballance code here later maybe)
 	// if(!auto2Done){
 	// 	while(X23._drivetrain.GetDistance() > 6.0) 
