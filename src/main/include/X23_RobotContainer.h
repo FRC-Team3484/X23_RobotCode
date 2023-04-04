@@ -263,6 +263,18 @@ class RobotContainer
                   // OnInit
 				  				[this] {}, 
 						  		// OnExecute
+                  [this] { _elevator.CubeOne();},
+                   // OnEnd
+                  [this](bool interrupted) { _elevator.StopMotors();},
+                  // IsFinished
+                  [this] { return _elevator.pidDisabled();},
+                  {&_elevator}
+                  ).ToPtr(),
+                  frc2::WaitCommand(1.0_s).ToPtr(),
+                  frc2::FunctionalCommand(
+                  // OnInit
+				  				[this] {}, 
+						  		// OnExecute
                   [this] { _elevator.CubeTwo();},
                    // OnEnd
                   [this](bool interrupted) { _elevator.StopMotors();},
@@ -377,6 +389,18 @@ class RobotContainer
                   {&_drivetrain}
                   ).ToPtr());
   frc2::CommandPtr ConeHIGHBalanceAutoCommand = frc2::cmd::Sequence(
+                  frc2::FunctionalCommand(
+                  // OnInit
+				  				[this] {}, 
+						  		// OnExecute
+                  [this] { _elevator.ConeOne();},
+                   // OnEnd
+                  [this](bool interrupted) { _elevator.StopMotors();},
+                  // IsFinished
+                  [this] { return _elevator.pidDisabled();},
+                  {&_elevator}
+                  ).ToPtr(),
+                  frc2::WaitCommand(1.0_s).ToPtr(),
                   frc2::FunctionalCommand(
                   // OnInit
 				  				[this] {}, 
@@ -536,6 +560,18 @@ class RobotContainer
                   // OnInit
 				  				[this] {}, 
 						  		// OnExecute
+                  [this] { _elevator.CubeOne();},
+                   // OnEnd
+                  [this](bool interrupted) { _elevator.StopMotors();},
+                  // IsFinished
+                  [this] { return _elevator.pidDisabled();},
+                  {&_elevator}
+                  ).ToPtr(),
+                  frc2::WaitCommand(1.0_s).ToPtr(),
+                  frc2::FunctionalCommand(
+                  // OnInit
+				  				[this] {}, 
+						  		// OnExecute
                   [this] { _elevator.CubeTwo();},
                    // OnEnd
                   [this](bool interrupted) { _elevator.StopMotors();},
@@ -628,6 +664,18 @@ class RobotContainer
 							  	{&_drivetrain}
 							  	).ToPtr());
   frc2::CommandPtr ConeHIGHAutoCommand = frc2::cmd::Sequence(
+                  frc2::FunctionalCommand(
+                  // OnInit
+				  				[this] {}, 
+						  		// OnExecute
+                  [this] { _elevator.ConeOne();},
+                   // OnEnd
+                  [this](bool interrupted) { _elevator.StopMotors();},
+                  // IsFinished
+                  [this] { return _elevator.pidDisabled();},
+                  {&_elevator}
+                  ).ToPtr(),
+                  frc2::WaitCommand(1.0_s).ToPtr(),
                   frc2::FunctionalCommand(
                   // OnInit
 				  				[this] {}, 
