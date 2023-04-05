@@ -28,8 +28,9 @@ RobotContainer::RobotContainer() {
     //autonomousChooser.AddOption(autoConfig, BalanceAutoCommand.get());
   //}
 
-  autonomousChooser.AddOption("Mobility Only", MobilityAutoCommand.get());
-  autonomousChooser.AddOption("Mobility And Balance", BalanceAutoCommand.get());
+  autonomousChooser.AddOption("Hybrid/Mobility", MobilityAutoCommand.get());
+  autonomousChooser.AddOption("Hybrid/Mobility/Balance", BalanceAutoCommand.get());
+  autonomousChooser.AddOption("Cone 1/Mobility/Balance", ConeMIDBalanceAutoCommand.get());
 	// //BAALLAANNCCIINNGG WOOOOOOOOOO(more auto ballance code here later maybe)
 	// if(!auto2Done){
 	// 	while(X23._drivetrain.GetDistance() > 6.0) 
@@ -44,6 +45,7 @@ RobotContainer::RobotContainer() {
     autonomousChooser.SetDefaultOption("NO AUTO", NoAutoCommand.get());
 
     frc::Shuffleboard::GetTab("X23").Add("Auto Chooser", autonomousChooser).WithWidget("ComboBox Chooser");
+        this->DebounceSocks = new frc::Debouncer(2.0_s, frc::Debouncer::DebounceType::kRising);
 }
 
 void RobotContainer::setAutoDefaults() {
@@ -56,8 +58,8 @@ void RobotContainer::setAutoDefaults() {
 
 void RobotContainer::startAutoCommand() {
   // Get command from chooser to scheduel  
-  //currentAuto = autonomousChooser.GetSelected();
-  //currentAuto->Schedule();
+  currentAuto = autonomousChooser.GetSelected();
+  currentAuto->Schedule();
 
 }
 

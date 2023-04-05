@@ -60,6 +60,7 @@ X23_Elevator::X23_Elevator(int ElevateMotor, int TiltMotor, SC::SC_Solenoid ChCl
 	//set Debouncer
     this->DebounceTrigger = new Debouncer(C_Pincher_BTN_DBNC_TIME, frc::Debouncer::DebounceType::kRising);
     this->DebounceTilt = new Debouncer(C_Pincher_BTN_DBNC_TIME, frc::Debouncer::DebounceType::kRising);
+    this->DebounceEBrake = new Debouncer(1.0_s, frc::Debouncer::DebounceType::kFalling);
     
 	//set Trigger
     this->rTrigPinch = new R_TRIG();
@@ -75,8 +76,8 @@ X23_Elevator::X23_Elevator(int ElevateMotor, int TiltMotor, SC::SC_Solenoid ChCl
     E_CV = 0;
     E_FooFighters = 0;
     E_P = 0;
-    E_I_Min = -75;
-    E_I_Max = 75;
+    E_I_Min = -50;
+    E_I_Max = 50;
     E_I = 0; 
     E_Error_ZminusOne = 0;
     E_D = 0;
@@ -108,6 +109,7 @@ X23_Elevator::~X23_Elevator()
 
     if (ElevateFalcon != nullptr) { delete ElevateFalcon; ElevateFalcon = nullptr; }
     if (DebounceTrigger != nullptr) { delete DebounceTrigger; DebounceTrigger = nullptr; }
+    if (DebounceEBrake != nullptr) { delete DebounceEBrake; DebounceEBrake = nullptr; }
     if (TiltLimit != nullptr) { delete TiltLimit; TiltLimit = nullptr; }
 
     if (TiltHome != nullptr) { delete TiltHome; TiltHome = nullptr; }
@@ -134,14 +136,14 @@ void X23_Elevator::Periodic()
 	#ifdef C_BUILD_OPT_ELEV_TUNING
 	//E_PID_isDisabled = false;
 	//T_PID_isDisabled = false;
-			if(E_ntSP != nullptr)   {ElevatorHeightSP = std::clamp(E_ntSP->GetDouble(0.0), 0.0, 68.5); } else { ElevatorHeightSP = 0.0; }
+			//if(E_ntSP != nullptr)   {ElevatorHeightSP = std::clamp(E_ntSP->GetDouble(0.0), 0.0, 68.5); } else { ElevatorHeightSP = 0.0; }
 			if(E_ntKp != nullptr)   {E_kpTune = E_ntKp->GetDouble(0.1); } else { E_kpTune = 0.0; }
 			if(E_ntKi != nullptr)   {E_kiTune = E_ntKi->GetDouble(0.1); } else { E_kiTune = 0.0; }
 			if(E_ntKd != nullptr)   {E_kdTune = E_ntKd->GetDouble(0.1); } else { E_kdTune = 0.0; }
 			if(E_ntBias != nullptr) {E_BiasTune = E_ntBias->GetDouble(0.1); } else { E_BiasTune = 0.0; }
 			
 		
-			if(T_ntSP != nullptr) {TiltAngleSP = std::clamp(T_ntSP->GetDouble(0.0), 0.0, 45.0); } else { TiltAngleSP = 0.0; }
+			//if(T_ntSP != nullptr) {TiltAngleSP = std::clamp(T_ntSP->GetDouble(0.0), 0.0, 45.0); } else { TiltAngleSP = 0.0; }
 			if(T_ntKp != nullptr) {T_kpTune = T_ntKp->GetDouble(0.1); } else { T_kpTune = 0.0; }
 			if(T_ntKi != nullptr) {T_kiTune = T_ntKi->GetDouble(0.1); } else { T_kiTune = 0.0; }
 			if(T_ntKd != nullptr) {T_kdTune = T_ntKd->GetDouble(0.1); } else { T_kdTune = 0.0; }
@@ -183,9 +185,9 @@ void X23_Elevator::Periodic()
 						
 						//ElevateBrake->Set(false);
 
-						T_PID_isDisabled = ((abs(Tilt_Error) < 0.5) && (TiltAngleSP != 0)) || (THomeLS && (TiltAngleSP == 0));
-						E_PID_isDisabled = ((abs(Elevator_Error) < 0.5) && (ElevatorHeightSP != 0)) || (EHomeLS && (ElevatorHeightSP == 0));
-//											|| (E_PID_isDisabled && (ElevatorHeightSP == 0));
+						T_PID_isDisabled = ((abs(Tilt_Error) < 0.25) && (TiltAngleSP != 0)) || (THomeLS && (TiltAngleSP == 0));
+						E_PID_isDisabled = ((abs(Elevator_Error) < 0.25) && (ElevatorHeightSP != 0)) || (EHomeLS && (ElevatorHeightSP == 0));
+						//ElevateBrake->Set(E_PID_isDisabled);
 
 	#ifndef C_BUILD_OPT_ELEV_TUNING					
 						if(!E_PID_isDisabled)
@@ -219,7 +221,7 @@ void X23_Elevator::Periodic()
 							T_D = T_I = T_P = T_FooFighters = 0;  
 						}
 
-						E_CV = std::clamp<double>(E_P + E_I + E_D + E_FooFighters, -75, 75);
+						E_CV = std::clamp<double>(E_P + E_I + E_D + E_FooFighters, -50, 50);
 						T_CV = std::clamp<double>(T_P + T_I + T_D + T_FooFighters, -100, 100);
 	#else					
 						if(!E_PID_isDisabled)
@@ -253,12 +255,12 @@ void X23_Elevator::Periodic()
 							T_D = T_I = T_P = T_FooFighters = 0;  
 						}
 
-						E_CV = std::clamp<double>(E_P + E_I + E_D + E_FooFighters, -75, 75);
+						E_CV = std::clamp<double>(E_P + E_I + E_D + E_FooFighters, -50, 50);
 						T_CV = std::clamp<double>(T_P + T_I + T_D + T_FooFighters, -100, 100);
 	#endif
 					}
 
-			ElevateBrake->Set(E_PID_isDisabled);
+			ElevateBrake->Set((DebounceEBrake->Calculate(EHomeLS) && ( ElevatorHeightSP == 0))||(E_PID_isDisabled));
 			ElevateFalcon->Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,(E_CV/100.0));
 			TiltFalcon->Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,(T_CV/100.0) * -1);
 
@@ -297,12 +299,12 @@ void X23_Elevator::InitNetworkTables()
     E_ntKi = frc::Shuffleboard::GetTab("PID").Add("E_Ki", 0.9).WithWidget("Text Entry").GetEntry();
     E_ntKd = frc::Shuffleboard::GetTab("PID").Add("E_Kd", 3.0).WithWidget("Text Entry").GetEntry();
     E_ntBias = frc::Shuffleboard::GetTab("PID").Add("E_Bias", 0.7).WithWidget("Text Entry").GetEntry();
-    E_ntSP = frc::Shuffleboard::GetTab("PID").Add("E_SP", 0.0).WithWidget("Text Entry").GetEntry();
+    //E_ntSP = frc::Shuffleboard::GetTab("PID").Add("E_SP", 0.0).WithWidget("Text Entry").GetEntry();
     T_ntKp = frc::Shuffleboard::GetTab("PID").Add("T_Kp", 0.0).WithWidget("Text Entry").GetEntry();
     T_ntKi = frc::Shuffleboard::GetTab("PID").Add("T_Ki", 0.0).WithWidget("Text Entry").GetEntry();
     T_ntKd = frc::Shuffleboard::GetTab("PID").Add("T_Kd", 0.0).WithWidget("Text Entry").GetEntry();
-    T_ntSP = frc::Shuffleboard::GetTab("PID").Add("T_SP", 0.0).WithWidget("Text Entry").GetEntry();
-	T_ntAngleSP = frc::Shuffleboard::GetTab("PID").Add("T_AngleSP", 0.0).WithWidget("Text Entry").GetEntry();
+    //T_ntSP = frc::Shuffleboard::GetTab("PID").Add("T_SP", 0.0).WithWidget("Text Entry").GetEntry();
+	//T_ntAngleSP = frc::Shuffleboard::GetTab("PID").Add("T_AngleSP", 0.0).WithWidget("Text Entry").GetEntry();
 	T_ntBias = frc::Shuffleboard::GetTab("PID").Add("T_FooFighters", 0.0).WithWidget("Text Entry").GetEntry();
 #endif
 
@@ -490,7 +492,7 @@ frc2::CommandPtr X23_Elevator::CubeTwo()
 frc2::CommandPtr X23_Elevator::Substation()
 {
 	return frc2::cmd::RunOnce([this]{
-								ElevatorHeightSP = 38.0;
+								ElevatorHeightSP = 39.5;
 								TiltAngleSP = 17.0;
 								E_PID_isDisabled = false;
 								T_PID_isDisabled = false;
@@ -543,13 +545,13 @@ bool X23_Elevator::_arePointersValid()
 	if(DebounceTilt == nullptr) {fmt::print("{}\n", "Claw Tilt Input Debouncer pointer is null"); valid = false; }
 
 #ifdef C_BUILD_OPT_ELEV_TUNING
-	if(E_ntSP == nullptr) { fmt::print("{}\n", "Elevator NT SP pointer is null"); valid = false; }
+	//if(E_ntSP == nullptr) { fmt::print("{}\n", "Elevator NT SP pointer is null"); valid = false; }
 	if(E_ntKp == nullptr) { fmt::print("{}\n", "Elevator NT Kp pointer is null"); valid = false; }
 	if(E_ntKi == nullptr) { fmt::print("{}\n", "Elevator NT Ki pointer is null"); valid = false; }
 	if(E_ntKd == nullptr) { fmt::print("{}\n", "Elevator NT Kd pointer is null"); valid = false; }
 	if(E_ntBias == nullptr) { fmt::print("{}\n", "Elevator NT bias pointer is null"); valid = false; }
 
-	if(T_ntSP == nullptr) { fmt::print("{}\n", "Tile NT SP pointer is null"); valid = false; }
+	//if(T_ntSP == nullptr) { fmt::print("{}\n", "Tile NT SP pointer is null"); valid = false; }
 	if(T_ntKp == nullptr) { fmt::print("{}\n", "Tile NT Kp pointer is null"); valid = false; }
 	if(T_ntKi == nullptr) { fmt::print("{}\n", "Tile NT Ki pointer is null"); valid = false; }
 	if(T_ntKd == nullptr) { fmt::print("{}\n", "Tile NT Kd pointer is null"); valid = false; }

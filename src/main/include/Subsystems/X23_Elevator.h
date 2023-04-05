@@ -105,7 +105,7 @@ private:
 	bool TiltClawSolenoidState;
 
     SC::R_TRIG *rTrigPinch, *rTrigEHome, *rTrigTHome, *rTrigTLimit;
-    frc::Debouncer *DebounceTrigger, *DebounceTilt;
+    frc::Debouncer *DebounceTrigger, *DebounceTilt, *DebounceEBrake;
 
 	//PID Elevator Loop
 	double E_CV;

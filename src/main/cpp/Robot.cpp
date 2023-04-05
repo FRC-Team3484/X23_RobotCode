@@ -55,14 +55,14 @@ void Robot::DisabledPeriodic() {}
  */
 void Robot::AutonomousInit() 
 { 
-	//X23.startAutoCommand();
-	auto1Done = false;
+	X23.startAutoCommand();
+	//auto1Done = false;
 	X23._drivetrain.ResetPose();
 }
 
 void Robot::AutonomousPeriodic() 
 {
-	//MESS WITH CONE LOL
+/*	//MESS WITH CONE LOL
 	if(!auto1Done)
 	{
 		while(X23._drivetrain.GetDistance() < 13.0)
@@ -81,17 +81,17 @@ void Robot::AutonomousPeriodic()
 	}
 	
 	X23._drivetrain.Drive(0,0, 0, false, true);
-
+*/
 }
 
 void Robot::AutonomousExit()
 {
-	//X23.endAutoCommand();
+	X23.endAutoCommand();
 }
 void Robot::TeleopInit() 
 {
 	//frc2::CommandScheduler::GetInstance().CancelAll();
-
+X23._drivetrain.SetPose(180.0);
 	if(GP2_Operator != nullptr)
 	{
 		//intake controls on the button box

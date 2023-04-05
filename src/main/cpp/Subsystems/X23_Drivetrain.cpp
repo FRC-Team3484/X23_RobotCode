@@ -259,6 +259,11 @@ void X23_Drivetrain::SetPose(frc::Pose2d &NewPose)
 	this->dtPose = NewPose;
 }
 
+void X23_Drivetrain::SetPose(double angle)
+{
+	this->Gyroscope->SetYaw(angle);
+}
+
 double X23_Drivetrain::GetDistance()
 {
 	return FL->GetSelectedSensorPosition(0) * C_DT_SCALE_FACTOR_POSN;

@@ -5,6 +5,8 @@
 #include <array>
 #include <iostream>
 #include "FRC3484_Lib/utils/SC_Functions.h"
+#include "frc/filter/Debouncer.h"
+
 // #include <units/acceleration.h>
 // #include <units/velocity.h>
 
@@ -82,31 +84,81 @@ class RobotContainer
    ****************/
   frc2::CommandPtr NoAutoCommand = frc2::PrintCommand("NO AUTO\n").ToPtr();
 
-  frc2::CommandPtr MobilityAutoCommand = frc2::cmd::Sequence(frc2::FunctionalCommand(
-					  			// OnInit
-				  				[this] {}, 
-						  		// OnExecute
-                  [this] { _intake.Eject_Cone(); },
-                   // OnEnd
-                  [this](bool interrupted) { _intake.StopIntake(); },
-                  // IsFinished
-                  [this] { return true;},
-                  {&_intake}
-                  ).ToPtr(),
-                  frc2::WaitCommand(2.0_s).ToPtr(),
-                  frc2::FunctionalCommand(
-                  //startup
-                  [this] {},
-                  //execute
-							  	[this] { _drivetrain.Drive(0, 0.25, 0, false, true); },
-							  	// Interrupted Function
-							  	[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
-							  	// End Condition
-							  	[this] {return _drivetrain.GetDistance() < 15.0;},
-							  	{&_drivetrain}
-							  	).ToPtr());
+  frc2::CommandPtr MobilityAutoCommand = frc2::cmd::Sequence(
+				frc2::FunctionalCommand(
+					// OnInit
+				  	[this] {}, 
+					// OnExecute
+					[this] { _intake.Eject_Cone(); },
+					// OnEnd
+					[this](bool interrupted) { _intake.StopIntake(); },
+					// IsFinished
+					[this] { return DebounceSocks->Calculate(true);},
+					{&_intake}
+					).ToPtr(),
+                  	frc2::WaitCommand(2.0_s).ToPtr(),
+                frc2::FunctionalCommand(
+					//startup
+					[this] {},
+					//execute
+					[this] { _drivetrain.Drive(0, 0.25, 0, false, true); },
+					// Interrupted Function
+					[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
+					// End Condition
+					[this] {return _drivetrain.GetDistance() < C_AUTO_DISTANCE_F;},
+					{&_drivetrain}
+					).ToPtr()
+				);
 
-  frc2::CommandPtr BalanceAutoCommand = frc2::cmd::Sequence(frc2::FunctionalCommand(
+  frc2::CommandPtr BalanceAutoCommand = frc2::cmd::Sequence(
+				 frc2::FunctionalCommand(
+				 	// OnInit
+				 	[this] {}, 
+				 	// OnExecute
+				 	[this] { _intake.Eject_Cone(); },
+				 	// OnEnd
+				 	[this](bool interrupted) { _intake.StopIntake(); },
+				 	// IsFinished
+				 	[this] { return DebounceSocks->Calculate(true);;},
+				 	{&_intake}
+				 	).ToPtr(),
+                   frc2::WaitCommand(2.0_s).ToPtr(),
+                  frc2::FunctionalCommand(
+                      //startup
+                      [this] {_drivetrain.ResetPose(); _drivetrain.ResetGyro(); },
+                      //execute
+                      [this] { _drivetrain.Drive(0, 0.25, 0, false, true); },
+                      // Interrupted Function
+                      [this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
+                      // End Condition
+                      [this] {return _drivetrain.GetDistance() > C_AUTO_DISTANCE_F;},
+                      {&_drivetrain}
+                      ).ToPtr(),
+                  frc2::FunctionalCommand(
+                      // Startup
+                      [this] {},
+                      // Execute
+                      [this] { _drivetrain.Drive(0, -0.25, 0, false, true); },
+                      // Interrupted Function
+                      [this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
+                      // End Condition
+                      [this] {return _drivetrain.GetDistance() < C_AUTO_DISTANCE_B;},
+                      {&_drivetrain}
+                      ).ToPtr()
+                  );
+
+ frc2::CommandPtr ConeMIDBalanceAutoCommand = frc2::cmd::Sequence(frc2::FunctionalCommand(
+					  			// OnInit
+				  				[this] {}, 
+						  		// OnExecute
+                  [this] { _elevator.ConeOne(); },
+                   // OnEnd
+                  [this](bool interrupted) { _elevator.StopMotors(); },
+                  // IsFinished
+                  [this] { return _elevator.pidDisabled();},
+                  {&_elevator}
+                  ).ToPtr(),
+                  frc2::WaitCommand(2.0_s).ToPtr(),frc2::FunctionalCommand(
 					  			// OnInit
 				  				[this] {}, 
 						  		// OnExecute
@@ -114,7 +166,18 @@ class RobotContainer
                    // OnEnd
                   [this](bool interrupted) { _intake.StopIntake(); },
                   // IsFinished
-                  [this] { return true;},
+                  [this] { return DebounceSocks->Calculate(true);;},
+                  {&_intake}
+                  ).ToPtr(),
+                  frc2::WaitCommand(2.0_s).ToPtr(),frc2::FunctionalCommand(
+					  			// OnInit
+				  				[this] {}, 
+						  		// OnExecute
+                  [this] { _elevator.HomePOS(); },
+                   // OnEnd
+                  [this](bool interrupted) { _elevator.StopMotors(); },
+                  // IsFinished
+                  [this] { return _elevator.pidDisabled();},
                   {&_intake}
                   ).ToPtr(),
                   frc2::WaitCommand(2.0_s).ToPtr(),
@@ -126,7 +189,7 @@ class RobotContainer
 							  	// Interrupted Function
 							  	[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
 							  	// End Condition
-							  	[this] {return _drivetrain.GetDistance() < 15.0;},
+							  	[this] {return _drivetrain.GetDistance() < C_AUTO_DISTANCE_F;},
 							  	{&_drivetrain}
 							  	).ToPtr(),
                   frc2::FunctionalCommand(
@@ -137,11 +200,12 @@ class RobotContainer
                   // Interrupted Function
 							  	[this](bool interrupted) { _drivetrain.Drive(0.0, 0.0, 0.0, false, true); }, 
                   // End Condition
-							  	[this] {return _drivetrain.GetDistance() > 6.0;},
+							  	[this] {return _drivetrain.GetDistance() > C_AUTO_DISTANCE_B;},
                   {&_drivetrain}
                   ).ToPtr());
 
   //std::vector<frc2::CommandPtr> autoCommands;
   frc2::Command* currentAuto = NoAutoCommand.get();
+  frc::Debouncer *DebounceSocks;
 
 };

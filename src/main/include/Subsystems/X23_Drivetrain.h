@@ -60,6 +60,7 @@ public:
     void ResetGyro();
 
     void SetPose(frc::Pose2d &NewPose);
+    void SetPose(double angle);
 
     void UpdateOdometry(frc::MecanumDriveWheelPositions& wheelPositions);
 

@@ -136,8 +136,8 @@ const double C_TILT_SCALE_FACTOR_POSN  	= -1.0 * (C_TILT_GEAR_RATIO / C_FALCON_E
 #define C_OPERATOR_USB               1
 
 // Game Device control input scheme 
-//#define DRV_SCHEME_XBOX       /* Xbox Controller Scheme */
-#define DRV_SCHEME_DS4      /* DualShock 4 Controller Scheme */
+#define DRV_SCHEME_XBOX       /* Xbox Controller Scheme */
+//#define DRV_SCHEME_DS4      /* DualShock 4 Controller Scheme */
 
 
 // Game Device control input scheme
@@ -219,6 +219,8 @@ const double C_TILT_SCALE_FACTOR_POSN  	= -1.0 * (C_TILT_GEAR_RATIO / C_FALCON_E
 #ifdef DRIVER_FINE_ADJ_MODE
     #ifdef DRV_SCHEME_XBOX
         #define C_DRIVER_FINE_ADJ_BTN           XBOX_RB
+        #define C_DRIVER_FAST_ADJ_BTN           XBOX_R3
+
     #elif defined(DRV_SCHEME_DS4)
         #define C_DRIVER_FINE_ADJ_BTN           DS4_L1
         #define C_DRIVER_FAST_ADJ_BTN           DS4_L3
@@ -301,6 +303,8 @@ const double C_TILT_SCALE_FACTOR_POSN  	= -1.0 * (C_TILT_GEAR_RATIO / C_FALCON_E
 
 // Auto-functions
 #define C_AUTOSHIFT_DBNC_TIME		0.250_s	// Auto-shift debounce time
+#define C_AUTO_DISTANCE_F           13.0
+#define C_AUTO_DISTANCE_B           3.25
 
 /*=====================*/
 /* Action Delay Config */
@@ -324,7 +328,7 @@ const std::tuple<int, int> C_BLANK_IDS = std::make_tuple<int, int>(C_DISABLED_CH
 #define E_Kp 2.35
 #define E_Ki 1.75
 #define E_dt 0.01
-#define E_Kd .5
+#define E_Kd .25
 #define E_Bias 9.0
 /*================================*/
 /*Elevator Tilt PID Loop Variables*/
